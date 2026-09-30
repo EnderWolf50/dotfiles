@@ -1,5 +1,5 @@
 # Color scheme for everything that has colors: PSReadLine, fzf, carapace, eza, herdr, tmux,
-# starship, lazygit and delta.
+# starship, lazygit, delta, bump and pathed.
 # This is the only place colors are written down. Templates turn it into
 #   - `$Theme` in the PowerShell profile (`.chezmoitemplates/pwsh/15-theme.ps1`),
 #   - carapace's `styles.json` (`AppData/Roaming/carapace/styles.json.tmpl`).
@@ -221,3 +221,37 @@ line-numbers-minus-style    = "danger"
 line-numbers-plus-style     = "accent2"
 line-numbers-left-style     = "faint"
 line-numbers-right-style    = "faint"
+
+# bump: the [theme] of ~/.config/bump/config.toml. The row backgrounds are dark tints of the
+# palette over `bg` (plain, then under the cursor), so they are written as colors.
+[roles.bump]
+accent            = "accent"
+dim               = "muted"
+faint             = "faint"
+ok                = "accent2"
+bad               = "danger"
+major             = "danger"
+minor             = "accent"
+patch             = "accent2"
+other             = "subtle"
+row_cursor        = "#262626"
+row_picked        = "#16241f"   # accent2 tint: picked
+row_picked_cursor = "#223a30"
+row_chosen        = "#3a2c12"   # accent tint: picked at a version other than the latest
+row_chosen_cursor = "#4d3b19"
+
+# pathed: the [theme] of ~/.config/pathed/config.toml; row backgrounds as for bump.
+[roles.pathed]
+accent             = "accent"
+dim                = "muted"
+faint              = "faint"
+ok                 = "accent2"
+bad                = "danger"
+warn               = "accent"
+row_cursor         = "#262626"
+row_added          = "#16241f"   # accent2 tint
+row_added_cursor   = "#223a30"
+row_edited         = "#3a2c12"   # accent tint
+row_edited_cursor  = "#4d3b19"
+row_removed        = "#2e1616"   # danger tint
+row_removed_cursor = "#432020"

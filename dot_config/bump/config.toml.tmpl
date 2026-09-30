@@ -1,0 +1,9 @@
+# bump's settings. Written by chezmoi: the [theme] comes from .chezmoidata/themes.toml
+# ([roles.bump]) so it follows the theme; change colors there, then run `chezmoi apply`.
+# Other settings go above [theme]; `bump --default-config` lists them all.
+
+[theme]
+{{- $palette := (index .themes .theme).palette }}
+{{- range $key, $spec := .roles.bump }}
+{{ $key }} = "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- end }}

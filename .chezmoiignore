@@ -3,11 +3,13 @@ README.md
 **/lazyvim.json
 
 {{ if eq .chezmoi.os "windows" -}}
-# Unix-side dotfiles. Shared with Windows: herdr (HERDR_CONFIG_PATH), nvim (symlinked from
-# %LOCALAPPDATA%) and starship; lazygit is included from AppData/Local/lazygit.
+# Unix-side dotfiles. Shared with Windows: bump and pathed, herdr (HERDR_CONFIG_PATH), nvim
+# (symlinked from %LOCALAPPDATA%) and starship; lazygit is included from AppData/Local/lazygit.
 .config/*
+!.config/bump
 !.config/herdr
 !.config/nvim
+!.config/pathed
 !.config/starship.toml
 .tmux.conf
 .zimrc
