@@ -1,0 +1,91 @@
+# Starship prompt, modeled on Powerlevel10k's "lean" style: one line, colored text with no
+# background blocks; directory and git on the left, status and context on the right.
+# Colors come from .chezmoidata/themes.toml (theme: {{ .theme }}).
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+format = "$directory$git_branch$git_status$git_state$character"
+right_format = "$status$cmd_duration$jobs$python$nodejs$username$hostname$time"
+
+palette = "theme"
+
+[palettes.theme]
+{{- range $name, $color := (index .themes .theme).palette }}
+{{ $name }} = "{{ $color }}"
+{{- end }}
+
+# --- left ---
+
+[directory]
+style = "bold accent"
+repo_root_style = "bold accent"
+read_only = " ro"
+read_only_style = "danger"
+
+[git_branch]
+format = "[$branch]($style) "
+style = "accent2"
+
+# p10k-style counts: *stashes +staged !modified ?untracked ~conflicts ⇣behind ⇡ahead
+[git_status]
+format = "([$all_status$ahead_behind]($style) )"
+style = "accent"
+stashed = "*${count}"
+staged = "+${count}"
+modified = "!${count}"
+deleted = "!${count}"
+renamed = "+${count}"
+untracked = "?${count}"
+conflicted = "~${count}"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇣${behind_count}⇡${ahead_count}"
+
+[git_state]
+style = "danger"
+
+[character]
+success_symbol = "[❯](accent2)"
+error_symbol = "[❯](danger)"
+
+# --- right ---
+
+[status]
+disabled = false
+format = "[✘$status]($style) "
+style = "danger"
+
+[cmd_duration]
+min_time = 3000
+format = "[$duration]($style) "
+style = "muted"
+
+[jobs]
+format = "[$symbol$number]($style) "
+symbol = "✦"
+style = "accent2"
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = "py "
+style = "subtle"
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+symbol = "node "
+style = "subtle"
+
+# user@host only over SSH (starship's default)
+[username]
+format = "[$user]($style)"
+style_user = "muted"
+
+[hostname]
+format = "[@$hostname]($style) "
+style = "muted"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+time_format = "%H:%M:%S"
+style = "faint"
