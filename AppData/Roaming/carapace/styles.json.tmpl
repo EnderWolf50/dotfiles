@@ -1,0 +1,11 @@
+{{- /* Generated from .chezmoidata/themes.toml. Edit the theme there, not this file. */ -}}
+{{- $palette := (index .themes .theme).palette -}}
+{
+  "carapace": {
+{{- $sep := "" }}
+{{- range $role, $spec := .roles.carapace }}{{ $sep }}
+    "{{ $role }}": "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- $sep = "," }}
+{{- end }}
+  }
+}

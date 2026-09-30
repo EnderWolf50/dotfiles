@@ -1,0 +1,168 @@
+# Color scheme for everything that has colors: PSReadLine, fzf, carapace and eza.
+# This is the only place colors are written down. Templates turn it into
+#   - `$Theme` in the PowerShell profile (`.chezmoitemplates/pwsh/15-theme.ps1`),
+#   - carapace's `styles.json` (`AppData/Roaming/carapace/styles.json.tmpl`).
+# After editing, run `chezmoi apply`.
+#
+# To change theme: set `theme` below, or per machine in `~/.config/chezmoi/chezmoi.toml`:
+#   [data]
+#   theme = "other"
+# To add a theme: copy `[themes.vesper.palette]`, rename it, and give every key a new color.
+# The keys are roles, not color names (`accent` is whatever the theme's main accent is), so
+# the `[roles.*]` tables below work unchanged for any palette with the same keys.
+#
+# A role value is a list of words separated by spaces:
+#   - a palette key (`accent`) or a literal `#rrggbb`; `fg:` / `bg:` in front picks the layer
+#     (foreground by default; bg is not understood by carapace),
+#   - the modifiers `bold`, `dim`, `italic`, `underline`,
+#   - anything else is passed through as-is (fzf uses `-1` for "the terminal's own color").
+
+theme = "vesper"
+
+# Vesper: https://github.com/raunofreiberg/vesper (values from its official theme file).
+[themes.vesper.palette]
+bg        = "#101010"   # background
+fg        = "#ffffff"   # main text
+accent    = "#ffc799"   # peach: functions, numbers, types, focus
+accent2   = "#99ffe4"   # mint: strings, "good"
+danger    = "#ff8080"   # errors, "bad"
+subtle    = "#a0a0a0"   # keywords, punctuation
+muted     = "#8b8b8b"   # secondary text, descriptions
+faint     = "#505050"   # borders, line numbers
+comment   = "#575757"   # #8b8b8b at 58% alpha blended over the background
+selection = "#333333"   # selected row background
+
+# PSReadLine: the keys of `Set-PSReadLineOption -Colors`.
+[roles.psreadline]
+Command                = "accent"
+Parameter              = "subtle"
+Operator               = "subtle"
+Keyword                = "subtle"
+String                 = "accent2"
+Variable               = "fg"
+Number                 = "accent"
+Type                   = "accent"
+Member                 = "fg"
+Default                = "fg"
+Error                  = "danger"
+Emphasis               = "accent"
+Comment                = "comment"
+Selection              = "fg:bg bg:accent"
+InlinePrediction       = "italic muted"
+ContinuationPrompt     = "faint"
+ListPrediction         = "accent"
+ListPredictionSelected = "bg:selection"
+ListPredictionTooltip  = "muted"
+
+# fzf: the entries of `--color=`. Values are colors only, no modifiers.
+[roles.fzf]
+bg        = "-1"
+fg        = "fg"
+hl        = "accent"
+"fg+"     = "fg"
+"bg+"     = "selection"
+"hl+"     = "accent"
+info      = "muted"
+prompt    = "accent2"
+pointer   = "accent"
+marker    = "accent2"
+spinner   = "accent"
+header    = "muted"
+border    = "faint"
+gutter    = "-1"
+query     = "fg"
+separator = "faint"
+scrollbar = "faint"
+label     = "muted"
+
+# carapace: the keys of `styles.json`. No `bg:` here.
+[roles.carapace]
+Value            = "fg"
+Description      = "muted"
+Error            = "bold danger"
+Usage            = "muted"
+KeywordPositive  = "accent2"
+KeywordNegative  = "danger"
+KeywordAmbiguous = "accent"
+KeywordUnknown   = "muted"
+FlagNoArg        = "subtle"
+FlagOptArg       = "accent2"
+FlagArg          = "accent"
+FlagMultiArg     = "italic accent"
+Highlight1       = "accent"
+Highlight2       = "accent2"
+Highlight3       = "danger"
+Highlight4       = "subtle"
+Highlight5       = "fg"
+Highlight6       = "dim accent"
+Highlight7       = "dim accent2"
+Highlight8       = "dim danger"
+Highlight9       = "dim subtle"
+Highlight10      = "dim fg"
+
+# eza: the codes of `EZA_COLORS` (see `man eza_colors`). Types eza has no code for keep
+# eza's own built-in colors.
+[roles.eza]
+di = "bold accent"        # directories
+ex = "accent2"            # executables
+fi = "fg"                 # regular files
+ln = "subtle"             # symlinks
+lp = "subtle"             # symlink target path
+or = "danger"             # symlinks with no target
+pi = "muted"              # named pipes
+so = "muted"              # sockets
+bd = "muted"              # block devices
+cd = "muted"              # character devices
+sp = "muted"              # special files
+mp = "accent"             # mount points
+ur = "accent"             # permissions: user read / write / execute
+uw = "danger"
+ux = "accent2"
+ue = "accent2"
+gr = "accent"             # group
+gw = "danger"
+gx = "accent2"
+tr = "accent"             # others
+tw = "danger"
+tx = "accent2"
+su = "bold danger"        # setuid, setgid, sticky
+sf = "bold danger"
+xa = "muted"              # extended attribute indicator
+sn = "fg"                 # size number
+sb = "muted"              # size unit
+uu = "accent"             # you / root / another user
+uR = "danger"
+un = "muted"
+gu = "accent"             # your group / root's group / another group
+gR = "danger"
+gn = "muted"
+lc = "muted"              # hard link count
+lm = "accent"             # hard link count, when two or more
+ga = "accent2"            # git: new / modified / deleted / renamed / type change / ignored / conflicted
+gm = "accent"
+gd = "danger"
+gv = "accent2"
+gt = "accent"
+gi = "faint"
+gc = "danger"
+Gm = "accent2"            # git branch: main / other / clean / dirty
+Go = "subtle"
+Gc = "accent2"
+Gd = "danger"
+xx = "faint"              # punctuation
+da = "subtle"             # date
+in = "muted"              # inode
+bl = "muted"              # blocks
+hd = "underline subtle"   # table header
+cc = "danger"             # escaped characters in names
+im = "accent2"            # images, video, music
+vi = "accent2"
+mu = "accent2"
+lo = "accent2"
+cr = "danger"             # keys and certificates
+do = "fg"                 # documents
+co = "accent"             # compressed
+tm = "muted"              # temporary
+cm = "muted"              # compilation artifacts
+bu = "accent"             # build files
+sc = "fg"                 # source code

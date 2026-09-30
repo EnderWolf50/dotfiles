@@ -30,12 +30,18 @@
 #     `$IsInteractiveConsole`, which it defines.
 #   - `20-prompt` before `80-tools`: starship defines `prompt`, mise and zoxide wrap it.
 #
+# Colors are not written in the fragments: they come from `.chezmoidata/themes.toml`.
+# `15-theme` turns that into the `$Theme` variable (the only fragment that is a template, so
+# it is pulled in with `template` instead of `include`), and PSReadLine, fzf and eza read it.
+# carapace's `styles.json` is generated from the same data.
+#
 # Code that only makes sense on one computer (a work-only path, say) goes in
 # `.chezmoitemplates/pwsh/<name>.local.ps1`. Those files are git-ignored, so they are never
 # pushed, and they are included last, in name order. Run `chezmoi apply` after editing one.
 
 {{ include ".chezmoitemplates/pwsh/00-helpers.ps1" }}
 {{ include ".chezmoitemplates/pwsh/10-environment.ps1" }}
+{{ template "pwsh/15-theme.ps1" . }}
 {{ include ".chezmoitemplates/pwsh/20-prompt.ps1" }}
 {{ include ".chezmoitemplates/pwsh/40-aliases.ps1" }}
 {{ include ".chezmoitemplates/pwsh/45-unix-tools.ps1" }}

@@ -1,0 +1,21 @@
+{{- /*
+Resolves a role value such as "italic accent" or "fg:bg bg:accent" against a palette.
+Called as: {{ template "theme/spec" (dict "palette" $palette "spec" $value) }}
+Palette keys become their color, `fg:` / `bg:` prefixes are kept, every other word
+(modifiers, `-1`, a literal #rrggbb) is passed through unchanged.
+*/ -}}
+{{- $palette := .palette -}}
+{{- range $i, $word := splitList " " .spec -}}
+{{- if $i }} {{ end -}}
+{{- $layer := "" -}}
+{{- $name := $word -}}
+{{- if hasPrefix "fg:" $word -}}
+{{- $layer = "fg:" -}}
+{{- $name = trimPrefix "fg:" $word -}}
+{{- else if hasPrefix "bg:" $word -}}
+{{- $layer = "bg:" -}}
+{{- $name = trimPrefix "bg:" $word -}}
+{{- end -}}
+{{- $layer -}}
+{{- if hasKey $palette $name -}}{{- index $palette $name -}}{{- else -}}{{- $name -}}{{- end -}}
+{{- end -}}
