@@ -1,4 +1,5 @@
-# Color scheme for everything that has colors: PSReadLine, fzf, carapace and eza.
+# Color scheme for everything that has colors: PSReadLine, fzf, carapace, eza, herdr, tmux,
+# starship, lazygit and delta.
 # This is the only place colors are written down. Templates turn it into
 #   - `$Theme` in the PowerShell profile (`.chezmoitemplates/pwsh/15-theme.ps1`),
 #   - carapace's `styles.json` (`AppData/Roaming/carapace/styles.json.tmpl`).
@@ -192,3 +193,31 @@ red           = "danger"
 blue          = "subtle"
 teal          = "accent2"
 peach         = "accent"
+# lazygit: the keys of `gui.theme` (each becomes a list: colors plus modifiers such as bold).
+# The *BgColor keys are background colors.
+[roles.lazygit]
+activeBorderColor               = "accent bold"
+inactiveBorderColor             = "faint"
+searchingActiveBorderColor      = "accent2 bold"
+optionsTextColor                = "muted"
+selectedLineBgColor             = "selection"
+inactiveViewSelectedLineBgColor = "bold"
+cherryPickedCommitFgColor       = "bg"
+cherryPickedCommitBgColor       = "accent2"
+markedBaseCommitFgColor         = "bg"
+markedBaseCommitBgColor         = "accent"
+unstagedChangesColor            = "danger"
+defaultFgColor                  = "default"
+
+# delta: style keys of the `[delta]` section in .gitconfig. A delta style is
+# "[foreground] [background] [attributes]"; decoration styles also take box / ul / ol.
+# The +/- line backgrounds keep delta's defaults: the palette has no tinted green/red.
+[roles.delta]
+file-style                  = "bold accent"
+file-decoration-style       = "faint ul"
+hunk-header-decoration-style = "faint box"
+line-numbers-zero-style     = "faint"
+line-numbers-minus-style    = "danger"
+line-numbers-plus-style     = "accent2"
+line-numbers-left-style     = "faint"
+line-numbers-right-style    = "faint"

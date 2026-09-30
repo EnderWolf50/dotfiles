@@ -7,6 +7,11 @@
   light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
   ; side-by-side = true
   line-numbers = true
+  # colors from .chezmoidata/themes.toml ([roles.delta]); quoted, since # starts a comment
+{{- $palette := (index .themes .theme).palette }}
+{{- range $key, $spec := .roles.delta }}
+  {{ $key }} = "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- end }}
 [merge]
   conflictstyle = zdiff3
 [diff]
