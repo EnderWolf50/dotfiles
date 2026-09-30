@@ -162,6 +162,22 @@ url     = "https://github.com/jesseduffield/lazygit"
 winget  = "JesseDuffield.lazygit"
 
 [[tools]]
+name    = "delta"
+check   = "delta"
+purpose = "Pager for git diff / log / show, and for lazygit's diffs"
+used_by = ".gitconfig, lazygit config.yml"
+url     = "https://github.com/dandavison/delta"
+winget  = "dandavison.delta"
+
+[[tools]]
+name    = "GitHub CLI"
+check   = "gh"
+purpose = "GitHub credentials for git (`gh auth login` once)"
+used_by = ".gitconfig credential helper"
+url     = "https://github.com/cli/cli"
+winget  = "GitHub.cli"
+
+[[tools]]
 name    = "Codex"
 check   = "codex"
 purpose = "OpenAI's coding agent (the cx alias)"

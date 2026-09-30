@@ -2,7 +2,8 @@
 **/lazyvim.json
 
 {{ if eq .chezmoi.os "windows" -}}
-# Unix-side dotfiles; herdr is shared via HERDR_CONFIG_PATH
+# Unix-side dotfiles. Shared with Windows: herdr (HERDR_CONFIG_PATH), nvim (symlinked from
+# %LOCALAPPDATA%) and starship; lazygit is included from AppData/Local/lazygit.
 .config/*
 !.config/herdr
 !.config/nvim
