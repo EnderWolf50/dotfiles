@@ -110,10 +110,6 @@ if ($IsInteractiveConsole) {
   Set-Alias oc2 opencode2
   Set-Alias hr herdr
 
-  function crm {
-    Set-Location "D:\CRM\"
-  }
-
   $Env:EDITOR = "nvim"
 
   function tree
