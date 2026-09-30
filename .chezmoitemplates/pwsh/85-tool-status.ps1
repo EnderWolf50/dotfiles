@@ -17,6 +17,7 @@ if ($IsInteractiveConsole) {
       Scoop     = '{{ index $tool "scoop" | default "" }}'
       Npm       = '{{ index $tool "npm" | default "" }}'
       PSGallery = '{{ index $tool "psgallery" | default "" }}'
+      Go        = '{{ index $tool "go" | default "" }}'
       Note      = '{{ index $tool "note" | default "" | replace "'" "''" }}'
     }
 {{- end }}
@@ -30,6 +31,9 @@ if ($IsInteractiveConsole) {
     elseif ($Tool.Scoop) { "scoop install $($Tool.Scoop)" }
     elseif ($Tool.Npm) { "npm install -g $($Tool.Npm)" }
     elseif ($Tool.PSGallery) { "Install-PSResource $($Tool.PSGallery) -Scope CurrentUser -TrustRepository" }
+    # Into ~/.local/bin rather than GOBIN: mise points GOBIN at the current Go's own folder,
+    # which the next Go upgrade replaces.
+    elseif ($Tool.Go) { "`$env:GOBIN = `"`$HOME\.local\bin`"; go install $($Tool.Go)@latest; Remove-Item Env:GOBIN" }
   }
 
   function Show-Tools {

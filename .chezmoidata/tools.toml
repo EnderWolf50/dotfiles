@@ -14,8 +14,9 @@
 #   purpose  what it does here
 #   used_by  the fragment or feature that needs it
 #   url      home page
-#   winget / scoop / npm / psgallery   how to install it, tried in that order. A scoop value may
-#            be `bucket/app`; the bucket is added first.
+#   winget / scoop / npm / psgallery / go   how to install it, tried in that order. A scoop
+#            value may be `bucket/app`; the bucket is added first. A go value is a module path,
+#            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
 #   note     anything else worth knowing
 #
 # Keep this in step with the code: a new `has <tool>`, `Set-SafeAlias` target or
@@ -215,14 +216,18 @@ name    = "pathed"
 check   = "pathed"
 purpose = "Edit the persistent User / Machine PATH (TUI and CLI)"
 used_by = "80-tools"
-note    = "Own tool in D:\\Dev\\pathed: `go build -o ~/.local/bin/ .`"
+url     = "https://github.com/EnderWolf50/pathed"
+go      = "github.com/EnderWolf50/pathed"
+note    = "Or download pathed.exe from the GitHub releases."
 
 [[tools]]
 name    = "bump"
 check   = "bump"
 purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet and cargo"
 used_by = "you, in a shell"
-note    = "Own tool in D:\\Dev\\bump: `go build -o ~/.local/bin/ .`"
+url     = "https://github.com/EnderWolf50/bump"
+go      = "github.com/EnderWolf50/bump"
+note    = "Or download bump.exe from the GitHub releases."
 
 [[tools]]
 name    = "A Nerd Font"
