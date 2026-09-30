@@ -1,6 +1,7 @@
 onboarding = false
 [keys]
 prefix = "ctrl+a"
+switch_workspace = "alt+1..9"
 close_tab = "prefix+&"
 navigate_workspace_up = "k"
 navigate_workspace_down = "j"
@@ -28,4 +29,10 @@ copy_on_select = false
 rows = [
   ["$idx", "state_icon", "workspace"],
   ["branch", "git_status"],
+]
+
+[ui.sidebar.agents]
+rows = [
+  ["$idx", "state_icon", "machine", "workspace", "tab"],
+  ["agent"],
 ]
