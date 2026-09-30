@@ -1,0 +1,36 @@
+
+# =============================================================================
+# Prerequisites
+# =============================================================================
+
+# modules:
+# oh-my-posh (https://github.com/JanDeDobbeleer/oh-my-posh)
+# starship (https://starship.rs/)
+# gsudo (https://github.com/gerardog/gsudo)
+# psreadline (https://github.com/PowerShell/PSReadLine)
+# psfzf (https://github.com/kelleyma49/PSFzf)
+#
+# tools:
+# eza (https://github.com/eza-community/eza)
+# fzf (https://github.com/junegunn/fzf)
+# fnm (https://github.com/Schniz/fnm)
+# zoxide (https://github.com/ajeetdsouza/zoxide)
+#
+# aliases:
+# git-aliases (https://github.com/gluons/powershell-git-aliases)
+
+# =============================================================================
+# Layout
+# =============================================================================
+# This file is only an index: the code lives in `.chezmoitemplates/pwsh/` and is included
+# below in load order. Edit a fragment there, then run `chezmoi apply`.
+#
+# Order matters in two places:
+#   - `00-helpers` first: everything after it uses `has`, `Set-SafeAlias` and
+#     `$IsInteractiveConsole`, which it defines.
+#   - `20-prompt` before `80-tools`: starship defines `prompt`, mise and zoxide wrap it.
+
+{{ include ".chezmoitemplates/pwsh/00-helpers.ps1" }}
+{{ include ".chezmoitemplates/pwsh/10-environment.ps1" }}
+{{ include ".chezmoitemplates/pwsh/20-prompt.ps1" }}
+{{ include ".chezmoitemplates/pwsh/80-tools.ps1" }}
