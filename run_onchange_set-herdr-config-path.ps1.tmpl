@@ -1,0 +1,4 @@
+{{ if eq .chezmoi.os "windows" -}}
+# herdr defaults to %APPDATA%\herdr on Windows; point it at the shared ~/.config copy.
+[Environment]::SetEnvironmentVariable('HERDR_CONFIG_PATH', (Join-Path $env:USERPROFILE '.config\herdr\config.toml'), 'User')
+{{ end -}}

@@ -1,8 +1,9 @@
 **/lazy-lock.json
 
 {{ if eq .chezmoi.os "windows" -}}
-# Unix-side dotfiles; herdr lives under AppData on Windows
-.config
+# Unix-side dotfiles; herdr is shared via HERDR_CONFIG_PATH
+.config/*
+!.config/herdr
 .czrc
 .gitconfig
 .p10k.zsh
