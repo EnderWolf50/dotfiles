@@ -5,7 +5,6 @@
 # Unix-side dotfiles; herdr is shared via HERDR_CONFIG_PATH
 .config/*
 !.config/herdr
-.gitconfig
 .p10k.zsh
 .tmux.conf
 .zimrc
