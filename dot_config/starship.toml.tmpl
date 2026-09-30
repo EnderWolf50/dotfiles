@@ -1,6 +1,8 @@
 # Starship prompt, modeled on Powerlevel10k's "lean" style: one line, colored text with no
 # background blocks; directory and git on the left, status and context on the right.
-# Colors come from .chezmoidata/themes.toml (theme: {{ .theme }}).
+# Colors come from .chezmoidata/themes.toml (theme: {{ .theme }}), symbols from
+# .chezmoidata/prompt.toml (preset: {{ .prompt.preset }}).
+{{- $sym := index .prompt.presets .prompt.preset }}
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
@@ -26,7 +28,7 @@ read_only_style = "danger"
 format = "[$branch]($style) "
 style = "accent2"
 
-# p10k-style counts: *stashes +staged !modified ?untracked ~conflicts ⇣behind ⇡ahead
+# p10k-style counts: *stashes +staged !modified ?untracked ~conflicts, then behind/ahead
 [git_status]
 format = "([$all_status$ahead_behind]($style) )"
 style = "accent"
@@ -37,22 +39,22 @@ deleted = "!${count}"
 renamed = "+${count}"
 untracked = "?${count}"
 conflicted = "~${count}"
-ahead = "⇡${count}"
-behind = "⇣${count}"
-diverged = "⇣${behind_count}⇡${ahead_count}"
+ahead = "{{ $sym.ahead }}${count}"
+behind = "{{ $sym.behind }}${count}"
+diverged = "{{ $sym.behind }}${behind_count}{{ $sym.ahead }}${ahead_count}"
 
 [git_state]
 style = "danger"
 
 [character]
-success_symbol = "[❯](accent2)"
-error_symbol = "[❯](danger)"
+success_symbol = "[{{ $sym.char }}](accent2)"
+error_symbol = "[{{ $sym.char }}](danger)"
 
 # --- right ---
 
 [status]
 disabled = false
-format = "[✘$status]($style) "
+format = "[{{ $sym.error }}$status]($style) "
 style = "danger"
 
 [cmd_duration]
@@ -62,7 +64,7 @@ style = "muted"
 
 [jobs]
 format = "[$symbol$number]($style) "
-symbol = "✦"
+symbol = "{{ $sym.jobs }}"
 style = "accent2"
 
 [python]

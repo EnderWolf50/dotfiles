@@ -1,0 +1,23 @@
+# Starship prompt symbols (dot_config/starship.toml.tmpl). Pick a preset below, or per machine
+# in `~/.config/chezmoi/chezmoi.toml`:
+#   [data.prompt]
+#   preset = "ascii"
+# `ascii` is for fonts or terminals that cannot show the unicode symbols. The git counts
+# (* + ! ? ~) are ASCII in both.
+
+[prompt]
+preset = "unicode"
+
+[prompt.presets.unicode]
+char   = "❯"   # prompt character
+ahead  = "⇡"   # commits to push
+behind = "⇣"   # commits to pull
+error  = "✘"   # before the exit code of a failed command
+jobs   = "✦"   # background jobs
+
+[prompt.presets.ascii]
+char   = ">"
+ahead  = ">"
+behind = "<"
+error  = "x"
+jobs   = "&"
