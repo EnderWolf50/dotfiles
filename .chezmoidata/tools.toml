@@ -221,6 +221,15 @@ go      = "github.com/EnderWolf50/pathed"
 note    = "Or download pathed.exe from the GitHub releases."
 
 [[tools]]
+name    = "enved"
+check   = "enved"
+purpose = "Edit the persistent User / Machine environment variables (TUI and CLI); PATH in pathed's editor"
+used_by = "80-tools"
+url     = "https://github.com/EnderWolf50/enved"
+go      = "github.com/EnderWolf50/enved"
+note    = "Or download enved.exe from the GitHub releases."
+
+[[tools]]
 name    = "bump"
 check   = "bump"
 purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet, cargo and go install"
