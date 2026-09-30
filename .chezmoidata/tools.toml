@@ -215,14 +215,14 @@ name    = "pathed"
 check   = "pathed"
 purpose = "Edit the persistent User / Machine PATH (TUI and CLI)"
 used_by = "80-tools"
-note    = "Own tool in D:\\Dev\\wintools: `go build -o ~/.local/bin/ ./cmd/...`"
+note    = "Own tool in D:\\Dev\\pathed: `go build -o ~/.local/bin/ .`"
 
 [[tools]]
 name    = "up"
 check   = "up"
-purpose = "Pick and upgrade outdated winget, scoop, mise and npm packages"
+purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet and cargo"
 used_by = "you, in a shell"
-note    = "Own tool in D:\\Dev\\wintools: `go build -o ~/.local/bin/ ./cmd/...`"
+note    = "Own tool in D:\\Dev\\up: `go build -o ~/.local/bin/ .`"
 
 [[tools]]
 name    = "A Nerd Font"
