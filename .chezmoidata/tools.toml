@@ -218,11 +218,11 @@ used_by = "80-tools"
 note    = "Own tool in D:\\Dev\\pathed: `go build -o ~/.local/bin/ .`"
 
 [[tools]]
-name    = "up"
-check   = "up"
+name    = "bump"
+check   = "bump"
 purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet and cargo"
 used_by = "you, in a shell"
-note    = "Own tool in D:\\Dev\\up: `go build -o ~/.local/bin/ .`"
+note    = "Own tool in D:\\Dev\\bump: `go build -o ~/.local/bin/ .`"
 
 [[tools]]
 name    = "A Nerd Font"
