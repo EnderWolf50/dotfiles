@@ -28,12 +28,21 @@ if ($IsInteractiveConsole) {
 # The wrapper compares the saved PATH before and after and applies the difference here, so
 # session-only entries (mise's) stay. A new entry goes to the end, whatever its saved position.
 if ($IsInteractiveConsole) {
+  # The saved PATH, Machine then User, one folder per item (with %VARS% expanded).
+  function Get-SavedPath {
+    'Machine', 'User' |
+      ForEach-Object { [Environment]::GetEnvironmentVariable('Path', $_) -split ';' } |
+      Where-Object { $_ }
+  }
+
   function pathed {
-    $saved = { ('Machine', 'User' | ForEach-Object { [Environment]::GetEnvironmentVariable('Path', $_) }) -join ';' -split ';' | Where-Object { $_ } }
-    $before = & $saved
+    $before = Get-SavedPath
     pathed.exe @args
-    $after = & $saved
-    $session = @($env:PATH -split ';' | Where-Object { $_ -and ($_ -in $after -or $_ -notin $before) })
-    $env:PATH = ($session + @($after | Where-Object { $_ -notin $before -and $_ -notin $session })) -join ';'
+    $after = Get-SavedPath
+
+    $removed = @($before | Where-Object { $_ -notin $after })
+    $added = @($after | Where-Object { $_ -notin $before })
+    $kept = @($env:PATH -split ';' | Where-Object { $_ -and $_ -notin $removed })
+    $env:PATH = ($kept + @($added | Where-Object { $_ -notin $kept })) -join ';'
   }
 }

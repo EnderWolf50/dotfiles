@@ -223,7 +223,7 @@ note    = "Or download pathed.exe from the GitHub releases."
 [[tools]]
 name    = "bump"
 check   = "bump"
-purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet and cargo"
+purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet, cargo and go install"
 used_by = "you, in a shell"
 url     = "https://github.com/EnderWolf50/bump"
 go      = "github.com/EnderWolf50/bump"
