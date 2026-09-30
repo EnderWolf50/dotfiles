@@ -1,13 +1,17 @@
-# Starship prompt, modeled on Powerlevel10k's "lean" style: one line, colored text with no
-# background blocks; directory and git on the left, status and context on the right.
+# Starship prompt, modeled on Powerlevel10k's two-line "lean" style: colored text with no
+# background blocks. First line: directory and git on the left, status and context pushed
+# to the right by `$fill`; second line: only the prompt character.
 # Colors come from .chezmoidata/themes.toml (theme: {{ .theme }}), symbols from
 # .chezmoidata/prompt.toml (preset: {{ .prompt.preset }}).
 {{- $sym := index .prompt.presets .prompt.preset }}
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
-format = "$directory$git_branch$git_status$git_state$character"
-right_format = "$status$cmd_duration$jobs$python$nodejs$username$hostname$time"
+format = """
+$directory$git_branch$git_status$git_state\
+$fill\
+$status$cmd_duration$jobs$python$nodejs$username$hostname$time
+$character"""
 
 palette = "theme"
 
@@ -50,7 +54,10 @@ style = "danger"
 success_symbol = "[{{ $sym.char }}](accent2)"
 error_symbol = "[{{ $sym.char }}](danger)"
 
-# --- right ---
+# --- right (after $fill) ---
+
+[fill]
+symbol = " "
 
 [status]
 disabled = false
