@@ -2,10 +2,3 @@ git:
   paging:
     colorArg: always
     pager: delta --dark --paging=never
-customCommands:
-  - key: <C-c>
-    command: git cz
-    description: Commit with commitizen
-    context: files
-    loadingText: Opening commitizen commit tool...
-    subprocess: true

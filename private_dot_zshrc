@@ -144,7 +144,6 @@ unset key
 # aliases
 alias vim="nvim"
 alias lg="lazygit"
-alias gcz="git cz"
 
 if [[ -v WSL_DISTRO_NAME ]] then # wsl specific
   alias open="/mnt/c/Windows/explorer.exe" 
