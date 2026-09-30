@@ -211,6 +211,20 @@ url     = "https://herdr.dev"
 note    = "Installs and updates itself (`herdr update`); no package manager entry."
 
 [[tools]]
+name    = "pathed"
+check   = "pathed"
+purpose = "Edit the persistent User / Machine PATH (TUI and CLI)"
+used_by = "80-tools"
+note    = "Own tool in D:\\Dev\\wintools: `go build -o ~/.local/bin/ ./cmd/...`"
+
+[[tools]]
+name    = "up"
+check   = "up"
+purpose = "Pick and upgrade outdated winget, scoop, mise and npm packages"
+used_by = "you, in a shell"
+note    = "Own tool in D:\\Dev\\wintools: `go build -o ~/.local/bin/ ./cmd/...`"
+
+[[tools]]
 name    = "A Nerd Font"
 purpose = "Icons in eza and the prompt glyphs; the terminal has to use one"
 used_by = "50-ls, 20-prompt"
