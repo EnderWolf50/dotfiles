@@ -156,25 +156,17 @@ bindkey -s '^f' "tmux-sessionizer\n"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
 # cargo
-export PATH="$PATH:/home/kerati/.cargo/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
 
 # homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ -x /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # pipx
-export PATH="$PATH:/home/kerati/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # pnpm
-export PNPM_HOME="/home/kerati/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
@@ -182,7 +174,7 @@ export PATH="$PNPM_HOME:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 # bun completions
-[ -s "/home/kerati/.bun/_bun" ] && source "/home/kerati/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # go
 if command -v go &> /dev/null; then
@@ -192,9 +184,8 @@ fi
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# fnm
-export PATH="/home/kerati/.local/share/fnm:$PATH"
-eval "`fnm env`"
+# mise (node, python, go, ... versions; replaces fnm and pyenv)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
 
 # zoxide
 eval "$(zoxide init zsh)"

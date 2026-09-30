@@ -62,7 +62,7 @@ zmodule ohmyzsh/ohmyzsh --root lib --source directories.zsh
 zmodule ohmyzsh/ohmyzsh --root plugins/git
 zmodule ohmyzsh/ohmyzsh --root plugins/tmux
 
-zmodule exa
+zmodule exa   # uses eza when installed, despite the name
 zmodule fzf
 zmodule homebrew
 zmodule joke/zim-chezmoi
