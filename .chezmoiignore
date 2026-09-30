@@ -8,7 +8,6 @@
 !.config/herdr
 !.config/nvim
 !.config/starship.toml
-.p10k.zsh
 .tmux.conf
 .zimrc
 .zprofile
