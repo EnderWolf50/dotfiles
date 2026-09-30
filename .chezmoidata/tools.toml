@@ -1,0 +1,203 @@
+# Every program and module the PowerShell profile relies on, in one place, so nothing has to
+# be found by opening the fragments one by one. All of them are optional: the profile checks
+# before using a tool and skips a missing one silently.
+#
+# `Show-Tools` in a shell (see `85-tool-status.ps1`) reads this file and reports what is
+# installed on the current machine; `Show-Tools -Missing` lists only what is not, and
+# `Show-Tools -Install` installs those after asking. After editing, run `chezmoi apply`.
+#
+# Fields:
+#   name     what to call it
+#   check    the command (or module) whose presence means "installed"; left out when it cannot
+#            be checked, such as a font
+#   kind     "command" (default) or "module"
+#   purpose  what it does here
+#   used_by  the fragment or feature that needs it
+#   url      home page
+#   winget / scoop / npm / psgallery   how to install it, tried in that order. A scoop value may
+#            be `bucket/app`; the bucket is added first.
+#   note     anything else worth knowing
+#
+# Keep this in step with the code: a new `has <tool>`, `Set-SafeAlias` target or
+# `Import-OptionalModule` in a fragment needs an entry here.
+
+[[tools]]
+name    = "PowerShell 7"
+check   = "pwsh"
+purpose = "The shell this profile is written for"
+used_by = "everything"
+url     = "https://github.com/PowerShell/PowerShell"
+winget  = "Microsoft.PowerShell"
+note    = "Windows PowerShell 5.1 does not read this profile; herdr 0.9.2 and later start pwsh by default."
+
+[[tools]]
+name    = "chezmoi"
+check   = "chezmoi"
+purpose = "Applies this repository"
+used_by = "the dotfiles themselves"
+url     = "https://www.chezmoi.io"
+winget  = "twpayne.chezmoi"
+
+[[tools]]
+name    = "Git for Windows"
+check   = "git"
+purpose = "git, plus the Unix tools aliased in PowerShell: head, tail, wc, sed, awk, xargs, cut, tr, uniq, env, printenv, less, tig"
+used_by = "45-unix-tools"
+url     = "https://gitforwindows.org"
+winget  = "Git.Git"
+
+[[tools]]
+name    = "starship"
+check   = "starship"
+purpose = "The prompt"
+used_by = "20-prompt"
+url     = "https://starship.rs"
+winget  = "Starship.Starship"
+
+[[tools]]
+name    = "eza"
+check   = "eza"
+purpose = "ls, ll, la, lt and tree, with icons and the theme colors"
+used_by = "50-ls"
+url     = "https://github.com/eza-community/eza"
+winget  = "eza-community.eza"
+
+[[tools]]
+name    = "fd"
+check   = "fd"
+purpose = "Directory list for Alt+c (PSFzf's own default is very slow on Windows)"
+used_by = "30-readline"
+url     = "https://github.com/sharkdp/fd"
+winget  = "sharkdp.fd"
+
+[[tools]]
+name    = "fzf"
+check   = "fzf"
+purpose = "The fuzzy finder behind Ctrl+t, Ctrl+r and Alt+c"
+used_by = "30-readline"
+url     = "https://github.com/junegunn/fzf"
+winget  = "junegunn.fzf"
+
+[[tools]]
+name      = "PSFzf"
+check     = "PSFzf"
+kind      = "module"
+purpose   = "Ctrl+t, Ctrl+r and Alt+c key bindings for fzf"
+used_by   = "30-readline"
+url       = "https://github.com/kelleyma49/PSFzf"
+psgallery = "PSFzf"
+
+[[tools]]
+name    = "zoxide"
+check   = "zoxide"
+purpose = "Jump to frequent directories: z and zi"
+used_by = "80-tools"
+url     = "https://github.com/ajeetdsouza/zoxide"
+winget  = "ajeetdsouza.zoxide"
+
+[[tools]]
+name    = "mise"
+check   = "mise"
+purpose = "Per-directory tool versions and PATH"
+used_by = "80-tools"
+url     = "https://mise.jdx.dev"
+winget  = "jdx.mise"
+
+[[tools]]
+name    = "carapace"
+check   = "carapace"
+purpose = "Tab completion for about a thousand commands, styled by the theme"
+used_by = "30-readline"
+url     = "https://carapace.sh"
+winget  = "rsteube.Carapace"
+scoop   = "extras/carapace-bin"
+
+[[tools]]
+name    = "inshellisense"
+check   = "is"
+purpose = "Extra completion specs that carapace borrows when it has none of its own"
+used_by = "30-readline (CARAPACE_BRIDGES)"
+url     = "https://github.com/microsoft/inshellisense"
+npm     = "@microsoft/inshellisense"
+
+[[tools]]
+name    = "gsudo"
+check   = "gsudo"
+purpose = "sudo for Windows"
+used_by = "80-tools"
+url     = "https://github.com/gerardog/gsudo"
+winget  = "gerardog.gsudo"
+
+[[tools]]
+name    = "gsudoModule"
+check   = "gsudoModule"
+kind    = "module"
+purpose = "PowerShell wrapper for gsudo (scriptblocks, the current directory)"
+used_by = "80-tools"
+url     = "https://github.com/gerardog/gsudo"
+note    = "Installed together with gsudo."
+
+[[tools]]
+name    = "bat"
+check   = "bat"
+purpose = "cat with syntax highlighting (the cat alias)"
+used_by = "40-aliases"
+url     = "https://github.com/sharkdp/bat"
+winget  = "sharkdp.bat"
+
+[[tools]]
+name    = "Neovim"
+check   = "nvim"
+purpose = "Editor: the vim alias and EDITOR"
+used_by = "40-aliases, 10-environment"
+url     = "https://neovim.io"
+winget  = "Neovim.Neovim"
+
+[[tools]]
+name    = "lazygit"
+check   = "lazygit"
+purpose = "git UI (the lg alias)"
+used_by = "40-aliases"
+url     = "https://github.com/jesseduffield/lazygit"
+winget  = "JesseDuffield.lazygit"
+
+[[tools]]
+name    = "Codex"
+check   = "codex"
+purpose = "OpenAI's coding agent (the cx alias)"
+used_by = "40-aliases"
+url     = "https://github.com/openai/codex"
+scoop   = "codex"
+
+[[tools]]
+name    = "Claude Code"
+check   = "claude"
+purpose = "Anthropic's coding agent (the cc alias)"
+used_by = "40-aliases"
+url     = "https://claude.com/product/claude-code"
+scoop   = "claude-code"
+note    = "This machine uses the native installer (~/.local/bin/claude.exe), which the scoop package also provides."
+
+[[tools]]
+name    = "opencode"
+check   = "opencode"
+purpose = "Open-source coding agent (the oc alias)"
+used_by = "40-aliases"
+url     = "https://opencode.ai"
+scoop   = "versions/opencode2"
+
+[[tools]]
+name    = "herdr"
+check   = "herdr"
+purpose = "Terminal workspace manager for coding agents (the hr alias)"
+used_by = "40-aliases"
+url     = "https://herdr.dev"
+note    = "Installs and updates itself (`herdr update`); no package manager entry."
+
+[[tools]]
+name    = "A Nerd Font"
+purpose = "Icons in eza and the prompt glyphs; the terminal has to use one"
+used_by = "50-ls, 20-prompt"
+url     = "https://www.nerdfonts.com"
+scoop   = "nerd-fonts/CascadiaCode-NF-Mono"
+note    = "Cannot be checked from PowerShell; any Nerd Font works."

@@ -3,21 +3,11 @@
 # Prerequisites
 # =============================================================================
 
-# modules:
-# oh-my-posh (https://github.com/JanDeDobbeleer/oh-my-posh)
-# starship (https://starship.rs/)
-# gsudo (https://github.com/gerardog/gsudo)
-# psreadline (https://github.com/PowerShell/PSReadLine)
-# psfzf (https://github.com/kelleyma49/PSFzf)
-#
-# tools:
-# eza (https://github.com/eza-community/eza)
-# fzf (https://github.com/junegunn/fzf)
-# fnm (https://github.com/Schniz/fnm)
-# zoxide (https://github.com/ajeetdsouza/zoxide)
-#
-# aliases:
-# git-aliases (https://github.com/gluons/powershell-git-aliases)
+# The programs and modules this profile uses are listed in `.chezmoidata/tools.toml`, with
+# what each is for, which fragment needs it and how to install it. In a shell, `Show-Tools`
+# (alias `tools`) shows what is installed on this machine, `Show-Tools -Missing` only what
+# is not, and `Show-Tools -Install` installs those after asking. Every tool is optional: the
+# profile checks before using one and skips a missing one silently.
 
 # =============================================================================
 # Layout
@@ -31,9 +21,10 @@
 #   - `20-prompt` before `80-tools`: starship defines `prompt`, mise and zoxide wrap it.
 #
 # Colors are not written in the fragments: they come from `.chezmoidata/themes.toml`.
-# `15-theme` turns that into the `$Theme` variable (the only fragment that is a template, so
-# it is pulled in with `template` instead of `include`), and PSReadLine, fzf and eza read it.
-# carapace's `styles.json` is generated from the same data.
+# `15-theme` turns that into the `$Theme` variable, and PSReadLine, fzf and eza read it.
+# carapace's `styles.json` is generated from the same data. `85-tool-status` is generated the
+# same way from `tools.toml`. Those two are the fragments that are templates, so they are
+# pulled in with `template` instead of `include`.
 #
 # Code that only makes sense on one computer (a work-only path, say) goes in
 # `.chezmoitemplates/pwsh/<name>.local.ps1`. Those files are git-ignored, so they are never
@@ -50,6 +41,7 @@
 {{ include ".chezmoitemplates/pwsh/60-navigation.ps1" }}
 {{ include ".chezmoitemplates/pwsh/70-functions.ps1" }}
 {{ include ".chezmoitemplates/pwsh/80-tools.ps1" }}
+{{ template "pwsh/85-tool-status.ps1" . }}
 {{ range glob (joinPath .chezmoi.sourceDir ".chezmoitemplates" "pwsh" "*.local.ps1") -}}
 {{ include . }}
 {{ end -}}
