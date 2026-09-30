@@ -30,6 +30,8 @@ if ($IsInteractiveConsole) {
   # Up and Down search the history by what is already typed (fish / history-substring-search).
   Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
   Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+  # HistorySearch* leaves the cursor where the typed prefix ends (column 0 on an empty line).
+  Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 
   # --- carapace ---
   # Also bridge completions from zsh, fish and bash (see carapace's `CARAPACE_BRIDGES`).
