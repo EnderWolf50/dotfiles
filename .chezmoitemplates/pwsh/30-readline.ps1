@@ -58,6 +58,21 @@ if ($IsInteractiveConsole) {
     '--prompt="❯ " --pointer="▌" --marker="✓"'
   ) -join ' '
   Remove-Variable fzfColors
+
+  # Alt+c lists directories with fd. PSFzf's own default is `cmd /c dir /s/b/ad`, which walks
+  # everything below the current directory (AppData and tool caches included) and feeds it
+  # through the PowerShell pipeline: about 7 seconds in D:\Dev and a minute in the home
+  # directory. Ctrl+t is unaffected, it uses fzf's own walker; `Set-PsFzfOption -EnableFd`
+  # would make Ctrl+t slower too, so fd is wired in only here. The skipped names are caches
+  # and package stores that are never a place to `cd` into; edit the list to taste.
+  if (has fd) {
+    $skipDirs = '.git', 'node_modules', 'AppData', '.cache', '.npm', '.nuget', '.cargo', '.rustup',
+      '.gradle', '.m2', '__pycache__', '.venv', '.bun', '.vscode', '.codex', '.hermes', '.unsloth'
+    $env:FZF_ALT_C_COMMAND = 'fd.exe --type directory --hidden ' +
+      (($skipDirs | ForEach-Object { "--exclude $_" }) -join ' ')
+    Remove-Variable skipDirs
+  }
+
   Import-OptionalModule PSFzf
   if (has Set-PsFzfOption) {
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' `
