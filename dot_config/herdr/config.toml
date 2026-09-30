@@ -25,6 +25,7 @@ pane_history = true
 [ui]
 copy_on_select = false
 
+status_indicators = "symbols"
 [ui.sidebar.spaces]
 rows = [
   ["$idx", "state_icon", "workspace"],
@@ -36,3 +37,10 @@ rows = [
   ["$idx", "state_icon", "machine", "workspace", "tab"],
   ["agent"],
 ]
+
+[theme]
+name = "vesper"
+auto_switch = false
+
+[ui.sound]
+enabled = true
