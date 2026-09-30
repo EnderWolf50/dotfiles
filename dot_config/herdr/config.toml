@@ -1,0 +1,31 @@
+onboarding = false
+[keys]
+prefix = "ctrl+a"
+close_tab = "prefix+&"
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+navigate_pane_up = "ctrl+k"
+navigate_pane_down = "ctrl+j"
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+last_pane = "ctrl+\\"
+detach = "prefix+d"
+split_vertical = "prefix+|"
+split_horizontal = "prefix+-"
+
+[ui.toast]
+delivery = "herdr"
+
+[experimental]
+pane_history = true
+
+[ui]
+copy_on_select = false
+
+[ui.sidebar.spaces]
+rows = [
+  ["$idx", "state_icon", "workspace"],
+  ["branch", "git_status"],
+]
