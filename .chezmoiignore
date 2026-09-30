@@ -1,4 +1,5 @@
 **/lazy-lock.json
+**/lazyvim.json
 
 {{ if eq .chezmoi.os "windows" -}}
 # Unix-side dotfiles; herdr is shared via HERDR_CONFIG_PATH
