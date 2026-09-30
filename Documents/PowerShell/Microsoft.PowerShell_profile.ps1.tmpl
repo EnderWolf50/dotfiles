@@ -29,6 +29,10 @@
 #   - `00-helpers` first: everything after it uses `has`, `Set-SafeAlias` and
 #     `$IsInteractiveConsole`, which it defines.
 #   - `20-prompt` before `80-tools`: starship defines `prompt`, mise and zoxide wrap it.
+#
+# Code that only makes sense on one computer (a work-only path, say) goes in
+# `.chezmoitemplates/pwsh/<name>.local.ps1`. Those files are git-ignored, so they are never
+# pushed, and they are included last, in name order. Run `chezmoi apply` after editing one.
 
 {{ include ".chezmoitemplates/pwsh/00-helpers.ps1" }}
 {{ include ".chezmoitemplates/pwsh/10-environment.ps1" }}
@@ -38,3 +42,6 @@
 {{ include ".chezmoitemplates/pwsh/60-navigation.ps1" }}
 {{ include ".chezmoitemplates/pwsh/70-functions.ps1" }}
 {{ include ".chezmoitemplates/pwsh/80-tools.ps1" }}
+{{ range glob (joinPath .chezmoi.sourceDir ".chezmoitemplates" "pwsh" "*.local.ps1") -}}
+{{ include . }}
+{{ end -}}

@@ -1,0 +1,2 @@
+# Machine-local profile fragments: included by the profile template when present, never pushed.
+.chezmoitemplates/pwsh/*.local.ps1
