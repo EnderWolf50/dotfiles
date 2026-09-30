@@ -39,8 +39,22 @@ rows = [
 ]
 
 [theme]
-name = "vesper"
+{{- /* From .chezmoidata/themes.toml: herdr's built-in theme when the theme names one, else
+       the palette through [theme.custom]. */}}
+{{- $theme := index .themes .theme }}
+{{- $palette := $theme.palette }}
+{{- if hasKey $theme "herdr" }}
+name = "{{ $theme.herdr }}"
 auto_switch = false
+{{- else }}
+name = "catppuccin"
+auto_switch = false
+
+[theme.custom]
+{{- range $token, $spec := .roles.herdr }}
+{{ $token }} = "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- end }}
+{{- end }}
 
 [ui.sound]
 enabled = true

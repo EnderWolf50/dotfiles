@@ -47,6 +47,16 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'christoomey/vim-tmux-navigator'
-set -g @plugin 'catppuccin/catppuccin-tmux'
 
 run '~/.tmux/plugins/tpm/tpm'
+
+# colors, from .chezmoidata/themes.toml (theme: {{ .theme }}); set after tpm so no plugin
+# overrides them
+{{- $p := (index .themes .theme).palette }}
+set -g status-style "bg={{ $p.bg }},fg={{ $p.subtle }}"
+set -g window-status-style "fg={{ $p.muted }}"
+set -g window-status-current-style "fg={{ $p.accent }},bold"
+set -g pane-border-style "fg={{ $p.faint }}"
+set -g pane-active-border-style "fg={{ $p.accent }}"
+set -g message-style "bg={{ $p.selection }},fg={{ $p.fg }}"
+set -g mode-style "bg={{ $p.accent }},fg={{ $p.bg }}"

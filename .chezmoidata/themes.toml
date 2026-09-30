@@ -20,6 +20,9 @@
 theme = "vesper"
 
 # Vesper: https://github.com/raunofreiberg/vesper (values from its official theme file).
+[themes.vesper]
+herdr = "vesper"   # herdr ships a Vesper theme; a theme without this line uses [roles.herdr]
+
 [themes.vesper.palette]
 bg        = "#101010"   # background
 fg        = "#ffffff"   # main text
@@ -166,3 +169,26 @@ tm = "muted"              # temporary
 cm = "muted"              # compilation artifacts
 bu = "accent"             # build files
 sc = "fg"                 # source code
+
+# herdr: the `[theme.custom]` tokens, used only when the theme has no `herdr = "..."` built-in.
+# The ones named after colors (mauve, green, ...) map to the closest palette role.
+[roles.herdr]
+accent        = "accent"
+panel_bg      = "bg"
+sidebar_bg    = "bg"
+active_row_bg = "selection"
+selection_bg  = "selection"
+surface0      = "selection"
+surface1      = "faint"
+surface_dim   = "bg"
+overlay0      = "faint"
+overlay1      = "muted"
+text          = "fg"
+subtext0      = "subtle"
+mauve         = "accent"
+green         = "accent2"
+yellow        = "accent"
+red           = "danger"
+blue          = "subtle"
+teal          = "accent2"
+peach         = "accent"
