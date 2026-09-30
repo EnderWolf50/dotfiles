@@ -67,7 +67,7 @@ if ($IsInteractiveConsole) {
   # and package stores that are never a place to `cd` into; edit the list to taste.
   if (has fd) {
     $skipDirs = '.git', 'node_modules', 'AppData', '.cache', '.npm', '.nuget', '.cargo', '.rustup',
-      '.gradle', '.m2', '__pycache__', '.venv', '.bun', '.vscode', '.codex', '.hermes', '.unsloth'
+      '.gradle', '.m2', '__pycache__', '.venv', '.bun', '.unsloth'
     $env:FZF_ALT_C_COMMAND = 'fd.exe --type directory --hidden ' +
       (($skipDirs | ForEach-Object { "--exclude $_" }) -join ' ')
     Remove-Variable skipDirs
