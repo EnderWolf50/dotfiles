@@ -24,25 +24,8 @@ if ($IsInteractiveConsole) {
 }
 
 # --- pathed ---
-# pathed.exe changes the saved PATH, but a child process cannot touch this shell's `$env:PATH`.
-# The wrapper compares the saved PATH before and after and applies the difference here, so
-# session-only entries (mise's) stay. A new entry goes to the end, whatever its saved position.
-if ($IsInteractiveConsole) {
-  # The saved PATH, Machine then User, one folder per item (with %VARS% expanded).
-  function Get-SavedPath {
-    'Machine', 'User' |
-      ForEach-Object { [Environment]::GetEnvironmentVariable('Path', $_) -split ';' } |
-      Where-Object { $_ }
-  }
-
-  function pathed {
-    $before = Get-SavedPath
-    pathed.exe @args
-    $after = Get-SavedPath
-
-    $removed = @($before | Where-Object { $_ -notin $after })
-    $added = @($after | Where-Object { $_ -notin $before })
-    $kept = @($env:PATH -split ';' | Where-Object { $_ -and $_ -notin $removed })
-    $env:PATH = ($kept + @($added | Where-Object { $_ -notin $kept })) -join ';'
-  }
+# Defines a `pathed` function that runs pathed.exe and then applies its change to this
+# shell's `$env:PATH` too (a child process cannot).
+if ($IsInteractiveConsole -and (has pathed)) {
+  pathed.exe init pwsh | Out-String | Invoke-Expression
 }
