@@ -24,16 +24,16 @@ if ($IsInteractiveConsole) {
 }
 
 # --- pathed ---
-# Defines a `pathed` function that runs pathed.exe and then applies its change to this
-# shell's `$env:PATH` too (a child process cannot).
+# pathed (built from enved): defines a `pathed` function that runs pathed.exe and then
+# applies its change to this shell's `$env:PATH` too (a child process cannot).
 if ($IsInteractiveConsole -and (has pathed)) {
   pathed.exe init pwsh | Out-String | Invoke-Expression
 }
 
 # --- enved ---
 # Defines an `enved` function that runs enved.exe and then applies its changes to this
-# shell's environment too: changed and removed variables, and `$env:PATH` merged as pathed's
-# wrapper merges it.
+# shell's environment too: changed and removed variables, and `$env:PATH` merged (entries
+# only this session has stay).
 if ($IsInteractiveConsole -and (has enved)) {
   enved.exe init pwsh | Out-String | Invoke-Expression
 }

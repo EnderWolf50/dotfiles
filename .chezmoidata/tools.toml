@@ -214,16 +214,16 @@ note    = "Installs and updates itself (`herdr update`); no package manager entr
 [[tools]]
 name    = "pathed"
 check   = "pathed"
-purpose = "Edit the persistent User / Machine PATH (TUI and CLI)"
+purpose = "Edit the persistent User / Machine PATH (TUI and CLI); enved path as a command of its own"
 used_by = "80-tools"
-url     = "https://github.com/EnderWolf50/pathed"
-go      = "github.com/EnderWolf50/pathed"
-note    = "Or download pathed.exe from the GitHub releases."
+url     = "https://github.com/EnderWolf50/enved"
+go      = "github.com/EnderWolf50/enved/cmd/pathed"
+note    = "Built from the enved repository; or download pathed.exe from enved's releases."
 
 [[tools]]
 name    = "enved"
 check   = "enved"
-purpose = "Edit the persistent User / Machine environment variables (TUI and CLI); PATH in pathed's editor"
+purpose = "Edit the persistent User / Machine environment variables (TUI and CLI); enved path for the PATH"
 used_by = "80-tools"
 url     = "https://github.com/EnderWolf50/enved"
 go      = "github.com/EnderWolf50/enved"

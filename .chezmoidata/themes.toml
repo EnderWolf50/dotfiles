@@ -1,5 +1,5 @@
 # Color scheme for everything that has colors: PSReadLine, fzf, carapace, eza, herdr, tmux,
-# starship, lazygit, delta, bump, pathed and enved.
+# starship, lazygit, delta, bump and enved (pathed reads enved's).
 # This is the only place colors are written down. Templates turn it into
 #   - `$Theme` in the PowerShell profile (`.chezmoitemplates/pwsh/15-theme.ps1`),
 #   - carapace's `styles.json` (`AppData/Roaming/carapace/styles.json.tmpl`).
@@ -240,28 +240,8 @@ row_picked_cursor = "#223a30"
 row_chosen        = "#3a2c12"   # accent tint: picked at a version other than the latest
 row_chosen_cursor = "#4d3b19"
 
-# pathed: the [theme] of ~/.config/pathed/config.toml; row backgrounds as for bump.
-[roles.pathed]
-accent             = "accent"
-dim                = "muted"
-faint              = "faint"
-ok                 = "accent2"
-bad                = "danger"
-warn               = "accent"
-row_cursor         = "#262626"
-row_added          = "#16241f"   # accent2 tint
-row_added_cursor   = "#223a30"
-row_edited         = "#3a2c12"   # accent tint
-row_edited_cursor  = "#4d3b19"
-row_removed        = "#2e1616"   # danger tint
-row_removed_cursor = "#432020"
-row_note           = "#1b2130"   # light blue-gray: a fact to keep in mind (system, stale)
-row_note_cursor    = "#283046"
-row_problem        = "#271d33"   # light violet: a problem (missing, duplicate)
-row_problem_cursor = "#36284a"
-
-# enved: the [theme] of ~/.config/enved/config.toml; the same as pathed's (they share the
-# look). warn also marks system variables.
+# enved: the [theme] of ~/.config/enved/config.toml, which pathed reads too (it is built from
+# enved). warn also marks system variables.
 [roles.enved]
 accent             = "accent"
 dim                = "muted"
