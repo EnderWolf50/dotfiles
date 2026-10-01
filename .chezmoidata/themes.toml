@@ -255,6 +255,10 @@ row_edited         = "#3a2c12"   # accent tint
 row_edited_cursor  = "#4d3b19"
 row_removed        = "#2e1616"   # danger tint
 row_removed_cursor = "#432020"
+row_note           = "#1b2130"   # light blue-gray: a fact to keep in mind (system, stale)
+row_note_cursor    = "#283046"
+row_problem        = "#271d33"   # light violet: a problem (missing, duplicate)
+row_problem_cursor = "#36284a"
 
 # enved: the [theme] of ~/.config/enved/config.toml; the same as pathed's (they share the
 # look). warn also marks system variables.
@@ -272,3 +276,7 @@ row_edited         = "#3a2c12"   # accent tint
 row_edited_cursor  = "#4d3b19"
 row_removed        = "#2e1616"   # danger tint
 row_removed_cursor = "#432020"
+row_note           = "#1b2130"   # light blue-gray: a fact to keep in mind (system, stale)
+row_note_cursor    = "#283046"
+row_problem        = "#271d33"   # light violet: a problem (missing, duplicate)
+row_problem_cursor = "#36284a"
