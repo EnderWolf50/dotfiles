@@ -30,17 +30,3 @@ function Import-OptionalModule {
   # `-Global` imports into the session instead of the scope of this function.
   Import-Module $Name -Global -ErrorAction SilentlyContinue
 }
-
-# Creates an alias only when its target exists, so a missing tool never leaves a dead alias.
-function Set-SafeAlias {
-  param(
-    [Parameter(Mandatory = $true)]
-    [string]$Name,
-
-    [string]$Value
-  )
-
-  if ($Value -and (has $Value)) {
-    Set-Alias -Name $Name -Value $Value -Scope Global
-  }
-}

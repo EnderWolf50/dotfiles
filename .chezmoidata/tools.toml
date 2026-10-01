@@ -19,7 +19,7 @@
 #            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
 #   note     anything else worth knowing
 #
-# Keep this in step with the code: a new `has <tool>`, `Set-SafeAlias` target or
+# Keep this in step with the code: a new `has <tool>`, alias target or
 # `Import-OptionalModule` in a fragment needs an entry here.
 
 [[tools]]

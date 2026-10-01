@@ -16,7 +16,7 @@
 # below in load order. Edit a fragment there, then run `chezmoi apply`.
 #
 # Order matters in two places:
-#   - `00-helpers` first: everything after it uses `has`, `Set-SafeAlias` and
+#   - `00-helpers` first: everything after it uses `has` and
 #     `$IsInteractiveConsole`, which it defines.
 #   - `20-prompt` before `80-tools`: starship defines `prompt`, mise and zoxide wrap it.
 #
