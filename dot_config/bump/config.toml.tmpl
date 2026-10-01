@@ -2,6 +2,9 @@
 # ([roles.bump]) so it follows the theme; change colors there, then run `chezmoi apply`.
 # Other settings go above [theme]; `bump --default-config` lists them all.
 
+# Programs from `go install` land here (GOBIN=~/.local/bin), not in mise's per-version GOBIN.
+go_bin_dirs = ["~/.local/bin"]
+
 [theme]
 {{- $palette := (index .themes .theme).palette }}
 {{- range $key, $spec := .roles.bump }}
