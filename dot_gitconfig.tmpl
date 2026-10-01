@@ -31,3 +31,6 @@
 [windows]
 	appendAtomically = false
 {{- end }}
+# Machine-only settings (a work git server, say); not managed by chezmoi. Git skips it when missing.
+[include]
+	path = ~/.gitconfig.local
