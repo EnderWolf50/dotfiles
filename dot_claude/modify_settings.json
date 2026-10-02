@@ -1,0 +1,8 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Claude Code writes ~/.claude/settings.json itself (permissions, plugins, ...), so this repo owns only
+       the two keys below and keeps everything else as it is. */ -}}
+{{- $s := dict -}}
+{{- if .chezmoi.stdin }}{{ $s = .chezmoi.stdin | fromJson }}{{ end -}}
+{{- $_ := set $s "theme" "custom:chezmoi" -}}
+{{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 10) -}}
+{{ $s | toPrettyJson }}

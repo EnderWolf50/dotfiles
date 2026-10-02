@@ -1,0 +1,15 @@
+{{- /* Generated from .chezmoidata/themes.toml ([roles.statusline]) and statusline.toml. Edit those, not this file.
+       Everything else (layout, blocks, ...) comes from the preset; see PRESETS in statusline.js. */ -}}
+{{- $palette := (index .themes .theme).palette -}}
+{
+  "preset": {{ .statusline.preset | quote }},
+  "icons": {{ .statusline.icons }},
+  "scheme": "builtin",
+  "palette": {
+{{- $sep := "" }}
+{{- range $name, $spec := .roles.statusline }}{{ $sep }}
+    "{{ $name }}": "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- $sep = "," }}
+{{- end }}
+  }
+}

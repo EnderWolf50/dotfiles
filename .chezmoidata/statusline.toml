@@ -1,0 +1,8 @@
+# Claude Code statusline (dot_claude/statusline/config.json.tmpl). Per machine, in
+# ~/.config/chezmoi/chezmoi.toml:
+#   [data.statusline]
+#   preset = "lean"   # vesper (the tuned one) | lean | rainbow | classic (p10k's own looks)
+#   icons  = false    # the terminal font has no Nerd Font glyphs
+[statusline]
+preset = "vesper"
+icons  = true

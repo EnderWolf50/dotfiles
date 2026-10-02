@@ -241,7 +241,16 @@ note    = "Or download bump.exe from the GitHub releases."
 [[tools]]
 name    = "A Nerd Font"
 purpose = "Icons in eza and the prompt glyphs; the terminal has to use one"
-used_by = "50-ls, 20-prompt"
+used_by = "50-ls, 20-prompt, Claude Code statusline"
 url     = "https://www.nerdfonts.com"
 scoop   = "nerd-fonts/CascadiaCode-NF-Mono"
 note    = "Cannot be checked from PowerShell; any Nerd Font works."
+
+[[tools]]
+name    = "Bun"
+check   = "bun"
+purpose = "Runs the Claude Code statusline"
+used_by = "dot_claude/statusline/statusline.js"
+url     = "https://bun.sh"
+winget  = "Oven-sh.Bun"
+scoop   = "bun"
