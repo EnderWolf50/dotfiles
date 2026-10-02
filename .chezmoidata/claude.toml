@@ -1,0 +1,63 @@
+# Claude Code settings this repo keeps the same on every machine (dot_claude/modify_settings.json).
+# ~/.claude/settings.json belongs to Claude Code; every key not listed here is left as the machine has it,
+# including autoMode (learned per machine and project) and the herdr hook (installed by herdr itself).
+# theme and statusLine are set in the template from the theme and statusline data.
+
+# set: top-level keys owned by this repo, written on every apply.
+[claude.set]
+language                = "繁體中文"
+askUserQuestionTimeout  = "never"
+switchModelsOnFlag      = true
+inputNeededNotifEnabled = true
+autoUpdatesChannel      = "latest"
+
+# merge: keys written inside an object on every apply; the other keys of that object stay as they are.
+[claude.merge.permissions]
+defaultMode = "auto"
+
+[claude.merge.worktree]
+baseRef = "fresh"
+
+[claude.merge.modelSettings."claude-sonnet-5-5"]
+effortLevel = "high"
+
+[claude.merge.extraKnownMarketplaces."anthropic-agent-skills"]
+source = { source = "github", repo = "anthropics/skills" }
+
+[claude.merge.extraKnownMarketplaces."enderwolf50"]
+autoUpdate = true
+source = { source = "github", repo = "EnderWolf50/claude-plugins" }
+
+[claude.merge.extraKnownMarketplaces."impeccable"]
+autoUpdate = true
+source = { source = "github", repo = "pbakaus/impeccable" }
+
+[claude.merge.extraKnownMarketplaces."karpathy-skills"]
+autoUpdate = true
+source = { source = "github", repo = "forrestchang/andrej-karpathy-skills" }
+
+[claude.merge.extraKnownMarketplaces."ponytail"]
+source = { source = "github", repo = "DietrichGebert/ponytail" }
+
+# seed: written only when the machine has no value for that key yet, so /plugin on one machine is not
+# undone by the next apply. win-toast is left out on purpose.
+[claude.seed.enabledPlugins]
+"andrej-karpathy-skills@karpathy-skills"   = false
+"clangd-lsp@claude-plugins-official"       = false
+"context7@claude-plugins-official"         = true
+"csharp-lsp@claude-plugins-official"       = true
+"document-skills@anthropic-agent-skills"   = false
+"figma@claude-plugins-official"            = false
+"firecrawl@claude-plugins-official"        = false
+"gopls-lsp@claude-plugins-official"        = false
+"impeccable@impeccable"                    = true
+"jdtls-lsp@claude-plugins-official"        = false
+"kotlin-lsp@claude-plugins-official"       = false
+"playwright@claude-plugins-official"       = true
+"ponytail@ponytail"                        = true
+"postman@claude-plugins-official"          = false
+"pyright-lsp@claude-plugins-official"      = false
+"rust-analyzer-lsp@claude-plugins-official" = false
+"search-tools@enderwolf50"                 = true
+"swift-lsp@claude-plugins-official"        = false
+"typescript-lsp@claude-plugins-official"   = true

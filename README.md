@@ -29,9 +29,10 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 | `.chezmoidata/prompt.toml` | starship symbol presets (`unicode` / `ascii`) |
 | `.chezmoidata/tools.toml` | Programs the PowerShell profile uses |
 | `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset`, `icons`) |
+| `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere (owned / merged / seeded keys of `settings.json`) |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr: shared by Windows and Linux |
-| `dot_claude/` | Claude Code: statusline script and config, theme (`custom:chezmoi`), and the `theme` / `statusLine` keys of `settings.json` (the rest of that file is Claude Code's) |
+| `dot_claude/` | Claude Code: `CLAUDE.md`, agents, statusline, theme (`custom:chezmoi`), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
 | `.chezmoiignore` | What each OS skips |
 

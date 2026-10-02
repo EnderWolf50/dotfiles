@@ -1,8 +1,24 @@
 {{- /* chezmoi:modify-template */ -}}
-{{- /* Claude Code writes ~/.claude/settings.json itself (permissions, plugins, ...), so this repo owns only
-       the two keys below and keeps everything else as it is. */ -}}
+{{- /* Claude Code writes ~/.claude/settings.json itself (permissions, plugins, autoMode, ...), so this repo
+       touches only what .chezmoidata/claude.toml lists, plus theme and statusLine, and keeps everything else:
+         set    top-level keys, written on every apply
+         merge  keys inside an object, written on every apply; the object's other keys are kept
+         seed   keys inside an object, written only when the machine has no value for them yet */ -}}
 {{- $s := dict -}}
 {{- if .chezmoi.stdin }}{{ $s = .chezmoi.stdin | fromJson }}{{ end -}}
+{{- range $key, $value := .claude.set }}{{ $_ := set $s $key $value }}{{ end -}}
+{{- range $obj, $entries := .claude.merge -}}
+{{-   $o := dict -}}
+{{-   if hasKey $s $obj }}{{ $o = index $s $obj }}{{ end -}}
+{{-   range $key, $value := $entries }}{{ $_ := set $o $key $value }}{{ end -}}
+{{-   $_ := set $s $obj $o -}}
+{{- end -}}
+{{- range $obj, $entries := .claude.seed -}}
+{{-   $o := dict -}}
+{{-   if hasKey $s $obj }}{{ $o = index $s $obj }}{{ end -}}
+{{-   range $key, $value := $entries }}{{ if not (hasKey $o $key) }}{{ $_ := set $o $key $value }}{{ end }}{{ end -}}
+{{-   $_ := set $s $obj $o -}}
+{{- end -}}
 {{- $_ := set $s "theme" "custom:chezmoi" -}}
 {{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 10) -}}
 {{ $s | toPrettyJson }}
