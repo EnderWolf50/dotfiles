@@ -13,11 +13,13 @@ $fill\
 $status$cmd_duration$jobs$python$nodejs$username$hostname$time
 $character"""
 
-palette = "theme"
+palette = "{{ .theme }}"
+{{- range $theme, $t := .themes }}
 
-[palettes.theme]
-{{- range $name, $color := (index .themes .theme).palette }}
+[palettes.{{ $theme }}]
+{{- range $name, $color := $t.palette }}
 {{ $name }} = "{{ $color }}"
+{{- end }}
 {{- end }}
 
 # --- left ---

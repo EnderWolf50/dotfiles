@@ -1,0 +1,15 @@
+{{- /* Claude Code's custom theme "vesper", generated from .chezmoidata/themes.toml ([themes.vesper] and
+       [roles.claude]). Edit the theme there, not this file. settings.json picks custom:<theme>, so
+       another theme in themes.toml gets its own copy of this file under its own name. */ -}}
+{{- $palette := (index .themes "vesper").palette -}}
+{
+  "name": "Vesper",
+  "base": "dark",
+  "overrides": {
+{{- $sep := "" }}
+{{- range $token, $spec := .roles.claude }}{{ $sep }}
+    "{{ $token }}": "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+{{- $sep = "," }}
+{{- end }}
+  }
+}

@@ -32,7 +32,7 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 | `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere (owned / merged / seeded keys of `settings.json`) |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr: shared by Windows and Linux |
-| `dot_claude/` | Claude Code: `CLAUDE.md`, agents, statusline, theme (`custom:chezmoi`), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
+| `dot_claude/` | Claude Code: `CLAUDE.md`, agents, statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
 | `.chezmoiignore` | What each OS skips |
 

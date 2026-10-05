@@ -19,6 +19,6 @@
 {{-   range $key, $value := $entries }}{{ if not (hasKey $o $key) }}{{ $_ := set $o $key $value }}{{ end }}{{ end -}}
 {{-   $_ := set $s $obj $o -}}
 {{- end -}}
-{{- $_ := set $s "theme" "custom:chezmoi" -}}
+{{- $_ := set $s "theme" (printf "custom:%s" .theme) -}}
 {{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 10) -}}
 {{ $s | toPrettyJson }}

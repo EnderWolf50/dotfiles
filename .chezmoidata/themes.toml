@@ -11,6 +11,8 @@
 # To add a theme: copy `[themes.vesper.palette]`, rename it, and give every key a new color.
 # The keys are roles, not color names (`accent` is whatever the theme's main accent is), so
 # the `[roles.*]` tables below work unchanged for any palette with the same keys.
+# Claude Code keeps one theme file per theme: copy `dot_claude/themes/vesper.json.tmpl` to
+# `<name>.json.tmpl` and point it at the new theme.
 #
 # A role value is a list of words separated by spaces:
 #   - a palette key (`accent`) or a literal `#rrggbb`; `fg:` / `bg:` in front picks the layer
@@ -261,7 +263,7 @@ row_note_cursor    = "#283046"
 row_problem        = "#271d33"   # light violet: a problem (missing, duplicate)
 row_problem_cursor = "#36284a"
 
-# claude: the `overrides` of ~/.claude/themes/chezmoi.json (Claude Code's custom theme). Colors the
+# claude: the `overrides` of ~/.claude/themes/<theme>.json (Claude Code's custom theme). Colors the
 # palette has no role for are written as colors (hues from Vesper's terminal scheme).
 [roles.claude]
 claude                 = "accent"

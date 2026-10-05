@@ -1,0 +1,2 @@
+# Targets left behind by renames; chezmoi apply deletes them.
+.claude/themes/chezmoi.json
