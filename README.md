@@ -28,7 +28,7 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 | `.chezmoidata/themes.toml` | The one color scheme (vesper) for every tool that has colors |
 | `.chezmoidata/prompt.toml` | starship symbol presets (`unicode` / `ascii`) |
 | `.chezmoidata/tools.toml` | Programs the PowerShell profile uses |
-| `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset`, `icons`) |
+| `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset` layout, `theme` colors, `icons`) |
 | `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere (owned / merged / seeded keys of `settings.json`) |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr: shared by Windows and Linux |
@@ -48,6 +48,7 @@ theme = "other"          # a theme defined in themes.toml
 preset = "ascii"
 
 [data.statusline]
-preset = "lean"        # vesper | lean | rainbow | classic
+preset = "lean"        # layout: vesper | lean | rainbow | classic
+theme = "p10k"         # colors: vesper (themes.toml) | p10k
 icons = false          # terminal font without Nerd Font glyphs
 ```

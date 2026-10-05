@@ -1,15 +1,18 @@
 {{- /* Generated from .chezmoidata/themes.toml ([roles.statusline]) and statusline.toml. Edit those, not this file.
-       Everything else (layout, blocks, ...) comes from the preset; see PRESETS in statusline.js. */ -}}
+       Everything else (layout, blocks, ...) comes from the preset; see PRESETS in statusline.js.
+       themes holds the chezmoi theme under its own name (vesper); "theme" picks it or the builtin p10k. */ -}}
 {{- $palette := (index .themes .theme).palette -}}
 {
   "preset": {{ .statusline.preset | quote }},
+  "theme": {{ .statusline.theme | quote }},
   "icons": {{ .statusline.icons }},
-  "scheme": "builtin",
-  "palette": {
+  "themes": {
+    {{ .theme | quote }}: {
 {{- $sep := "" }}
 {{- range $name, $spec := .roles.statusline }}{{ $sep }}
-    "{{ $name }}": "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
+      "{{ $name }}": "{{ template "theme/spec" (dict "palette" $palette "spec" $spec) }}"
 {{- $sep = "," }}
 {{- end }}
+    }
   }
 }

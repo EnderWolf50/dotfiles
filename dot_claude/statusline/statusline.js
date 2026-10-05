@@ -1,15 +1,15 @@
 // p10k 風格 statusline（rainbow / lean / classic）。所有選項見 config.json（缺的欄位用下面的 DEFAULTS）。
-// 色票預設讀自 Windows Terminal 目前的 colorScheme，讀不到就用 Vesper 備援值。
+// preset 管版面，theme 管顏色，兩者各選各的。theme＝內建 p10k 或 config.json 的 themes 裡的名稱（chezmoi 寫入 vesper）。
 // bun statusline.js --print-config [preset]  印出某個 preset 合併後的完整設定
 const fs = require("fs"), path = require("path"), os = require("os");
 const { execFileSync } = require("child_process");
 
 const DEFAULTS = {
   preset: "vesper", // vesper | lean | rainbow | classic，見下方 PRESETS；config.json 的欄位再疊在 preset 上
-  style: "lean", // rainbow | lean | classic | all（all＝三種疊成三行，只拿來比較）
+  style: "lean", // rainbow | lean | classic
   icons: true, // false＝全部拿掉 Nerd Font 圖示
-  scheme: "auto", // auto＝Windows Terminal 預設 profile 的配色；builtin＝內建 Vesper；或直接指定配色名稱
-  palette: {}, // 覆寫色票，例如 { "brightGreen": "#99FFE4" }
+  theme: "p10k", // 色票名稱：p10k（內建）或 themes 裡的名稱；缺的色名用 p10k 補
+  themes: {}, // 額外的色票，例如 { "vesper": { "brightGreen": "#99FFE4", ... } }
   margin: 4, // 右側保留的格數（尺規實測：COLUMNS-4 剛好貼邊）
   gap: 1, // lean：區塊之間的空格數
   thresholds: { warn: 60, crit: 85 }, // context／用量百分比的警示門檻
@@ -17,27 +17,26 @@ const DEFAULTS = {
   ground: { mid: "#2A2A2A", low: "#1E1E1E" }, // rainbow／classic 資訊區塊的底色
   // 版面：每個物件是一行；left 靠左、right 靠右，區塊照陣列順序排，同一個區塊可以放在任何一行任何位置
   // 窄視窗放不下時，從每一行最後面開始丟（先右側由右往左，再左側由右往左，至少留一個），所以不重要的放後面
-  // 區塊：model cwd git context cache usage cost session dirs lines duration clock；沒有資料的區塊會自動略過
+  // 區塊：model cwd git context cache usage cost dirs lines duration clock；沒有資料的區塊會自動略過
   layout: [
-    // 單行：左＝位置（cwd、額外目錄）與程式碼狀態（git、行數）；右＝模型與額度、花費與快取、時間、session 名稱
+    // 單行：左＝位置（cwd、額外目錄）與程式碼狀態（git、行數）；右＝模型與額度、花費與快取、時間
     { left: ["cwd", "dirs", "git", "lines"], right: ["model", "context", "cache", "usage", "cost", "clock"] },
   ],
   blocks: {
-    // show 顯示；fade 顏色濃度 0~1（1＝原色，越小越接近終端機背景色）；icon true/false/自訂字元；lead 區塊前的短語（只有 lean 用）
+    // show 顯示；icon true/false/自訂字元；lead 區塊前的短語（只有 lean 用）
     // color 色票名稱或 #rrggbb；fill rainbow 是否用 color 當底色；ground 資訊底色 mid/low
-    // effort：顯示格式（{level} 會換成 high 等；空字串＝不顯示，例如 "({level})"）；effortDim＝用淡色，不靠標點區分
-    model: { show: true, fade: 1, icon: true, lead: "", color: "brightGreen", fill: true, ground: "mid", effort: "{level}", effortDim: true },
-    cwd: { show: true, fade: 1, icon: false, lead: "", color: "blue", fill: true, ground: "mid", depth: 3 },
-    git: { show: true, fade: 1, icon: false, lead: "", color: "green", dirtyColor: "brightYellow", fill: true, ground: "mid" },
-    context: { show: true, fade: 1, icon: true, lead: "", color: "purple", fill: false, ground: "mid" },
-    cache: { show: true, fade: 1, icon: true, lead: "", color: "brightBlue", fill: false, ground: "low", misses: true }, // misses：有 miss 時多顯示次數（警示色）
-    usage: { show: true, fade: 1, icon: true, lead: "", color: "green", fill: false, ground: "mid", sep: " · ", reset: true }, // reset：顯示距離重置的剩餘時間（與數值同色的淡色）
-    cost: { show: true, fade: 1, icon: true, lead: "", color: "yellow", fill: false, ground: "low" },
-    session: { show: true, fade: 1, icon: false, lead: "", color: "brightPurple", fill: false, ground: "mid", maxLen: 24 }, // maxLen：最多佔幾格（中文算 2 格），超過截斷
-    dirs: { show: true, fade: 1, icon: false, lead: "", color: "brightBlack", fill: false, ground: "low" }, // /add-dir 加入的目錄數
-    lines: { show: true, fade: 1, icon: false, lead: "·", color: "green", addedColor: "green", removedColor: "red", fill: false, ground: "mid" }, // git 未 commit 的行數變更（git diff --numstat HEAD：已暫存＋未暫存）；不在儲存庫或沒有變更時不顯示
-    duration: { show: true, fade: 1, icon: true, lead: "", color: "white", fill: false, ground: "low" }, // 本 session 時長
-    clock: { show: true, fade: 1, icon: true, lead: "", color: "white", fill: false, ground: "mid" }, // 現在時間 HH:MM
+    // effort：顯示格式（{level} 會換成 high 等；空字串＝不顯示，例如 "({level})"），用淡色顯示
+    model: { show: true, icon: true, lead: "", color: "brightGreen", fill: true, ground: "mid", effort: "{level}" },
+    cwd: { show: true, icon: false, lead: "", color: "blue", fill: true, ground: "mid", depth: 3 },
+    git: { show: true, icon: false, lead: "", color: "green", dirtyColor: "brightYellow", fill: true, ground: "mid" },
+    context: { show: true, icon: true, lead: "", color: "purple", fill: false, ground: "mid" },
+    cache: { show: true, icon: true, lead: "", color: "brightBlue", fill: false, ground: "low" }, // 有 miss 時多顯示次數（淡色）
+    usage: { show: true, icon: true, lead: "", color: "green", fill: false, ground: "mid", sep: " · " }, // 附距離重置的剩餘時間（淡色）
+    cost: { show: true, icon: true, lead: "", color: "yellow", fill: false, ground: "low" },
+    dirs: { show: true, icon: false, lead: "", color: "brightBlack", fill: false, ground: "low" }, // /add-dir 加入的目錄數
+    lines: { show: true, icon: false, lead: "·", color: "green", addedColor: "green", removedColor: "red", fill: false, ground: "mid" }, // git 未 commit 的行數變更（git diff --numstat HEAD：已暫存＋未暫存）；不在儲存庫或沒有變更時不顯示
+    duration: { show: true, icon: true, lead: "", color: "white", fill: false, ground: "low" }, // 本 session 時長
+    clock: { show: true, icon: true, lead: "", color: "white", fill: false, ground: "mid" }, // 現在時間 HH:MM
   },
 };
 // preset：一整套設定，疊在 DEFAULTS 上。vesper＝DEFAULTS 本身（這份腳本調出來的樣子）；
@@ -67,7 +66,7 @@ const PRESETS = {
     clock: { fill: true, color: "white" },
   }),
 };
-const GLYPH = { session: "", dirs: "", lines: "", duration: "", clock: "", model: "", cwd: "", git: "", context: "", cache: "", usage: "", cost: "", fast: "" };
+const GLYPH = { dirs: "", lines: "", duration: "", clock: "", model: "", cwd: "", git: "", context: "", cache: "", usage: "", cost: "", fast: "" };
 const ARROW = "", ARROW_R = "", THIN = "", THIN_R = "";
 
 
@@ -84,12 +83,8 @@ function withPreset(user) {
 }
 
 function loadConfig() {
-  const p = process.env.CC_STATUSLINE_CONFIG ?? path.join(__dirname, "config.json");
-  if (!fs.existsSync(p)) return withPreset({});
-  let user;
-  try { user = JSON.parse(fs.readFileSync(p, "utf8").replace(/^﻿/, "")); }
-  catch (e) { throw new Error(`config.json: ${e.message}`); }
-  return withPreset(user);
+  const p = path.join(__dirname, "config.json");
+  return withPreset(fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8").replace(/^﻿/, "")) : {});
 }
 
 if (process.argv[2] === "--print-config") {
@@ -98,31 +93,22 @@ if (process.argv[2] === "--print-config") {
 }
 
 // ---------- 色票 ----------
-const VESPER = {
-  black: "#101010", white: "#A0A0A0", brightBlack: "#7E7E7E", brightWhite: "#FFFFFF",
-  red: "#F5A191", green: "#90B99F", yellow: "#E6B99D", blue: "#ACA1CF", purple: "#E29ECA",
-  brightRed: "#FF8080", brightGreen: "#99FFE4", brightYellow: "#FFC799", brightBlue: "#B9AEDA", brightPurple: "#ECAAD6",
+// p10k lean 各區段的預設 256 色（括號內是色號與 p10k 用在哪）
+const P10K = {
+  black: "#000000", brightWhite: "#E4E4E4", // 0、254
+  blue: "#0087AF", // 31 dir
+  green: "#5FD700", brightGreen: "#5FAF00", // 76 vcs clean、70 status ok
+  brightYellow: "#D7AF00", // 178 vcs modified
+  brightBlue: "#00AFFF", // 39 vcs untracked、dir anchor
+  white: "#5F8787", // 66 time
+  yellow: "#87875F", // 101 command_execution_time
+  brightBlack: "#6C6C6C", // 242 分隔線、連接詞
+  red: "#D70000", brightRed: "#FF0000", // 160 status error、196 prompt error
+  purple: "#D7AF87", brightPurple: "#8787AF", // 180 context、103 dir shortened
 };
-function loadPalette(cfg) {
-  let scheme = {};
-  if (cfg.scheme !== "builtin") {
-    try {
-      const p = path.join(process.env.LOCALAPPDATA, "Packages", "Microsoft.WindowsTerminal_8wekyb3d8bbwe", "LocalState", "settings.json");
-      const j = JSON.parse(fs.readFileSync(p, "utf8").replace(/^\s*\/\/.*$/gm, "").replace(/,(\s*[}\]])/g, "$1"));
-      const n = j.profiles?.defaults?.colorScheme;
-      const name = cfg.scheme === "auto" ? (typeof n === "string" ? n : n?.dark) : cfg.scheme;
-      scheme = (j.schemes || []).find((s) => s.name === name) ?? {};
-      if (cfg.scheme !== "auto" && !scheme.name) throw new Error(`scheme "${cfg.scheme}" not found in Windows Terminal`);
-    } catch (e) { if (cfg.scheme !== "auto") throw e; }
-  }
-  return { ...VESPER, ...scheme, ...cfg.palette };
-}
 
 // ---------- ANSI ----------
 const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(";");
-// 把顏色 a 往顏色 b 混合：t=1 → a，t=0 → b
-const mix = (a, b, t) =>
-  "#" + [1, 3, 5].map((i) => { const x = parseInt(a.slice(i, i + 2), 16), y = parseInt(b.slice(i, i + 2), 16); return Math.round(y + (x - y) * t).toString(16).padStart(2, "0"); }).join("");
 const fg = (h) => `\x1b[38;2;${rgb(h)}m`, bg = (h) => `\x1b[48;2;${rgb(h)}m`;
 const RESET = "\x1b[0m", BOLD = "\x1b[1m", FAINT = "\x1b[2m", NOBOLD = "\x1b[22m"; // 22 同時關掉 bold 與 faint
 const width = (s) => Bun.stringWidth(s); // ANSI 不計；中文算 2 格，圖示與箭頭算 1 格（尺規實測）
@@ -134,13 +120,6 @@ const dur = (s) => {
   s = Math.max(0, Math.round(s));
   const dd = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
   return dd ? `${dd}d${h}h` : h ? `${h}h${m}m` : m ? `${m}m` : `${s}s`;
-};
-// 截到最多 max 格，超過的以 … 結尾
-const clip = (s, max) => {
-  if (width(s) <= max) return s;
-  let out = "", w = 0;
-  for (const ch of s) { if (w + width(ch) > max - 1) break; out += ch; w += width(ch); }
-  return out + "…";
 };
 
 function shortDir(dir, depth) {
@@ -180,7 +159,9 @@ function gitLines(cwd) {
 
 function main() {
   const cfg = loadConfig();
-  const P = loadPalette(cfg);
+  const themes = { p10k: P10K, ...cfg.themes };
+  if (!themes[cfg.theme]) throw new Error(`unknown theme "${cfg.theme}" (${Object.keys(themes).join("|")})`);
+  const P = { ...P10K, ...themes[cfg.theme] };
   const HEX = /^#[0-9a-f]{6}$/i;
   const col = (c) => { const v = P[c] ?? c; if (typeof v !== "string" || !HEX.test(v)) throw new Error(`unknown color "${c}"`); return v; };
   const ground = { mid: col(cfg.ground.mid), low: col(cfg.ground.low) };
@@ -195,7 +176,7 @@ function main() {
   const builders = {
     model: (b) => {
       const lvl = d.effort?.level;
-      const effort = b.effort && lvl ? ` ${b.effortDim ? FAINT : ""}${b.effort.replace("{level}", lvl)}${b.effortDim ? NOBOLD : ""}` : "";
+      const effort = b.effort && lvl ? ` ${FAINT}${b.effort.replace("{level}", lvl)}${NOBOLD}` : "";
       const fast = d.fast_mode ? (ic("model", b) ? ` ${GLYPH.fast}` : " fast") : "";
       return { text: `${BOLD}${ic("model", b)}${d.model?.display_name ?? "?"}${NOBOLD}${effort}${fast}`, color: col(b.color) };
     },
@@ -222,7 +203,7 @@ function main() {
       if (!pc?.caching_observed) return null;
       const left = Math.max(0, Math.round((pc.expires_at - Date.now() / 1000) / 60));
       const hit = Math.round(pc.hit_ratio * 100);
-      const miss = b.misses && pc.misses > 0 ? ` ${FAINT}${pc.misses} miss${NOBOLD}` : "";
+      const miss = pc.misses > 0 ? ` ${FAINT}${pc.misses} miss${NOBOLD}` : "";
       return { text: `${ic("cache", b)}${hit}%${pc.warm ? ` ${left}m` : " cold"}${miss}`, color: pc.warm ? col(b.color) : col(cfg.colors.crit) };
     },
     usage: (b) => {
@@ -231,14 +212,13 @@ function main() {
       const f = (label, r) => {
         if (!r) return null;
         const secs = r.resets_at - Date.now() / 1000;
-        const reset = b.reset && secs > 0 ? ` ${FAINT}${dur(secs)}${NOBOLD}` : "";
+        const reset = secs > 0 ? ` ${FAINT}${dur(secs)}${NOBOLD}` : "";
         return `${fg(col(b.color))}${label} ${fg(alert(r.used_percentage, col(b.color)))}${Math.round(r.used_percentage)}%${reset}`;
       };
       const body = [f("5h", rl.five_hour), f("7d", rl.seven_day)].filter(Boolean).join(`${fg(dim)}${b.sep}`);
       return { text: `${ic("usage", b)}${body}`, color: col(b.color) };
     },
     cost: (b) => (d.cost?.total_cost_usd == null ? null : { text: `${ic("cost", b)}$${d.cost.total_cost_usd.toFixed(2)}`, color: col(b.color) }),
-    session: (b) => (d.session_name ? { text: `${ic("session", b)}${clip(d.session_name, b.maxLen)}`, color: col(b.color) } : null),
     dirs: (b) => {
       const n = d.workspace?.added_dirs?.length ?? 0;
       return n ? { text: `${ic("dirs", b)}+${n} dir${n > 1 ? "s" : ""}`, color: col(b.color) } : null;
@@ -248,27 +228,24 @@ function main() {
       return g ? { text: `${ic("lines", b)}${fg(col(b.addedColor))}+${g.a} ${fg(col(b.removedColor))}-${g.r}`, color: col(b.color) } : null;
     },
     duration: (b) => (d.cost?.total_duration_ms == null ? null : { text: `${ic("duration", b)}${dur(d.cost.total_duration_ms / 1000)}`, color: col(b.color) }),
-    clock: (b) => {
-      const t = new Date();
-      return { text: `${ic("clock", b)}${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`, color: col(b.color) };
-    },
+    clock: (b) => ({ text: `${ic("clock", b)}${new Date().toTimeString().slice(0, 5)}`, color: col(b.color) }),
   };
 
-  // 區塊物件 { bg, fg, tone, text, lead }；rainbow 用 bg/fg，lean／classic 用 tone。每個區塊只算一次（git 不會重複呼叫）
-  const memo = {};
+  // 區塊物件 { bg, fg, tone, text, lead }；rainbow 用 bg/fg，lean／classic 用 tone
   const segOf = (id) => {
-    if (id in memo) return memo[id];
     const b = cfg.blocks[id];
     if (!b || !builders[id]) throw new Error(`unknown block "${id}" in layout`);
     const r = b.show ? builders[id](b) : null;
-    if (!r) return (memo[id] = null);
-    const c = b.fade < 1 ? mix(r.color, col(P.background ? "background" : "black"), b.fade) : r.color;
-    return (memo[id] = { bg: b.fill ? c : ground[b.ground], fg: b.fill ? ink : c, tone: c, text: r.text, lead: b.lead });
+    if (!r) return null;
+    const c = r.color;
+    return { bg: b.fill ? c : ground[b.ground], fg: b.fill ? ink : c, tone: c, text: r.text, lead: b.lead };
   };
 
   // lean：每塊前面可帶一個暗灰短語（on / ctx…），靠短語分隔區塊
   const leanBlock = (s) => (s.lead ? `${fg(dim)}${s.lead}${RESET} ` : "") + `${fg(s.tone)}${s.text}${RESET}`;
   const gapStr = " ".repeat(cfg.gap);
+  // classic：區塊之間的內容（底色由外層給）
+  const classicBlock = (s) => `${s.lead ? fg(dim) + " " + s.lead : ""}${fg(s.tone)} ${s.text} `;
 
   const RENDERERS = {
     // 每塊各自底色，powerline 箭頭相接；右側用反向箭頭
@@ -291,15 +268,15 @@ function main() {
     },
     // 整條單一底色，區塊間用 powerline 細箭頭，兩端用實心箭頭收尾
     classic: {
-      left: (ss) => `${bg(ground.mid)}` + ss.map((s) => `${s.lead ? fg(dim) + " " + s.lead : ""}${fg(s.tone)} ${s.text} `).join(`${fg(dim)}${THIN}`) + `${RESET}${fg(ground.mid)}${ARROW}${RESET}`,
-      right: (ss) => `${fg(ground.mid)}${ARROW_R}${bg(ground.mid)}` + ss.map((s) => `${s.lead ? fg(dim) + " " + s.lead : ""}${fg(s.tone)} ${s.text} `).join(`${fg(dim)}${THIN_R}`) + RESET,
+      left: (ss) => `${bg(ground.mid)}` + ss.map(classicBlock).join(`${fg(dim)}${THIN}`) + `${RESET}${fg(ground.mid)}${ARROW}${RESET}`,
+      right: (ss) => `${fg(ground.mid)}${ARROW_R}${bg(ground.mid)}` + ss.map(classicBlock).join(`${fg(dim)}${THIN_R}`) + RESET,
     },
   };
 
   const cols = Number(process.env.COLUMNS);
   function compose(name, line) {
     const R = RENDERERS[name];
-    if (!R) throw new Error(`unknown style "${name}" (rainbow|lean|classic|all)`);
+    if (!R) throw new Error(`unknown style "${name}" (rainbow|lean|classic)`);
     let left = (line.left ?? []).map(segOf).filter(Boolean);
     let right = (line.right ?? []).map(segOf).filter(Boolean);
     const draw = () => [left.length ? R.left(left) : "", right.length ? R.right(right) : ""];
@@ -312,9 +289,8 @@ function main() {
     if (!r) return l;
     return l + (cols ? " ".repeat(Math.max(cols - cfg.margin - width(l) - width(r), 1)) : " ") + r;
   }
-  const styles = cfg.style === "all" ? Object.keys(RENDERERS) : [cfg.style];
   if (!Array.isArray(cfg.layout)) throw new Error("layout must be an array of lines");
-  return styles.flatMap((st) => cfg.layout.map((line) => compose(st, line))).filter((l) => l.trim()).join("\n");
+  return cfg.layout.map((line) => compose(cfg.style, line)).filter((l) => l.trim()).join("\n");
 }
 
 // 設定寫錯時直接把原因顯示在 statusline 上，而不是整條變空白
