@@ -1,26 +1,34 @@
 onboarding = false
+
 [keys]
 prefix = "ctrl+a"
-focus_agent = "alt+1..9"
-previous_workspace = "alt+k"
-next_workspace = "alt+j"
-workspace_picker = ["prefix+w", "alt+w"]
-close_tab = "prefix+&"
+detach = "prefix+d"
+# workspace
+workspace_picker = "prefix+w"
+switch_workspace = "alt+1..9"
 navigate_workspace_up = "k"
 navigate_workspace_down = "j"
-last_pane = "ctrl+\\"
-detach = "prefix+d"
+# tab
+close_tab = "prefix+&"
+# pane
 split_vertical = "prefix+|"
 split_horizontal = "prefix+-"
+last_pane = "ctrl+\\"
+focus_pane_left = ["prefix+h", "prefix+ctrl+h"]
+focus_pane_right = ["prefix+l", "prefix+ctrl+l"]
+focus_pane_up = ["prefix+k", "prefix+ctrl+k"]
+focus_pane_down = ["prefix+j", "prefix+ctrl+j"]
 
 [ui.toast]
 delivery = "terminal"
 
 [experimental]
 pane_history = true
+switch_ascii_input_source_in_prefix = true
 
 [ui]
 copy_on_select = false
+host_cursor = "drawn"
 
 status_indicators = "symbols"
 [ui.sidebar.spaces]
