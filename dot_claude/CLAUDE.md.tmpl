@@ -29,6 +29,12 @@ Start a long job with `run_in_background` and wait on it with Monitor; a foregro
 chezmoi manages `~/.claude`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them, `~/.local/share/chezmoi/README.md` maps the source. Edit the source (`chezmoi edit <target>`), then `chezmoi apply`. In `settings.json`, only the keys listed in `.chezmoidata/claude.toml` come from the source; every other key stays local.
 
 Change targets only through the source: a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`.
+
+## Tools
+
+- Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
+- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`.
+- `!` commands get no stdin: a login that asks to paste a key or answer a prompt goes in a separate terminal window.
 {{- if eq .chezmoi.os "windows" }}
 
 ## Windows shell

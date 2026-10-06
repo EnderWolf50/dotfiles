@@ -14,6 +14,9 @@ autoUpdatesChannel      = "latest"
 # merge: keys written inside an object on every apply; the other keys of that object stay as they are.
 [claude.merge.permissions]
 defaultMode = "auto"
+# Asked first even in auto mode: TinyFish agent and browser runs bill per step / minute (search and fetch are free).
+# This list replaces the machine's own permissions.ask on every apply.
+ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfish agent:*)", "PowerShell(tinyfish browser:*)"]
 
 # security-guidance reviews default to the newest Opus; Sonnet keeps most of the catch at a fraction of the usage.
 [claude.merge.env]
