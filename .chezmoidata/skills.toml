@@ -1,7 +1,7 @@
 # Global agent skills installed with the `skills` CLI (https://skills.sh), one entry per source repo.
 # `chezmoi apply` runs run_onchange_after_sync-skills whenever this list changes: it installs every
 # skill listed here and removes any CLI-installed global skill that is not. Skills installed by hand
-# without a source (ship, pr-sweep from dot_claude, plugin ones) are left alone.
+# without a source (plugin ones) are left alone.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
 
 [[skills]]
@@ -56,6 +56,8 @@ names = [
   "dalamud-regional-client-adaptation",
   "dalamud-traditional-chinese-localization",
   "github-fork-history-analysis",
+  "pr-sweep",
+  "ship",
 ]
 
 [[skills]]
