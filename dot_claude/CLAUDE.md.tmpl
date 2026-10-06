@@ -30,7 +30,7 @@ Start a long job with `run_in_background` and wait on it with Monitor; a foregro
 
 chezmoi manages `~/.claude`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them, `~/.local/share/chezmoi/README.md` maps the source. Edit the source (`chezmoi edit <target>`), then `chezmoi apply`. In `settings.json`, only the keys listed in `.chezmoidata/claude.toml` come from the source; every other key stays local.
 
-Change targets only through the source: a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`.
+Change targets only through the source: a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`. An `R` line is a script that runs on every apply, not drift.
 
 ## Tools
 
@@ -44,4 +44,5 @@ Change targets only through the source: a drifted target makes `chezmoi apply` s
 - `!` commands and the Bash tool run Git Bash: give the user `!` commands with forward slashes and no PowerShell cmdlets.
 - Git Bash rewrites `/Foo`-style arguments into Windows paths; prefix `MSYS_NO_PATHCONV=1` (adb, `git show rev:path`, URL paths in env vars).
 - scoop `jq` and pwsh output end lines in `\r`; pipe through `tr -d '\r'` before comparing.
+- `pwsh -Command '<script>' <args>` drops the trailing args (no `$args`): pass values through env vars, or write the script to a file and use `-File`.
 {{- end }}
