@@ -36,6 +36,7 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 | `dot_claude/` | Claude Code: `CLAUDE.md`, agents, statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
 | `.chezmoiignore` | What each OS skips |
+| `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
 
 ## Per-machine overrides
 

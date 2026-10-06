@@ -1,0 +1,5 @@
+# Git hooks for this repo; run `lefthook install` once per clone.
+pre-commit:
+  jobs:
+    - name: render and syntax-check every target
+      run: python3 .github/check.py
