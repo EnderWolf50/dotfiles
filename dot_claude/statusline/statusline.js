@@ -133,7 +133,7 @@ function shortDir(dir, depth) {
 // 跑 git，失敗（不是儲存庫、逾時、cwd 不存在）回傳 null
 function runGit(cwd, args) {
   try {
-    const r = Bun.spawnSync(["git", ...args], { cwd, stdin: "ignore", stderr: "ignore", timeout: 1500 });
+    const r = Bun.spawnSync(["git", ...args], { cwd, stdin: "ignore", stderr: "ignore", timeout: 1500, windowsHide: true });
     return r.success ? r.stdout.toString() : null;
   } catch { return null; }
 }
