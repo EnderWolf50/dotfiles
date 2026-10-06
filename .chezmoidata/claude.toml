@@ -10,6 +10,10 @@ askUserQuestionTimeout  = "never"
 switchModelsOnFlag      = true
 inputNeededNotifEnabled = true
 autoUpdatesChannel      = "latest"
+# claude.ai's skills and plugins stay out: document-skills comes from its marketplace instead.
+# Turning these off moves what was synced to ~/.claude/{skills,plugins}/.trash/ on the next start.
+syncClaudeAiSkills      = false
+syncClaudeAiPlugins     = false
 
 # merge: keys written inside an object on every apply; the other keys of that object stay as they are.
 [claude.merge.permissions]
@@ -50,9 +54,7 @@ ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfis
 [claude.seed.enabledPlugins]
 "clangd-lsp@claude-plugins-official"       = false
 "csharp-lsp@claude-plugins-official"       = true
-"document-skills@anthropic-agent-skills"   = false
-"figma@claude-plugins-official"            = false
-"firecrawl@claude-plugins-official"        = false
+"document-skills@anthropic-agent-skills"   = true
 "gopls-lsp@claude-plugins-official"        = true
 "hookify@claude-plugins-official"          = true
 "impeccable@impeccable"                    = true
@@ -60,7 +62,6 @@ ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfis
 "kotlin-lsp@claude-plugins-official"       = false
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
-"postman@claude-plugins-official"          = false
 "pyright-lsp@claude-plugins-official"      = true
 "rust-analyzer-lsp@claude-plugins-official" = false
 "search-tools@enderwolf50"                 = true
