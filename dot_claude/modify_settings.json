@@ -3,7 +3,8 @@
        touches only what .chezmoidata/claude.toml lists, plus theme and statusLine, and keeps everything else:
          set    top-level keys, written on every apply
          merge  keys inside an object, written on every apply; the object's other keys are kept
-         seed   keys inside an object, written only when the machine has no value for them yet */ -}}
+         seed   keys inside an object, written only when the machine has no value for them yet
+         append list entries inside an object, added when missing; the machine's own entries are kept */ -}}
 {{- $s := dict -}}
 {{- if .chezmoi.stdin }}{{ $s = .chezmoi.stdin | fromJson }}{{ end -}}
 {{- range $key, $value := .claude.set }}{{ $_ := set $s $key $value }}{{ end -}}
@@ -17,6 +18,17 @@
 {{-   $o := dict -}}
 {{-   if hasKey $s $obj }}{{ $o = index $s $obj }}{{ end -}}
 {{-   range $key, $value := $entries }}{{ if not (hasKey $o $key) }}{{ $_ := set $o $key $value }}{{ end }}{{ end -}}
+{{-   $_ := set $s $obj $o -}}
+{{- end -}}
+{{- range $obj, $entries := .claude.append -}}
+{{-   $o := dict -}}
+{{-   if hasKey $s $obj }}{{ $o = index $s $obj }}{{ end -}}
+{{-   range $key, $values := $entries -}}
+{{-     $l := list -}}
+{{-     if hasKey $o $key }}{{ $l = index $o $key }}{{ end -}}
+{{-     range $v := $values }}{{ if not (has $v $l) }}{{ $l = append $l $v }}{{ end }}{{ end -}}
+{{-     $_ := set $o $key $l -}}
+{{-   end -}}
 {{-   $_ := set $s $obj $o -}}
 {{- end -}}
 {{- $_ := set $s "theme" (printf "custom:%s" .theme) -}}

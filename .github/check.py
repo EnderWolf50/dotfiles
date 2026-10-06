@@ -54,4 +54,14 @@ with tempfile.TemporaryDirectory() as tmp, tarfile.open(fileobj=io.BytesIO(tar.s
         if err := check(path, m.name):
             failed += 1
             print(f"{m.name}: {err}")
+
+# modify_settings.json `append`: the machine's own list entries stay, the repo's are added once.
+local = {"permissions": {"ask": ["Bash(rm:*)", "Bash(tinyfish agent:*)"]}}
+r = subprocess.run(["chezmoi", "execute-template", "--with-stdin", "-f", "dot_claude/modify_settings.json"],
+                   input=json.dumps(local), capture_output=True, text=True, encoding="utf-8")
+ask = json.loads(r.stdout or "{}").get("permissions", {}).get("ask", [])
+if (r.returncode or "Bash(rm:*)" not in ask or ask.count("Bash(tinyfish agent:*)") != 1
+        or "PowerShell(tinyfish browser:*)" not in ask):
+    failed += 1
+    print(f"dot_claude/modify_settings.json: append lost or duplicated permissions.ask entries: {ask or r.stderr.strip()}")
 sys.exit(failed and 1)
