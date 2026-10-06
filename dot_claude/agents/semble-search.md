@@ -34,7 +34,7 @@ semble find-related src/auth.py 42 ./my-project
 semble search "invoice endpoint" ./service-a ../service-b
 ```
 
-If `semble` is not on `$PATH`, use `uvx --from "semble[mcp]==0.6.0" semble` in its place.
+If `semble` is not on `$PATH`, use `uvx --from "semble[mcp]" semble` in its place.
 
 ### Workflow
 
