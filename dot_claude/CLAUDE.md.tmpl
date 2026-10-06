@@ -44,5 +44,6 @@ Change targets only through the source: a drifted target makes `chezmoi apply` s
 - `!` commands and the Bash tool run Git Bash: give the user `!` commands with forward slashes and no PowerShell cmdlets.
 - Git Bash rewrites `/Foo`-style arguments into Windows paths; prefix `MSYS_NO_PATHCONV=1` (adb, `git show rev:path`, URL paths in env vars).
 - scoop `jq` and pwsh output end lines in `\r`; pipe through `tr -d '\r'` before comparing.
+- A script without the profile (chezmoi scripts, `pwsh -NoProfile`) decodes a native command's output with the console code page, which garbles UTF-8 (CJK, `—`): set `[Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)` before capturing it.
 - `pwsh -Command '<script>' <args>` drops the trailing args (no `$args`): pass values through env vars, or write the script to a file and use `-File`.
 {{- end }}
