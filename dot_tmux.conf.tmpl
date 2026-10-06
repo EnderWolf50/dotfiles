@@ -1,6 +1,8 @@
 # tmux-256color (not screen-256color) so italics and other attributes work inside tmux
 set -g default-terminal "tmux-256color"
 set-option -ga terminal-overrides ",*256col*:Tc"
+# pass OSC 8 hyperlinks (clickable file links from Claude Code) through to the terminal; tmux 3.4+
+set -as terminal-features ",*:hyperlinks"
 
 # FIX FOR WSL ONLY
 set -sg escape-time 50
