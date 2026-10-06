@@ -27,16 +27,16 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 |---|---|
 | `.chezmoidata/themes.toml` | The one color scheme (vesper) for every tool that has colors |
 | `.chezmoidata/prompt.toml` | starship symbol presets (`unicode` / `ascii`) |
-| `.chezmoidata/tools.toml` | Programs the PowerShell profile uses |
+| `.chezmoidata/tools.toml` | Programs the PowerShell profile and Claude Code use (CLIs, language servers by `lang`); npm-registry ones install with `pnpm add -g` |
 | `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset` layout, `theme` colors, `icons`) |
 | `.chezmoidata/skills.toml` | Global agent skills (`skills` CLI); `run_onchange_after_sync-skills.*` installs the list and removes the rest on change |
-| `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere (owned / merged / seeded keys of `settings.json`) |
+| `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere: set / merged / seeded / appended keys of `settings.json`, and the LSP plugin per language. Removing a key here does not remove it from `settings.json` |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr: shared by Windows and Linux |
 | `dot_claude/` | Claude Code: `CLAUDE.md` (your own instructions), `rules/` (third-party instructions, loaded like CLAUDE.md), agents, statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
 | `.chezmoiignore` | What each OS skips |
-| `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
+| `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it, and pins how `modify_settings.json` appends lists and sets LSP plugins; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
 
 ## Per-machine overrides
 
