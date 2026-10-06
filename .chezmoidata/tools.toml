@@ -13,6 +13,7 @@
 #   kind     "command" (default) or "module"
 #   purpose  what it does here
 #   used_by  the fragment or feature that needs it
+#   lang     a language from `languages` (chezmoi init); the tool is listed only on machines that chose it
 #   url      home page
 #   winget / scoop / npm / psgallery / go   how to install it, tried in that order. A scoop
 #            value may be `bucket/app`; the bucket is added first. An npm value is a package on the npm registry,
@@ -251,7 +252,7 @@ note    = "Cannot be checked from PowerShell; any Nerd Font works."
 name    = "Bun"
 check   = "bun"
 purpose = "Runs the Claude Code statusline"
-used_by = "dot_claude/statusline/statusline.js"
+used_by = "dot_claude/statusline/statusline.js; the typescript7-lsp plugin (enderwolf50)"
 url     = "https://bun.sh"
 winget  = "Oven-sh.Bun"
 scoop   = "bun"
@@ -269,6 +270,7 @@ name    = "csharp-ls"
 check   = "csharp-ls"
 purpose = "C# language server"
 used_by = "Claude Code csharp-lsp plugin"
+lang    = "csharp"
 url     = "https://github.com/razzmatazz/csharp-language-server"
 note    = "A dotnet tool: `dotnet tool install -g csharp-ls`."
 
@@ -277,6 +279,7 @@ name    = "gopls"
 check   = "gopls"
 purpose = "Go language server"
 used_by = "Claude Code gopls-lsp plugin"
+lang    = "go"
 url     = "https://go.dev/gopls"
 go      = "golang.org/x/tools/gopls"
 
@@ -285,6 +288,7 @@ name    = "pyright"
 check   = "pyright-langserver"
 purpose = "Python language server"
 used_by = "Claude Code pyright-lsp plugin"
+lang    = "python"
 url     = "https://github.com/microsoft/pyright"
 npm     = "pyright"
 
@@ -293,9 +297,64 @@ name    = "typescript-language-server"
 check   = "typescript-language-server"
 purpose = "TypeScript / JavaScript language server"
 used_by = "Claude Code typescript-lsp plugin"
+lang    = "typescript"
 url     = "https://github.com/typescript-language-server/typescript-language-server"
 npm     = "typescript-language-server"
 note    = "Uses the TypeScript in the project's node_modules; TypeScript 7 has no tsserver, so it needs 6.x or older; 7 serves LSP itself (`tsc --lsp --stdio`), which needs an LSP plugin of its own."
+
+[[tools]]
+name    = "clangd"
+check   = "clangd"
+purpose = "C / C++ language server"
+used_by = "Claude Code clangd-lsp plugin"
+lang    = "c-cpp"
+url     = "https://clangd.llvm.org"
+scoop   = "clangd"
+
+[[tools]]
+name    = "JDK 21"
+check   = "java"
+purpose = "Java runtime that jdtls runs on (21 or newer)"
+used_by = "jdtls"
+lang    = "java"
+url     = "https://adoptium.net"
+scoop   = "java/temurin21-jdk"
+
+[[tools]]
+name    = "jdtls"
+check   = "jdtls"
+purpose = "Java language server (Eclipse JDT LS)"
+used_by = "Claude Code jdtls-lsp plugin"
+lang    = "java"
+url     = "https://github.com/eclipse-jdtls/eclipse.jdt.ls"
+scoop   = "jdtls"
+
+[[tools]]
+name    = "kotlin-lsp"
+check   = "kotlin-lsp"
+purpose = "Kotlin language server (JetBrains)"
+used_by = "Claude Code kotlin-lsp plugin"
+lang    = "kotlin"
+url     = "https://github.com/Kotlin/kotlin-lsp"
+note    = "No package manager entry: unzip a GitHub release and put kotlin-lsp on PATH."
+
+[[tools]]
+name    = "rust-analyzer"
+check   = "rust-analyzer"
+purpose = "Rust language server"
+used_by = "Claude Code rust-analyzer-lsp plugin"
+lang    = "rust"
+url     = "https://rust-analyzer.github.io"
+note    = "A rustup component: `rustup component add rust-analyzer` (the rustup proxy exists without it, so check with `rust-analyzer --version`)."
+
+[[tools]]
+name    = "Swift toolchain"
+check   = "sourcekit-lsp"
+purpose = "Swift compiler and the sourcekit-lsp language server"
+used_by = "Claude Code swift-lsp plugin"
+lang    = "swift"
+url     = "https://www.swift.org"
+scoop   = "swift"
 
 [[tools]]
 name    = "TinyFish CLI"

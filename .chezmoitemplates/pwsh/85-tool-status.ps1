@@ -7,6 +7,7 @@
 if ($IsInteractiveConsole) {
   $DotTools = @(
 {{- range $tool := .tools }}
+{{- if or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages) }}
     @{
       Name      = '{{ $tool.name | replace "'" "''" }}'
       Check     = '{{ index $tool "check" | default "" | replace "'" "''" }}'
@@ -20,6 +21,7 @@ if ($IsInteractiveConsole) {
       Go        = '{{ index $tool "go" | default "" }}'
       Note      = '{{ index $tool "note" | default "" | replace "'" "''" }}'
     }
+{{- end }}
 {{- end }}
   )
 

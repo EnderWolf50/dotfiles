@@ -49,21 +49,25 @@ source = { source = "github", repo = "DietrichGebert/ponytail" }
 [claude.append.permissions]
 ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfish agent:*)", "PowerShell(tinyfish browser:*)"]
 
+# lsp: the LSP plugin for each language. On a machine whose chezmoi config has `languages` (asked by
+# `chezmoi init`), every apply turns on the plugins of the chosen languages and turns the rest off.
+[claude.lsp]
+c-cpp      = "clangd-lsp@claude-plugins-official"
+csharp     = "csharp-lsp@claude-plugins-official"
+go         = "gopls-lsp@claude-plugins-official"
+java       = "jdtls-lsp@claude-plugins-official"
+kotlin     = "kotlin-lsp@claude-plugins-official"
+python     = "pyright-lsp@claude-plugins-official"
+rust       = "rust-analyzer-lsp@claude-plugins-official"
+swift      = "swift-lsp@claude-plugins-official"
+typescript = "typescript-lsp@claude-plugins-official"
+
 # seed: written only when the machine has no value for that key yet, so /plugin on one machine is not
 # undone by the next apply. win-toast is left out on purpose.
 [claude.seed.enabledPlugins]
-"clangd-lsp@claude-plugins-official"       = false
-"csharp-lsp@claude-plugins-official"       = true
 "document-skills@anthropic-agent-skills"   = true
-"gopls-lsp@claude-plugins-official"        = true
 "hookify@claude-plugins-official"          = true
 "impeccable@impeccable"                    = true
-"jdtls-lsp@claude-plugins-official"        = false
-"kotlin-lsp@claude-plugins-official"       = false
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
-"pyright-lsp@claude-plugins-official"      = true
-"rust-analyzer-lsp@claude-plugins-official" = false
 "search-tools@enderwolf50"                 = true
-"swift-lsp@claude-plugins-official"        = false
-"typescript-lsp@claude-plugins-official"   = true

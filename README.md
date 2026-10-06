@@ -40,6 +40,8 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 
 ## Per-machine overrides
 
+`chezmoi init` asks which languages the machine works in and stores them as `languages`. Every apply turns on those languages' LSP plugins and turns the rest off (`[claude.lsp]` in `.chezmoidata/claude.toml`), and `tools` lists only their language servers (`lang` in `tools.toml`). Rerun `chezmoi init` to change the answer.
+
 In `~/.config/chezmoi/chezmoi.toml`:
 
 ```toml

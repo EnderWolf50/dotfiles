@@ -4,7 +4,9 @@
          set    top-level keys, written on every apply
          merge  keys inside an object, written on every apply; the object's other keys are kept
          seed   keys inside an object, written only when the machine has no value for them yet
-         append list entries inside an object, added when missing; the machine's own entries are kept */ -}}
+         append list entries inside an object, added when missing; the machine's own entries are kept
+         lsp    enabledPlugins for each language's LSP plugin: on for the languages in this machine's
+                `languages` (chezmoi init), off for the rest; untouched where `languages` is unset */ -}}
 {{- $s := dict -}}
 {{- if .chezmoi.stdin }}{{ $s = .chezmoi.stdin | fromJson }}{{ end -}}
 {{- range $key, $value := .claude.set }}{{ $_ := set $s $key $value }}{{ end -}}
@@ -30,6 +32,12 @@
 {{-     $_ := set $o $key $l -}}
 {{-   end -}}
 {{-   $_ := set $s $obj $o -}}
+{{- end -}}
+{{- if hasKey . "languages" -}}
+{{-   $p := dict -}}
+{{-   if hasKey $s "enabledPlugins" }}{{ $p = index $s "enabledPlugins" }}{{ end -}}
+{{-   range $lang, $id := .claude.lsp }}{{ $_ := set $p $id (has $lang $.languages) }}{{ end -}}
+{{-   $_ := set $s "enabledPlugins" $p -}}
 {{- end -}}
 {{- $_ := set $s "theme" (printf "custom:%s" .theme) -}}
 {{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 2) -}}
