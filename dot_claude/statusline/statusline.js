@@ -1,8 +1,8 @@
 // p10k 風格 statusline（rainbow / lean / classic）。所有選項見 config.json（缺的欄位用下面的 DEFAULTS）。
 // preset 管版面，theme 管顏色，兩者各選各的。theme＝內建 p10k 或 config.json 的 themes 裡的名稱（chezmoi 寫入 vesper）。
 // bun statusline.js --print-config [preset]  印出某個 preset 合併後的完整設定
+// 每次刷新都整支重跑；要跑 git 的區塊（git、lines）照各自的 ttl 快取，見下方「快取」
 const fs = require("fs"), path = require("path"), os = require("os");
-const { execFileSync } = require("child_process");
 
 const DEFAULTS = {
   preset: "vesper", // vesper | lean | rainbow | classic，見下方 PRESETS；config.json 的欄位再疊在 preset 上
@@ -28,13 +28,14 @@ const DEFAULTS = {
     // effort：顯示格式（{level} 會換成 high 等；空字串＝不顯示，例如 "({level})"），用淡色顯示
     model: { show: true, icon: true, lead: "", color: "brightGreen", fill: true, ground: "mid", effort: "{level}" },
     cwd: { show: true, icon: false, lead: "", color: "blue", fill: true, ground: "mid", depth: 3 },
-    git: { show: true, icon: false, lead: "", color: "green", dirtyColor: "brightYellow", fill: true, ground: "mid" },
+    // ttl：快取秒數（0＝每次重跑 git）。過期時先顯示舊值、背景更新；對話有新訊息時一律重跑
+    git: { show: true, icon: false, lead: "", color: "green", dirtyColor: "brightYellow", fill: true, ground: "mid", ttl: 3 },
     context: { show: true, icon: true, lead: "", color: "purple", fill: false, ground: "mid" },
     cache: { show: true, icon: true, lead: "", color: "brightBlue", fill: false, ground: "low" }, // 有 miss 時多顯示次數（淡色）
     usage: { show: true, icon: true, lead: "", color: "green", fill: false, ground: "mid", sep: " · " }, // 附距離重置的剩餘時間（淡色）
     cost: { show: true, icon: true, lead: "", color: "yellow", fill: false, ground: "low" },
     dirs: { show: true, icon: false, lead: "", color: "brightBlack", fill: false, ground: "low" }, // /add-dir 加入的目錄數
-    lines: { show: true, icon: false, lead: "·", color: "green", addedColor: "green", removedColor: "red", fill: false, ground: "mid" }, // git 未 commit 的行數變更（git diff --numstat HEAD：已暫存＋未暫存）；不在儲存庫或沒有變更時不顯示
+    lines: { show: true, icon: false, lead: "·", color: "green", addedColor: "green", removedColor: "red", fill: false, ground: "mid", ttl: 10 }, // git 未 commit 的行數變更（git diff --numstat HEAD：已暫存＋未暫存）；不在儲存庫或沒有變更時不顯示
     duration: { show: true, icon: true, lead: "", color: "white", fill: false, ground: "low" }, // 本 session 時長
     clock: { show: true, icon: true, lead: "", color: "white", fill: false, ground: "mid" }, // 現在時間 HH:MM
   },
@@ -129,10 +130,17 @@ function shortDir(dir, depth) {
   return parts.length > depth ? "…/" + parts.slice(-(depth - 1)).join("/") : parts.join("/") || d;
 }
 
+// 跑 git，失敗（不是儲存庫、逾時、cwd 不存在）回傳 null
+function runGit(cwd, args) {
+  try {
+    const r = Bun.spawnSync(["git", ...args], { cwd, stdin: "ignore", stderr: "ignore", timeout: 1500 });
+    return r.success ? r.stdout.toString() : null;
+  } catch { return null; }
+}
+
 function git(cwd) {
-  let out;
-  try { out = execFileSync("git", ["status", "--porcelain=v2", "--branch"], { cwd, encoding: "utf8", timeout: 1500, stdio: ["ignore", "pipe", "ignore"] }); }
-  catch { return null; }
+  const out = runGit(cwd, ["status", "--porcelain=v2", "--branch"]);
+  if (out == null) return null;
   const g = { branch: "", ahead: 0, behind: 0, staged: 0, unstaged: 0, untracked: 0, conflict: 0 };
   for (const l of out.split("\n")) {
     if (l.startsWith("# branch.head ")) g.branch = l.slice(14);
@@ -146,15 +154,67 @@ function git(cwd) {
 
 // 未 commit 的行數變更（已暫存＋未暫存，相對於 HEAD）；不是 git 儲存庫、沒有任何 commit 或沒有變更時回傳 null
 function gitLines(cwd) {
-  let out;
-  try { out = execFileSync("git", ["diff", "--numstat", "HEAD"], { cwd, encoding: "utf8", timeout: 1500, stdio: ["ignore", "pipe", "ignore"] }); }
-  catch { return null; }
+  const out = runGit(cwd, ["diff", "--numstat", "HEAD"]);
+  if (out == null) return null;
   let a = 0, r = 0;
   for (const l of out.split("\n")) {
     const m = l.match(/^(\d+)\t(\d+)\t/); // 二進位檔是 "-\t-\t"，略過
     if (m) { a += +m[1]; r += +m[2]; }
   }
   return a || r ? { a, r } : null;
+}
+
+// ---------- 快取 ----------
+// 每個 (session, 區塊, cwd) 一個檔：{ t 算出的時間, epoch, v 結果, pending 背景更新開始的時間 }
+// - ttl 內：直接用 v
+// - 過期：先回傳舊的 v，另開背景 process（--refresh）重算寫回，下次刷新就是新的；statusline 不用等 git
+// - epoch 變了（對話有新訊息，例如剛跑完 git commit）：同步重算，不顯示舊值
+const FETCH = { git, lines: gitLines };
+const CACHE_DIR = path.join(os.tmpdir(), "claude-statusline");
+const PENDING_MS = 5000; // 背景更新超過這麼久沒寫回，就當它死了，再開一個
+const readCache = (f) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } };
+function writeCache(f, e) {
+  try {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+    const tmp = `${f}.${process.pid}`;
+    fs.writeFileSync(tmp, JSON.stringify(e));
+    fs.renameSync(tmp, f); // 整檔替換，讀的一方不會讀到寫一半的內容
+  } catch {}
+}
+
+function cached(id, ttl, cwd, ctx) {
+  if (!ttl) return FETCH[id](cwd);
+  const f = path.join(CACHE_DIR, Bun.hash([ctx.session, id, cwd].join("\0")).toString(36) + ".json");
+  const e = readCache(f), now = Date.now();
+  if (e && e.epoch === ctx.epoch) {
+    if (now - e.t < ttl * 1000) return e.v;
+    if (!(now - (e.pending ?? 0) < PENDING_MS)) {
+      writeCache(f, { ...e, pending: now });
+      try {
+        Bun.spawn([process.execPath, __filename, "--refresh", f, id, cwd, ctx.epoch], { stdio: ["ignore", "ignore", "ignore"], detached: true, windowsHide: true }).unref();
+      } catch {}
+    }
+    return e.v;
+  }
+  const v = FETCH[id](cwd);
+  writeCache(f, { t: now, epoch: ctx.epoch, v });
+  return v;
+}
+
+// 背景更新：bun statusline.js --refresh <快取檔> <區塊> <cwd> <epoch>
+if (process.argv[2] === "--refresh") {
+  const [f, id, cwd, epoch] = process.argv.slice(3);
+  const v = FETCH[id](cwd);
+  // 這段時間內前景已經因新訊息同步重算過（epoch 不同），就不要拿舊 epoch 的結果蓋掉
+  if (readCache(f)?.epoch === epoch) writeCache(f, { t: Date.now(), epoch, v });
+  // 順便清掉一天沒動過的快取（結束的 session）
+  try {
+    for (const n of fs.readdirSync(CACHE_DIR)) {
+      const p = path.join(CACHE_DIR, n);
+      if (Date.now() - fs.statSync(p).mtimeMs > 86400e3) fs.unlinkSync(p);
+    }
+  } catch {}
+  process.exit(0);
 }
 
 function main() {
@@ -171,6 +231,10 @@ function main() {
 
   const d = JSON.parse(fs.readFileSync(0, "utf8"));
   const cwd = d.workspace?.current_dir ?? d.cwd ?? process.cwd();
+  // epoch：對話有新訊息就會變（transcript 被寫入、API 時間累加），拿來讓 git 快取失效
+  let mtime = 0;
+  try { if (d.transcript_path) mtime = fs.statSync(d.transcript_path).mtimeMs; } catch {}
+  const ctx = { session: d.session_id ?? "", epoch: `${d.cost?.total_api_duration_ms ?? ""}|${mtime}` };
 
   // 每個區塊回傳 { text, color }（或 null＝沒資料），文字內可以夾自己的顏色碼
   const builders = {
@@ -182,7 +246,7 @@ function main() {
     },
     cwd: (b) => ({ text: `${ic("cwd", b)}${shortDir(cwd, b.depth)}`, color: col(b.color) }),
     git: (b) => {
-      const g = git(cwd);
+      const g = cached("git", b.ttl, cwd, ctx);
       if (!g) return null;
       const dirty = g.staged || g.unstaged || g.untracked || g.conflict;
       const bits = [
@@ -224,7 +288,7 @@ function main() {
       return n ? { text: `${ic("dirs", b)}+${n} dir${n > 1 ? "s" : ""}`, color: col(b.color) } : null;
     },
     lines: (b) => {
-      const g = gitLines(cwd);
+      const g = cached("lines", b.ttl, cwd, ctx);
       return g ? { text: `${ic("lines", b)}${fg(col(b.addedColor))}+${g.a} ${fg(col(b.removedColor))}-${g.r}`, color: col(b.color) } : null;
     },
     duration: (b) => (d.cost?.total_duration_ms == null ? null : { text: `${ic("duration", b)}${dur(d.cost.total_duration_ms / 1000)}`, color: col(b.color) }),
@@ -294,4 +358,7 @@ function main() {
 }
 
 // 設定寫錯時直接把原因顯示在 statusline 上，而不是整條變空白
-try { process.stdout.write(main()); } catch (e) { process.stdout.write(`statusline: ${e.message}`); }
+// 用 fs.writeSync 而不是 process.stdout：bun 初始化 process.stdout 要十幾 ms
+let out;
+try { out = main(); } catch (e) { out = `statusline: ${e.message}`; }
+fs.writeSync(1, out);

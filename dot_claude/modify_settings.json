@@ -20,5 +20,5 @@
 {{-   $_ := set $s $obj $o -}}
 {{- end -}}
 {{- $_ := set $s "theme" (printf "custom:%s" .theme) -}}
-{{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 10) -}}
+{{- $_ := set $s "statusLine" (dict "type" "command" "command" "bun ~/.claude/statusline/statusline.js" "padding" 0 "refreshInterval" 2) -}}
 {{ $s | toPrettyJson }}
