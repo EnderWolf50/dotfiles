@@ -29,7 +29,9 @@ if ($IsInteractiveConsole) {
 
     if ($Tool.Winget) { "winget install --id $($Tool.Winget) -e" }
     elseif ($Tool.Scoop) { "scoop install $($Tool.Scoop)" }
-    elseif ($Tool.Npm) { "npm install -g $($Tool.Npm)" }
+    # pnpm rather than npm -g: npm puts a global package in the current Node's folder, which the
+    # next Node upgrade replaces; pnpm keeps it under PNPM_HOME.
+    elseif ($Tool.Npm) { "pnpm add -g $($Tool.Npm)" }
     elseif ($Tool.PSGallery) { "Install-PSResource $($Tool.PSGallery) -Scope CurrentUser -TrustRepository" }
     # Into ~/.local/bin rather than GOBIN: mise points GOBIN at the current Go's own folder,
     # which the next Go upgrade replaces.

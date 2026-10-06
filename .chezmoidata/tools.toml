@@ -15,7 +15,8 @@
 #   used_by  the fragment or feature that needs it
 #   url      home page
 #   winget / scoop / npm / psgallery / go   how to install it, tried in that order. A scoop
-#            value may be `bucket/app`; the bucket is added first. A go value is a module path,
+#            value may be `bucket/app`; the bucket is added first. An npm value is a package on the npm registry,
+#            installed with `pnpm add -g` so a Node upgrade keeps it. A go value is a module path,
 #            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
 #   note     anything else worth knowing
 #
@@ -254,3 +255,53 @@ used_by = "dot_claude/statusline/statusline.js"
 url     = "https://bun.sh"
 winget  = "Oven-sh.Bun"
 scoop   = "bun"
+
+[[tools]]
+name    = "pnpm"
+check   = "pnpm"
+purpose = "Installs the npm-registry tools below (`pnpm add -g`), outside Node's own folder"
+used_by = "Show-Tools -Install"
+url     = "https://pnpm.io"
+note    = "From corepack, which mise installs (`npm:corepack` in the global mise config): `corepack enable pnpm`."
+
+[[tools]]
+name    = "csharp-ls"
+check   = "csharp-ls"
+purpose = "C# language server"
+used_by = "Claude Code csharp-lsp plugin"
+url     = "https://github.com/razzmatazz/csharp-language-server"
+note    = "A dotnet tool: `dotnet tool install -g csharp-ls`."
+
+[[tools]]
+name    = "gopls"
+check   = "gopls"
+purpose = "Go language server"
+used_by = "Claude Code gopls-lsp plugin"
+url     = "https://go.dev/gopls"
+go      = "golang.org/x/tools/gopls"
+
+[[tools]]
+name    = "pyright"
+check   = "pyright-langserver"
+purpose = "Python language server"
+used_by = "Claude Code pyright-lsp plugin"
+url     = "https://github.com/microsoft/pyright"
+npm     = "pyright"
+
+[[tools]]
+name    = "typescript-language-server"
+check   = "typescript-language-server"
+purpose = "TypeScript / JavaScript language server"
+used_by = "Claude Code typescript-lsp plugin"
+url     = "https://github.com/typescript-language-server/typescript-language-server"
+npm     = "typescript-language-server"
+note    = "Uses the TypeScript in the project's node_modules; TypeScript 7 has no tsserver, so it needs 6.x or older; 7 serves LSP itself (`tsc --lsp --stdio`), which needs an LSP plugin of its own."
+
+[[tools]]
+name    = "TinyFish CLI"
+check   = "tinyfish"
+purpose = "Web search and fetch for coding agents, free within rate limits"
+used_by = "the use-tinyfish skill (skills.toml)"
+url     = "https://tinyfish.ai"
+npm     = "@tiny-fish/cli"
+note    = "Once per machine: `tinyfish auth login` (free API key, no card)."

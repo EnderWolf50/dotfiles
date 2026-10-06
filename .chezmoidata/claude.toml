@@ -15,6 +15,11 @@ autoUpdatesChannel      = "latest"
 [claude.merge.permissions]
 defaultMode = "auto"
 
+# security-guidance reviews default to the newest Opus; Sonnet keeps most of the catch at a fraction of the usage.
+[claude.merge.env]
+SECURITY_REVIEW_MODEL = "claude-sonnet-5-5"
+SG_AGENTIC_MODEL      = "claude-sonnet-5-5"
+
 [claude.merge.worktree]
 baseRef = "fresh"
 
@@ -32,31 +37,26 @@ source = { source = "github", repo = "EnderWolf50/claude-plugins" }
 autoUpdate = true
 source = { source = "github", repo = "pbakaus/impeccable" }
 
-[claude.merge.extraKnownMarketplaces."karpathy-skills"]
-autoUpdate = true
-source = { source = "github", repo = "forrestchang/andrej-karpathy-skills" }
-
 [claude.merge.extraKnownMarketplaces."ponytail"]
 source = { source = "github", repo = "DietrichGebert/ponytail" }
 
 # seed: written only when the machine has no value for that key yet, so /plugin on one machine is not
 # undone by the next apply. win-toast is left out on purpose.
 [claude.seed.enabledPlugins]
-"andrej-karpathy-skills@karpathy-skills"   = false
 "clangd-lsp@claude-plugins-official"       = false
-"context7@claude-plugins-official"         = true
 "csharp-lsp@claude-plugins-official"       = true
 "document-skills@anthropic-agent-skills"   = false
 "figma@claude-plugins-official"            = false
 "firecrawl@claude-plugins-official"        = false
-"gopls-lsp@claude-plugins-official"        = false
+"gopls-lsp@claude-plugins-official"        = true
+"hookify@claude-plugins-official"          = true
 "impeccable@impeccable"                    = true
 "jdtls-lsp@claude-plugins-official"        = false
 "kotlin-lsp@claude-plugins-official"       = false
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
 "postman@claude-plugins-official"          = false
-"pyright-lsp@claude-plugins-official"      = false
+"pyright-lsp@claude-plugins-official"      = true
 "rust-analyzer-lsp@claude-plugins-official" = false
 "search-tools@enderwolf50"                 = true
 "swift-lsp@claude-plugins-official"        = false
