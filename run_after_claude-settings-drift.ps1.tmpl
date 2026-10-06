@@ -1,0 +1,79 @@
+{{ if eq .chezmoi.os "windows" -}}
+# After every apply: list the plugins and marketplaces in ~/.claude/settings.json that
+# .chezmoidata/claude.toml does not know. Removing an entry from claude.toml never removes it from
+# a machine's settings.json, so this is where a removal gets finished on the other machines.
+# Asks about each entry only in an interactive console; otherwise it only lists them.
+$settingsPath = Join-Path $HOME '.claude\settings.json'
+if (-not (Test-Path $settingsPath)) { exit 0 }
+$settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+
+$knownPlugins = @(
+{{- range $id, $_ := .claude.seed.enabledPlugins }}
+  '{{ $id }}'
+{{- end }}
+{{- range $_, $id := .claude.lsp }}
+  '{{ $id }}'
+{{- end }}
+{{- range .claude.local.plugins }}
+  '{{ . }}'
+{{- end }}
+)
+$knownMarketplaces = @(
+{{- range $name, $_ := .claude.merge.extraKnownMarketplaces }}
+  '{{ $name }}'
+{{- end }}
+{{- range .claude.local.marketplaces }}
+  '{{ . }}'
+{{- end }}
+)
+
+$installedPath = Join-Path $HOME '.claude\plugins\installed_plugins.json'
+$installed = @()
+if (Test-Path $installedPath) { $installed = @((Get-Content $installedPath -Raw | ConvertFrom-Json).plugins.PSObject.Properties.Name) }
+
+# @builtin, @inline, @skills-dir and @synced plugins are not settings Claude Code keeps for a marketplace.
+$plugins = @()
+if ($settings.enabledPlugins) {
+  $plugins = @($settings.enabledPlugins.PSObject.Properties | Where-Object {
+      $_.Name -match '@' -and $_.Name -notmatch '@(builtin|inline|skills-dir|synced)$' -and $_.Name -notin $knownPlugins })
+}
+$marketplaces = @()
+if ($settings.extraKnownMarketplaces) {
+  $marketplaces = @($settings.extraKnownMarketplaces.PSObject.Properties.Name | Where-Object { $_ -notin $knownMarketplaces })
+}
+if (-not $plugins -and -not $marketplaces) { exit 0 }
+
+Write-Host 'claude-settings-drift: ~/.claude/settings.json has entries .chezmoidata/claude.toml does not list.'
+Write-Host '  Add one to claude.toml to share it, to [claude.local] to keep it on this machine only, or remove it.'
+$interactive = -not [Console]::IsInputRedirected
+$hasClaude = [bool](Get-Command claude -ErrorAction SilentlyContinue)
+$hasJq = [bool](Get-Command jq -ErrorAction SilentlyContinue)
+
+function Read-Remove {
+  if (-not $interactive) { return $false }
+  (Read-Host '    remove? [y/N]') -match '^[yY]'
+}
+
+foreach ($p in $plugins) {
+  $isInstalled = $p.Name -in $installed
+  $state = $(if ($p.Value) { 'enabled' } else { 'disabled' }) + $(if ($isInstalled) { ', installed' } else { ', not installed' })
+  Write-Host "  plugin       $($p.Name)  ($state)"
+  if (-not (Read-Remove)) { continue }
+  if ($isInstalled -and $hasClaude) { claude plugin uninstall $p.Name | Out-Null }
+  if ($hasJq) {
+    # uninstall drops the key itself; this clears what is left, such as a stale disabled entry.
+    # jq prints UTF-8; without this PowerShell decodes it with the console code page and garbles CJK text.
+    [Console]::OutputEncoding = New-Object Text.UTF8Encoding $false
+    $json = jq --arg id $p.Name 'del(.enabledPlugins[$id])' $settingsPath
+    if ($LASTEXITCODE -eq 0) { [IO.File]::WriteAllText($settingsPath, ($json -join "`n") + "`n", (New-Object Text.UTF8Encoding $false)) }
+  } elseif (-not $isInstalled) {
+    Write-Warning "jq not found: delete enabledPlugins.`"$($p.Name)`" from settings.json by hand"
+  }
+}
+foreach ($m in $marketplaces) {
+  Write-Host "  marketplace  $m"
+  if (-not (Read-Remove)) { continue }
+  if ($hasClaude) { claude plugin marketplace remove $m | Out-Null }
+  else { Write-Warning "claude not found: run ``claude plugin marketplace remove $m``" }
+}
+{{ end -}}

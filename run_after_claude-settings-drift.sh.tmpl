@@ -1,0 +1,50 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# After every apply: list the plugins and marketplaces in ~/.claude/settings.json that
+# .chezmoidata/claude.toml does not know. Removing an entry from claude.toml never removes it from
+# a machine's settings.json, so this is where a removal gets finished on the other machines.
+# Asks about each entry only on a terminal; otherwise it only lists them.
+settings="$HOME/.claude/settings.json"
+[ -f "$settings" ] || exit 0
+command -v jq >/dev/null || { echo 'claude-settings-drift: jq not found, skipped' >&2; exit 0; }
+
+known_plugins='{{ range $id, $_ := .claude.seed.enabledPlugins }} {{ $id }}{{ end }}{{ range $_, $id := .claude.lsp }} {{ $id }}{{ end }}{{ range .claude.local.plugins }} {{ . }}{{ end }} '
+known_marketplaces='{{ range $name, $_ := .claude.merge.extraKnownMarketplaces }} {{ $name }}{{ end }}{{ range .claude.local.marketplaces }} {{ . }}{{ end }} '
+installed=" $(jq -r '.plugins | keys[]' "$HOME/.claude/plugins/installed_plugins.json" 2>/dev/null | tr '\n' ' ') "
+
+# @builtin, @inline, @skills-dir and @synced plugins are not settings Claude Code keeps for a marketplace.
+plugins=$(jq -r '.enabledPlugins // {} | to_entries[] | "\(.key) \(.value)"' "$settings" |
+  while read -r id on; do
+    case "$id" in *@*) ;; *) continue ;; esac
+    case "$id" in *@builtin|*@inline|*@skills-dir|*@synced) continue ;; esac
+    case "$known_plugins" in *" $id "*) ;; *) echo "$id $on" ;; esac
+  done)
+marketplaces=$(jq -r '.extraKnownMarketplaces // {} | keys[]' "$settings" |
+  while read -r name; do case "$known_marketplaces" in *" $name "*) ;; *) echo "$name" ;; esac; done)
+[ -z "$plugins$marketplaces" ] && exit 0
+
+echo 'claude-settings-drift: ~/.claude/settings.json has entries .chezmoidata/claude.toml does not list.'
+echo '  Add one to claude.toml to share it, to [claude.local] to keep it on this machine only, or remove it.'
+# Asked only when apply itself runs on a terminal; the loops below read the answers from /dev/tty.
+interactive=; [ -t 0 ] && interactive=1
+remove() { [ -n "$interactive" ] || return 1; printf '    remove? [y/N] '; read -r a </dev/tty; case "$a" in [yY]*) return 0 ;; esac; return 1; }
+
+printf '%s\n' "$plugins" | while read -r id on; do
+  [ -n "$id" ] || continue
+  case "$installed" in *" $id "*) inst=installed ;; *) inst='not installed' ;; esac
+  state=disabled; [ "$on" = true ] && state=enabled
+  echo "  plugin       $id  ($state, $inst)"
+  remove || continue
+  [ "$inst" = installed ] && command -v claude >/dev/null && claude plugin uninstall "$id" >/dev/null
+  # uninstall drops the key itself; this clears what is left, such as a stale disabled entry
+  tmp=$(mktemp) && jq --arg id "$id" 'del(.enabledPlugins[$id])' "$settings" > "$tmp" && mv "$tmp" "$settings"
+done
+printf '%s\n' "$marketplaces" | while read -r name; do
+  [ -n "$name" ] || continue
+  echo "  marketplace  $name"
+  remove || continue
+  if command -v claude >/dev/null; then claude plugin marketplace remove "$name" >/dev/null
+  else echo "  claude not found: run \`claude plugin marketplace remove $name\`" >&2; fi
+done
+exit 0
+{{ end -}}

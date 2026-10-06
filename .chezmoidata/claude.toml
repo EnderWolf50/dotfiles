@@ -62,8 +62,14 @@ rust       = "rust-analyzer-lsp@claude-plugins-official"
 swift      = "swift-lsp@claude-plugins-official"
 typescript = "typescript-lsp@claude-plugins-official"
 
+# local: plugins and marketplaces some machines keep on purpose. run_after_claude-settings-drift
+# lists every settings.json plugin or marketplace this file does not know, except these.
+[claude.local]
+plugins      = ["win-toast@enderwolf50"]
+marketplaces = []
+
 # seed: written only when the machine has no value for that key yet, so /plugin on one machine is not
-# undone by the next apply. win-toast is left out on purpose.
+# undone by the next apply. win-toast is left out on purpose (see [claude.local]).
 [claude.seed.enabledPlugins]
 "document-skills@anthropic-agent-skills"   = true
 "hookify@claude-plugins-official"          = true
@@ -71,3 +77,4 @@ typescript = "typescript-lsp@claude-plugins-official"
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
 "search-tools@enderwolf50"                 = true
+"security-guidance@claude-plugins-official" = true
