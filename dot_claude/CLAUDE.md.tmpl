@@ -20,6 +20,8 @@ Write every reply and every progress line in 繁體中文, including when the us
 
 Write every file you mention in a reply as a markdown link to its absolute `file://` URL, with the repo-relative path (and `:line` when it points at a line) as the text: [src/app.ts:42](file:///home/me/repo/src/app.ts). The terminal turns it into a clickable OSC 8 link; a bare path is not clickable. Forward slashes, spaces as `%20`{{ if eq .chezmoi.os "windows" }}, drive letter after the third slash (`file:///C:/Users/...`){{ end }}. Code blocks and commands keep plain paths.
 
+A web address gets the same shape, with a short name as the text: [herdr#4748](https://github.com/herdrdev/herdr/issues/4748), never a bare URL.
+
 ## Waiting
 
 Start a long job with `run_in_background` and wait on it with Monitor; a foreground `sleep` is blocked.
