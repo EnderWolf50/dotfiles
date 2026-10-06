@@ -2,7 +2,7 @@
 # watch-pr.sh <number> [interval-seconds]: run from inside the repo. Watches a pull request: a GitHub PR
 # through gh when origin is on github.com, otherwise a GitLab merge request through glab.
 # Prints one line per change of "<state> pipeline=<status> merge=<status>" and exits when it is
-# merged or closed, its pipeline failed or was canceled, or it conflicts with its target branch.
+# merged or closed, its pipeline passed, failed, was canceled or skipped, or it conflicts with its target branch.
 # Meant to run under Monitor: every line is an event.
 set -u
 n="${1:?usage: watch-pr.sh <number> [interval-seconds]}"
@@ -36,7 +36,7 @@ while :; do
   [ -n "$now" ] || now="unreachable (VPN or token?)"
   if [ "$now" != "$last" ]; then echo "$now"; last="$now"; fi
   case "$now" in
-    merged*|closed*|*pipeline=failed*|*pipeline=canceled*|*merge=conflict*) exit 0 ;;
+    merged*|closed*|*pipeline=success*|*pipeline=skipped*|*pipeline=failed*|*pipeline=canceled*|*merge=conflict*) exit 0 ;;
   esac
   sleep "$interval"
 done
