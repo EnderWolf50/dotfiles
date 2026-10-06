@@ -20,3 +20,8 @@ README.md
 AppData
 Documents
 {{- end }}
+
+{{ if not (index . "work") -}}
+# Work-only Claude skills (GitLab ship flow)
+.claude/skills/ship
+{{- end }}

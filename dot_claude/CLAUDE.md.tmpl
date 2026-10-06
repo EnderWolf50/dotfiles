@@ -60,3 +60,21 @@ Every changed line should trace directly to the user's request.
 - "Refactor X" → "Ensure tests pass before and after"
 
 For multi-step tasks, state a brief plan with a verify check per step.
+
+## Waiting
+
+Start a long job with `run_in_background` and wait on it with Monitor; a foreground `sleep` is blocked.
+{{- if eq .chezmoi.os "windows" }}
+
+## Windows shell
+
+- `!` commands and the Bash tool run Git Bash: give the user `!` commands with forward slashes and no PowerShell cmdlets.
+- Git Bash rewrites `/Foo`-style arguments into Windows paths; prefix `MSYS_NO_PATHCONV=1` (adb, `git show rev:path`, URL paths in env vars).
+- scoop `jq` and pwsh output end lines in `\r`; pipe through `tr -d '\r'` before comparing.
+{{- end }}
+{{- if index . "work" }}
+
+## Work network
+
+`git.gss.com.tw` (GitLab, glab) is reachable only on the company VPN. When it fails to resolve, stop and tell the user the VPN is down instead of retrying.
+{{- end }}
