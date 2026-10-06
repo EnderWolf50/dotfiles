@@ -29,6 +29,7 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 | `.chezmoidata/prompt.toml` | starship symbol presets (`unicode` / `ascii`) |
 | `.chezmoidata/tools.toml` | Programs the PowerShell profile uses |
 | `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset` layout, `theme` colors, `icons`) |
+| `.chezmoidata/skills.toml` | Global agent skills (`skills` CLI); `run_onchange_after_sync-skills.*` installs the list and removes the rest on change |
 | `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere (owned / merged / seeded keys of `settings.json`) |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr: shared by Windows and Linux |

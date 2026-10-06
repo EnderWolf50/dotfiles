@@ -1,0 +1,16 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Make the global skills match .chezmoidata/skills.toml. Codex makes the CLI install into
+# ~/.agents/skills (read by Codex, Copilot, OpenCode); Claude Code gets a symlink to it.
+command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
+command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
+wanted='{{ range .skills }}{{ range .names }} {{ . }}{{ end }}{{ end }} '
+{{ range .skills -}}
+npx -y skills add {{ .source }} -g -a claude-code codex -y -s {{ .names | join " " }} ||
+  echo 'sync-skills: installing from {{ .source }} failed' >&2
+{{ end -}}
+extra=$(npx -y skills ls -g --json 2>/dev/null | jq -r '.[] | select(.source) | .name' |
+  while read -r name; do case "$wanted" in *" $name "*) ;; *) echo "$name" ;; esac; done)
+[ -n "$extra" ] && npx -y skills remove -g -y $extra
+exit 0
+{{ end -}}

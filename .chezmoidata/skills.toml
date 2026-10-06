@@ -1,0 +1,71 @@
+# Global agent skills installed with the `skills` CLI (https://skills.sh), one entry per source repo.
+# `chezmoi apply` runs run_onchange_after_sync-skills whenever this list changes: it installs every
+# skill listed here and removes any CLI-installed global skill that is not. Skills installed by hand
+# without a source (ship, pr-sweep from dot_claude, plugin ones) are left alone.
+# ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
+
+[[skills]]
+source = "mattpocock/skills"
+names = [
+  "ask-matt",
+  "code-review",
+  "codebase-design",
+  "diagnosing-bugs",
+  "domain-modeling",
+  "grill-me",
+  "grill-with-docs",
+  "grilling",
+  "handoff",
+  "implement",
+  "implement-spec",
+  "improve-codebase-architecture",
+  "pr",
+  "prototype",
+  "research",
+  "retro",
+  "setup-matt-pocock-skills",
+  "tdd",
+  "teach",
+  "to-questionnaire",
+  "to-spec",
+  "to-tickets",
+  "triage",
+  "wait-what",
+  "wayfinder",
+  "wizard",
+  "writing-for-agents",
+]
+
+[[skills]]
+source = "humanlayer/skills"
+names = [
+  "build-iterated-agentic-loop",
+  "design-control-loop",
+  "improve-claude-md",
+  "narrow-react-prop-types",
+  "show-me",
+  "visual-pr",
+]
+
+# Private repo: needs `gh auth login` first.
+[[skills]]
+source = "EnderWolf50/skills"
+names = [
+  "dalamud-plugin-build",
+  "dalamud-plugin-integration-auditing",
+  "dalamud-regional-client-adaptation",
+  "dalamud-traditional-chinese-localization",
+  "github-fork-history-analysis",
+]
+
+[[skills]]
+source = "cli/cli"
+names = ["gh"]
+
+[[skills]]
+source = "herdrdev/herdr"
+names = ["herdr"]
+
+[[skills]]
+source = "pbakaus/impeccable"
+names = ["impeccable"]
