@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Register the user-scope MCP servers listed in .chezmoidata/claude.toml ([claude.mcp]); reruns when
+# that list changes. Remove then add, so a new version or argument replaces the old entry.
+if (-not (Get-Command claude -ErrorAction SilentlyContinue)) { Write-Warning 'claude-mcp: claude not found, skipped'; exit 0 }
+{{ range $name, $s := .claude.mcp -}}
+# Registered either way; the server starts once its command is installed.
+if (-not (Get-Command {{ $s.command }} -ErrorAction SilentlyContinue)) { Write-Warning 'claude-mcp: {{ $name }} needs {{ $s.command }}; install it with `tools -Install` (tools.toml), then restart Claude Code' }
+claude mcp remove -s user {{ $name }} *> $null
+claude mcp add -s user {{ $name }} -- {{ $s.command }}{{ range $s.args }} '{{ . }}'{{ end }}
+if ($LASTEXITCODE) { Write-Warning 'claude-mcp: adding {{ $name }} failed' }
+{{ end -}}
+{{ end -}}

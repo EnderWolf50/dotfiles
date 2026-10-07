@@ -4,7 +4,7 @@ Route by what the question asks for:
 
 | Ask | Tool |
 |---|---|
-| **Intent** — where is X implemented, how does Y work, code like this spot | `semble search "<query>" <repo>` (`--content docs\|config\|all` beyond code); from a hit, `semble find-related <file> <line> <repo>` |
+| **Intent** — where is X implemented, how does Y work, code like this spot | `mcp__semble__search` (`content`: `docs`\|`config`\|`all` beyond code; `repo`: the project root); from a hit, `mcp__semble__find_related` |
 | **Literal** — every occurrence of a string or regex, all callers of a symbol, an exact message | `rg` (the Grep tool is ripgrep). Large repo (the search-tools plugin runs `tgrep serve` for it): `tgrep` from `<root>` with the same flags |
 | **Shape** — a construct with variable parts (`foo($$$ARGS)`), a mechanical rewrite across files, a file's symbol outline | `ast-grep run -p '<pattern>' -l <lang>`; `-r '<fix>'` shows a diff, `-U` applies it; `ast-grep outline <path>` |
 
@@ -35,7 +35,7 @@ Change targets only through the source: a drifted target makes `chezmoi apply` s
 ## Tools
 
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
-- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`.
+- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
 - `!` commands get no stdin: a login that asks to paste a key or answer a prompt goes in a separate terminal window.
 {{- if eq .chezmoi.os "windows" }}
 

@@ -54,6 +54,13 @@ source = { source = "github", repo = "michael-denyer/pstack-claude" }
 [claude.append.permissions]
 ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfish agent:*)", "PowerShell(tinyfish browser:*)"]
 
+# mcp: user-scope MCP servers (they live in ~/.claude.json, not settings.json), registered by
+# run_onchange_after_claude-mcp whenever this list changes. semble is one despite the CLI-first rule:
+# its server keeps the index in memory, while the CLI rescans the repo on every call (~20 s in D:\CRM).
+[claude.mcp.semble]
+command = "uvx"
+args    = ["--from", "semble[mcp]==0.6.0", "semble"]
+
 # lsp: the LSP plugin for each language. On a machine whose chezmoi config has `languages` (asked by
 # `chezmoi init`), every apply turns on the plugins of the chosen languages and turns the rest off.
 [claude.lsp]

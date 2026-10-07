@@ -1,4 +1,5 @@
-# Targets left behind by renames; chezmoi apply deletes them.
+# Targets left behind by renames and removals; chezmoi apply deletes them.
 .claude/themes/chezmoi.json
 .claude/skills/mr-sweep
 .claude/skills/ship/watch-mr.sh
+.claude/agents/semble-search.md

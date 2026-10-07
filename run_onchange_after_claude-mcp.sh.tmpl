@@ -1,0 +1,15 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Register the user-scope MCP servers listed in .chezmoidata/claude.toml ([claude.mcp]); reruns when
+# that list changes. Remove then add, so a new version or argument replaces the old entry.
+command -v claude >/dev/null || { echo 'claude-mcp: claude not found, skipped' >&2; exit 0; }
+{{ range $name, $s := .claude.mcp -}}
+# Registered either way; the server starts once its command is installed.
+command -v {{ $s.command }} >/dev/null ||
+  echo 'claude-mcp: {{ $name }} needs {{ $s.command }}; install it (uv: https://docs.astral.sh/uv), then restart Claude Code' >&2
+claude mcp remove -s user {{ $name }} >/dev/null 2>&1
+claude mcp add -s user {{ $name }} -- {{ $s.command }}{{ range $s.args }} '{{ . }}'{{ end }} >/dev/null ||
+  echo 'claude-mcp: adding {{ $name }} failed' >&2
+{{ end -}}
+exit 0
+{{ end -}}
