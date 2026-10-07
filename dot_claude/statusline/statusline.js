@@ -131,9 +131,11 @@ function shortDir(dir, depth) {
 }
 
 // 跑 git，失敗（不是儲存庫、逾時、cwd 不存在）回傳 null
+// --no-optional-locks：status / diff 不寫 index.lock。逾時只殺得到 Windows 的 git 外層程式，
+// 留下的 git.exe 會一直佔著鎖，讓同一個 repo 的 commit、pull 失敗
 function runGit(cwd, args) {
   try {
-    const r = Bun.spawnSync(["git", ...args], { cwd, stdin: "ignore", stderr: "ignore", timeout: 1500, windowsHide: true });
+    const r = Bun.spawnSync(["git", "--no-optional-locks", ...args], { cwd, stdin: "ignore", stderr: "ignore", timeout: 1500, windowsHide: true });
     return r.success ? r.stdout.toString() : null;
   } catch { return null; }
 }
