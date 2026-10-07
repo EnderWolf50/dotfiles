@@ -83,6 +83,7 @@ marketplaces = []
 # seed: written only when the machine has no value for that key yet, so /plugin on one machine is not
 # undone by the next apply. win-toast is left out on purpose (see [claude.local]).
 [claude.seed.enabledPlugins]
+"cc-plugin-you-should-know@builtin"        = true
 "document-skills@anthropic-agent-skills"   = true
 "hookify@claude-plugins-official"          = false
 "impeccable@impeccable"                    = true
