@@ -14,5 +14,7 @@ if ($IsInteractiveConsole) {
   Set-Alias cx codex
   Set-Alias cc claude
   Set-Alias oc opencode
-  Set-Alias hr herdr
+  Set-Alias hd herdr
+  function hds { herdr server @args }
+  function hdsr { herdr server reload-config @args }
 }

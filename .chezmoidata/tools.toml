@@ -208,7 +208,7 @@ scoop   = "versions/opencode2"
 [[tools]]
 name    = "herdr"
 check   = "herdr"
-purpose = "Terminal workspace manager for coding agents (the hr alias)"
+purpose = "Terminal workspace manager for coding agents (the hd, hds, hdsr aliases)"
 used_by = "40-aliases"
 url     = "https://herdr.dev"
 note    = "Installs and updates itself (`herdr update`); no package manager entry."
