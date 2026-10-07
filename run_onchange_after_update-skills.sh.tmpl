@@ -1,0 +1,9 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Pull new versions of the installed global skills. sync-skills reruns only when skills.toml changes,
+# so a skill updated in its source repo would otherwise stay stale; the date below reruns this on the
+# first apply of each day: {{ now | date "2006-01-02" }}
+command -v npx >/dev/null || { echo 'update-skills: npx not found, skipped' >&2; exit 0; }
+npx -y skills update -g -y >/dev/null 2>&1 || echo 'update-skills: skills update failed' >&2
+exit 0
+{{ end -}}
