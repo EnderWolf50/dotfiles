@@ -12,25 +12,17 @@ One search per question: land on the top intent hit and read there; the exhausti
 
 Before the first `tgrep` or `ast-grep` call in a session, load the `search-tools:reference` skill.
 
-## Language
-
-Write every reply and every progress line in 繁體中文, including when the user writes in English.
-
 ## File references
 
 Write every file or directory you mention in a reply (a worktree too) as a markdown link to its absolute `file://` URL, with the repo-relative path (and `:line` when it points at a line) as the text: [src/app.ts:42](file:///home/me/repo/src/app.ts). The terminal turns it into a clickable OSC 8 link; a bare path is not clickable. Forward slashes, spaces as `%20`{{ if eq .chezmoi.os "windows" }}, drive letter after the third slash (`file:///C:/Users/...`){{ end }}. Code blocks and commands keep plain paths.
 
 A web address gets the same shape, with a short name as the text, never a bare URL. Every pull request, merge request, issue, pipeline or commit you mention is such a link, named by its short form: [herdr#4748](https://github.com/herdrdev/herdr/issues/4748), [CRM!2612](https://git.gss.com.tw/CRM/CRM/-/merge_requests/2612); a bare `#4748` or `!2612` is not clickable.
 
-## Waiting
-
-Start a long job with `run_in_background` and wait on it with Monitor; a foreground `sleep` is blocked.
-
 ## Dotfiles
 
-chezmoi manages `~/.claude`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them, `~/.local/share/chezmoi/README.md` maps the source. Edit the source (`chezmoi edit <target>`), then `chezmoi apply`. In `settings.json`, only the keys listed in `.chezmoidata/claude.toml` come from the source; every other key stays local.
+chezmoi manages `~/.claude`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them, `~/.local/share/chezmoi/README.md` maps the source. Change a target only through its source (`chezmoi edit <target>`, then `chezmoi apply`): a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. In `settings.json`, only the keys listed in `.chezmoidata/claude.toml` come from the source; every other key stays local.
 
-Change targets only through the source: a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`. An `R` line is a script that runs on every apply, not drift.
+When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`. An `R` line is a script that runs on every apply, not drift.
 
 ## Tools
 
