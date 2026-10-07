@@ -77,7 +77,7 @@ marketplaces = []
 # undone by the next apply. win-toast is left out on purpose (see [claude.local]).
 [claude.seed.enabledPlugins]
 "document-skills@anthropic-agent-skills"   = true
-"hookify@claude-plugins-official"          = true
+"hookify@claude-plugins-official"          = false
 "impeccable@impeccable"                    = true
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
