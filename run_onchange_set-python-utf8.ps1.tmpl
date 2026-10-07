@@ -1,0 +1,5 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Python reads and writes the console in the ANSI code page (cp950) by default; UTF-8 mode makes
+# piped stdin/stdout UTF-8, so glab/gh JSON and emoji round-trip without UnicodeEncodeError.
+[Environment]::SetEnvironmentVariable('PYTHONUTF8', '1', 'User')
+{{ end -}}
