@@ -368,7 +368,7 @@ note    = "Once per machine: `tinyfish auth login` (free API key, no card)."
 [[tools]]
 name    = "uv"
 check   = "uvx"
-purpose = "Runs the semble MCP server (uvx), pinned in claude.toml [claude.mcp]"
+purpose = "Runs the semble MCP server (uvx), declared in claude.toml [claude.mcp]"
 used_by = "run_onchange_after_claude-mcp"
 url     = "https://docs.astral.sh/uv"
 winget  = "astral-sh.uv"
