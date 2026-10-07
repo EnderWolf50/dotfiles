@@ -85,7 +85,6 @@ marketplaces = []
 [claude.seed.enabledPlugins]
 "cc-plugin-you-should-know@builtin"        = true
 "document-skills@anthropic-agent-skills"   = true
-"hookify@claude-plugins-official"          = false
 "impeccable@impeccable"                    = true
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
