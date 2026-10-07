@@ -58,6 +58,7 @@ names = [
   "github-fork-history-analysis",
   "land",
   "pr-sweep",
+  "prune",
   "ship",
 ]
 
