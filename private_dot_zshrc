@@ -156,7 +156,8 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
-export PATH="$PNPM_HOME:$PATH"
+# pnpm 11+ links global commands into $PNPM_HOME/bin; older versions into $PNPM_HOME
+export PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 # pnpm end
 
 # bun

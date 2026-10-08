@@ -21,6 +21,11 @@
 #            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
 #   brew     the Homebrew formula on Linux / WSL; `run_before_install-tools.sh` installs the
 #            missing ones on every apply
+#   cask     the Homebrew cask instead, for a tool that ships as one (installed with --cask)
+#            Linux falls back to `npm` (pnpm add -g) for a tool with neither
+#   os       "windows" for a tool only Windows uses; Linux skips its npm package
+#   after    what to do once after installing it; the Linux install script and `Show-Tools -Install`
+#            print it for each tool they just installed
 #   note     anything else worth knowing
 #
 # Keep this in step with the code: a new `has <tool>`, alias target or
@@ -130,6 +135,7 @@ purpose = "Extra completion specs that carapace borrows when it has none of its 
 used_by = "30-readline (CARAPACE_BRIDGES)"
 url     = "https://github.com/microsoft/inshellisense"
 npm     = "@microsoft/inshellisense"
+os      = "windows"
 
 [[tools]]
 name    = "gsudo"
@@ -199,6 +205,7 @@ check   = "gh"
 purpose = "GitHub credentials for git (`gh auth login` once)"
 used_by = ".gitconfig credential helper"
 url     = "https://github.com/cli/cli"
+after   = "gh auth login"
 brew    = "gh"
 winget  = "GitHub.cli"
 
@@ -208,6 +215,8 @@ check   = "codex"
 purpose = "OpenAI's coding agent (the cx alias)"
 used_by = "40-aliases"
 url     = "https://github.com/openai/codex"
+after   = "codex login"
+cask    = "codex"
 scoop   = "codex"
 
 [[tools]]
@@ -216,6 +225,8 @@ check   = "claude"
 purpose = "Anthropic's coding agent (the cc alias)"
 used_by = "40-aliases"
 url     = "https://claude.com/product/claude-code"
+after   = "claude auth login"
+cask    = "claude-code"
 scoop   = "claude-code"
 note    = "This machine uses the native installer (~/.local/bin/claude.exe), which the scoop package also provides."
 
@@ -225,6 +236,8 @@ check   = "opencode"
 purpose = "Open-source coding agent (the oc alias)"
 used_by = "40-aliases"
 url     = "https://opencode.ai"
+after   = "opencode auth login"
+brew    = "opencode"
 scoop   = "versions/opencode2"
 
 [[tools]]
@@ -233,7 +246,8 @@ check   = "herdr"
 purpose = "Terminal workspace manager for coding agents (the hd, hds, hdsr aliases)"
 used_by = "40-aliases"
 url     = "https://herdr.dev"
-note    = "Installs and updates itself (`herdr update`); no package manager entry."
+brew    = "herdr"
+note    = "On Windows it installs and updates itself (`herdr update`); no winget or scoop entry."
 
 [[tools]]
 name    = "pathed"
@@ -390,8 +404,8 @@ check   = "tinyfish"
 purpose = "Web search and fetch for coding agents, free within rate limits"
 used_by = "the use-tinyfish skill (skills.toml)"
 url     = "https://tinyfish.ai"
+after   = "tinyfish auth login (free API key, no card)"
 npm     = "@tiny-fish/cli"
-note    = "Once per machine: `tinyfish auth login` (free API key, no card)."
 
 [[tools]]
 name    = "uv"
