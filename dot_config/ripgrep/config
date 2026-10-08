@@ -1,0 +1,4 @@
+# Read through RIPGREP_CONFIG_PATH, which only Claude Code sessions set (dot_claude/modify_settings.json):
+# a match inside a minified file prints a 300-character preview instead of the whole line.
+--max-columns=300
+--max-columns-preview
