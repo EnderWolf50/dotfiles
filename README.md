@@ -21,6 +21,10 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 `.chezmoidata/tools.toml`. Creating the `%LOCALAPPDATA%\nvim` symlink needs Developer Mode
 (or an elevated shell).
 
+Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew`
+formulas in `tools.toml` that are missing (`run_before_install-tools.sh`); the first one asks for
+the sudo password.
+
 ## Layout
 
 | Path | What |
