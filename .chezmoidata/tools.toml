@@ -75,6 +75,15 @@ brew    = "eza"
 winget  = "eza-community.eza"
 
 [[tools]]
+name    = "tree"
+check   = "tree"
+purpose = "Directory tree in zsh (PowerShell's tree is the eza function)"
+used_by = ".zshrc"
+url     = "https://oldmanprogrammer.net/source.php?dir=projects/tree"
+brew    = "tree"
+note    = "Windows has its own tree.com, so Show-Tools reports it installed there."
+
+[[tools]]
 name    = "fd"
 check   = "fd"
 purpose = "Directory list for Alt+c (PSFzf's own default is very slow on Windows)"
