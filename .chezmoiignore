@@ -17,6 +17,7 @@ README.md
 .tmux.conf
 .zimrc
 .zprofile
+.zshenv
 .zshrc
 {{- else -}}
 # Windows-only files
