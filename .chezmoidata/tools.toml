@@ -84,6 +84,15 @@ brew    = "tree"
 note    = "Windows has its own tree.com, so Show-Tools reports it installed there."
 
 [[tools]]
+name    = "wl-clipboard"
+check   = "wl-copy"
+purpose = "Clipboard for CLIs on Linux / WSLg (gh copies its one-time login code with it)"
+used_by = "gh auth login"
+url     = "https://github.com/bugaevc/wl-clipboard"
+brew    = "wl-clipboard"
+note    = "Windows has its own clipboard, so Show-Tools reports it installed there."
+
+[[tools]]
 name    = "fd"
 check   = "fd"
 purpose = "Directory list for Alt+c (PSFzf's own default is very slow on Windows)"
