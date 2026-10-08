@@ -3,13 +3,14 @@ README.md
 **/lazyvim.json
 
 {{ if eq .chezmoi.os "windows" -}}
-# Unix-side dotfiles. Shared with Windows: bump, enved (and pathed), herdr (HERDR_CONFIG_PATH), nvim
+# Unix-side dotfiles. Shared with Windows: bump, enved (and pathed), herdr (HERDR_CONFIG_PATH), mise, nvim
 # (symlinked from %LOCALAPPDATA%), ripgrep (RIPGREP_CONFIG_PATH) and starship; lazygit is included from
 # AppData/Local/lazygit.
 .config/*
 !.config/bump
 !.config/enved
 !.config/herdr
+!.config/mise
 !.config/nvim
 !.config/ripgrep
 !.config/starship.toml

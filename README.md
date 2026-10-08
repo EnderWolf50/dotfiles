@@ -23,7 +23,8 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 
 Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew`
 formulas in `tools.toml` that are missing (`run_before_install-tools.sh`); the first one asks for
-the sudo password.
+the sudo password. After the files, `run_onchange_after_mise-install.sh` installs the tools in
+the shared mise config (`dot_config/mise/config.toml`: node, uv, ...); on Windows, run `mise install`.
 
 ## Layout
 

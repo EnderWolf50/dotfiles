@@ -2,6 +2,7 @@
 #!/bin/sh
 # Make the global skills match .chezmoidata/skills.toml. Codex makes the CLI install into
 # ~/.agents/skills (read by Codex, Copilot, OpenCode); Claude Code gets a symlink to it.
+{{ template "tool-path.sh" . }}
 command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
 wanted='{{ range .skills }}{{ range .names }} {{ . }}{{ end }}{{ end }} '

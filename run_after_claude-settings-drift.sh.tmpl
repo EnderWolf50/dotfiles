@@ -4,6 +4,7 @@
 # .chezmoidata/claude.toml does not know. Removing an entry from claude.toml never removes it from
 # a machine's settings.json, so this is where a removal gets finished on the other machines.
 # Asks about each entry only on a terminal; otherwise it only lists them.
+{{ template "tool-path.sh" . }}
 settings="$HOME/.claude/settings.json"
 [ -f "$settings" ] || exit 0
 command -v jq >/dev/null || { echo 'claude-settings-drift: jq not found, skipped' >&2; exit 0; }

@@ -2,6 +2,7 @@
 #!/bin/sh
 # Register the user-scope MCP servers listed in .chezmoidata/claude.toml ([claude.mcp]); reruns when
 # that list changes. Remove then add, so a new version or argument replaces the old entry.
+{{ template "tool-path.sh" . }}
 command -v claude >/dev/null || { echo 'claude-mcp: claude not found, skipped' >&2; exit 0; }
 {{ range $name, $s := .claude.mcp -}}
 # Registered either way; the server starts once its command is installed.
