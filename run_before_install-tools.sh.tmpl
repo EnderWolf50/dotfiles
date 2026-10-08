@@ -1,0 +1,33 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+# Install what .chezmoidata/tools.toml lists for Linux (`brew`) and this machine lacks. Runs before
+# the files on every apply, so a failed install is retried and the first .zshrc finds its tools;
+# with nothing missing it only looks the commands up. zsh comes from apt: a login shell has to be
+# in /etc/shells.
+brew=/home/linuxbrew/.linuxbrew/bin/brew
+
+if ! command -v zsh >/dev/null; then
+  echo 'install-tools: installing zsh (asks for the sudo password)'
+  sudo apt-get update && sudo apt-get install -y zsh && chsh -s "$(command -v zsh)" ||
+    echo 'install-tools: installing zsh failed' >&2
+fi
+
+if [ ! -x "$brew" ]; then
+  echo 'install-tools: installing Homebrew (asks for the sudo password)'
+  sudo apt-get install -y build-essential procps curl file git &&
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" ||
+    { echo 'install-tools: installing Homebrew failed, tools skipped' >&2; exit 0; }
+fi
+eval "$("$brew" shellenv)"
+
+missing=
+{{- range $tool := .tools }}
+{{- if and (hasKey $tool "brew") (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
+command -v {{ $tool.check }} >/dev/null || missing="$missing {{ $tool.brew }}"
+{{- end }}
+{{- end }}
+[ -z "$missing" ] && exit 0
+echo "install-tools: brew install$missing"
+brew install $missing || echo 'install-tools: brew install failed' >&2
+exit 0
+{{ end -}}

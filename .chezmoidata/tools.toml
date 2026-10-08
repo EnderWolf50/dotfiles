@@ -19,6 +19,8 @@
 #            value may be `bucket/app`; the bucket is added first. An npm value is a package on the npm registry,
 #            installed with `pnpm add -g` so a Node upgrade keeps it. A go value is a module path,
 #            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
+#   brew     the Homebrew formula on Linux / WSL; `run_before_install-tools.sh` installs the
+#            missing ones on every apply
 #   note     anything else worth knowing
 #
 # Keep this in step with the code: a new `has <tool>`, alias target or
@@ -55,6 +57,7 @@ check   = "starship"
 purpose = "The prompt"
 used_by = "20-prompt"
 url     = "https://starship.rs"
+brew    = "starship"
 winget  = "Starship.Starship"
 
 [[tools]]
@@ -63,6 +66,7 @@ check   = "eza"
 purpose = "ls, ll, la, lt and tree, with icons and the theme colors"
 used_by = "50-ls"
 url     = "https://github.com/eza-community/eza"
+brew    = "eza"
 winget  = "eza-community.eza"
 
 [[tools]]
@@ -71,6 +75,7 @@ check   = "fd"
 purpose = "Directory list for Alt+c (PSFzf's own default is very slow on Windows)"
 used_by = "30-readline"
 url     = "https://github.com/sharkdp/fd"
+brew    = "fd"
 winget  = "sharkdp.fd"
 
 [[tools]]
@@ -79,6 +84,7 @@ check   = "fzf"
 purpose = "The fuzzy finder behind Ctrl+t, Ctrl+r and Alt+c"
 used_by = "30-readline"
 url     = "https://github.com/junegunn/fzf"
+brew    = "fzf"
 winget  = "junegunn.fzf"
 
 [[tools]]
@@ -96,6 +102,7 @@ check   = "zoxide"
 purpose = "Jump to frequent directories: z and zi"
 used_by = "80-tools"
 url     = "https://github.com/ajeetdsouza/zoxide"
+brew    = "zoxide"
 winget  = "ajeetdsouza.zoxide"
 
 [[tools]]
@@ -104,6 +111,7 @@ check   = "mise"
 purpose = "Per-directory tool versions and PATH"
 used_by = "80-tools"
 url     = "https://mise.jdx.dev"
+brew    = "mise"
 winget  = "jdx.mise"
 
 [[tools]]
@@ -146,6 +154,7 @@ check   = "bat"
 purpose = "cat with syntax highlighting (the cat alias)"
 used_by = "40-aliases"
 url     = "https://github.com/sharkdp/bat"
+brew    = "bat"
 winget  = "sharkdp.bat"
 
 [[tools]]
@@ -154,6 +163,7 @@ check   = "nvim"
 purpose = "Editor: the vim alias and EDITOR"
 used_by = "40-aliases, 10-environment"
 url     = "https://neovim.io"
+brew    = "neovim"
 winget  = "Neovim.Neovim"
 
 [[tools]]
@@ -162,6 +172,7 @@ check   = "lazygit"
 purpose = "git UI (the lg alias)"
 used_by = "40-aliases"
 url     = "https://github.com/jesseduffield/lazygit"
+brew    = "lazygit"
 winget  = "JesseDuffield.lazygit"
 
 [[tools]]
@@ -170,7 +181,17 @@ check   = "delta"
 purpose = "Pager for git diff / log / show, and for lazygit's diffs"
 used_by = ".gitconfig, lazygit config.yml"
 url     = "https://github.com/dandavison/delta"
+brew    = "git-delta"
 winget  = "dandavison.delta"
+
+[[tools]]
+name    = "jq"
+check   = "jq"
+purpose = "JSON for the run scripts: settings.json drift, the installed skills list"
+used_by = "run_after_claude-settings-drift, run_onchange_after_sync-skills.sh"
+url     = "https://jqlang.org"
+brew    = "jq"
+scoop   = "jq"
 
 [[tools]]
 name    = "GitHub CLI"
@@ -178,6 +199,7 @@ check   = "gh"
 purpose = "GitHub credentials for git (`gh auth login` once)"
 used_by = ".gitconfig credential helper"
 url     = "https://github.com/cli/cli"
+brew    = "gh"
 winget  = "GitHub.cli"
 
 [[tools]]
@@ -254,6 +276,7 @@ check   = "bun"
 purpose = "Runs the Claude Code statusline"
 used_by = "dot_claude/statusline/statusline.js; the typescript7-lsp plugin (enderwolf50)"
 url     = "https://bun.sh"
+brew    = "oven-sh/bun/bun"
 winget  = "Oven-sh.Bun"
 scoop   = "bun"
 
@@ -263,6 +286,7 @@ check   = "pnpm"
 purpose = "Installs the npm-registry tools below (`pnpm add -g`), outside Node's own folder"
 used_by = "Show-Tools -Install"
 url     = "https://pnpm.io"
+brew    = "pnpm"
 note    = "From corepack, which mise installs (`npm:corepack` in the global mise config): `corepack enable pnpm`."
 
 [[tools]]
@@ -281,6 +305,7 @@ purpose = "Go language server"
 used_by = "Claude Code gopls-lsp plugin"
 lang    = "go"
 url     = "https://go.dev/gopls"
+brew    = "gopls"
 go      = "golang.org/x/tools/gopls"
 
 [[tools]]
@@ -290,6 +315,7 @@ purpose = "Python language server"
 used_by = "Claude Code pyright-lsp plugin"
 lang    = "python"
 url     = "https://github.com/microsoft/pyright"
+brew    = "pyright"
 npm     = "pyright"
 
 [[tools]]
@@ -299,6 +325,7 @@ purpose = "TypeScript / JavaScript language server"
 used_by = "Claude Code typescript-lsp plugin"
 lang    = "typescript"
 url     = "https://github.com/typescript-language-server/typescript-language-server"
+brew    = "typescript-language-server"
 npm     = "typescript-language-server"
 note    = "Uses the TypeScript in the project's node_modules; TypeScript 7 has no tsserver, so it needs 6.x or older; 7 serves LSP itself (`tsc --lsp --stdio`), which needs an LSP plugin of its own."
 
@@ -345,6 +372,7 @@ purpose = "Rust language server"
 used_by = "Claude Code rust-analyzer-lsp plugin"
 lang    = "rust"
 url     = "https://rust-analyzer.github.io"
+brew    = "rust-analyzer"
 note    = "A rustup component: `rustup component add rust-analyzer` (the rustup proxy exists without it, so check with `rust-analyzer --version`)."
 
 [[tools]]
@@ -371,6 +399,7 @@ check   = "uvx"
 purpose = "Runs the semble MCP server (uvx), declared in claude.toml [claude.mcp]"
 used_by = "run_onchange_after_claude-mcp"
 url     = "https://docs.astral.sh/uv"
+brew    = "uv"
 winget  = "astral-sh.uv"
 scoop   = "uv"
 note    = "This machine gets it from mise (`uv = \"latest\"` in the global mise config)."
