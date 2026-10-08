@@ -1,5 +1,5 @@
 
-# Start configuration added by Zim install {{{
+# Start configuration added by Zim install {{ "{{{" }}
 #
 # User configuration sourced by interactive shells
 #
@@ -129,15 +129,75 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-# Start configuration added by Zim install {{{
+# Start configuration added by Zim install {{ "{{{" }}
 #
 # --------------------
 # Custom configuration
 # --------------------
 
+export EDITOR=nvim
+
 # aliases
-alias vim="nvim"
+(( $+commands[nvim] )) && alias vim="nvim"
+(( $+commands[bat] )) && alias cat="bat"
 alias lg="lazygit"
+alias cm="chezmoi"
+alias cx="codex"
+alias cc="claude"
+alias oc="opencode"
+alias hd="herdr"
+alias hds="herdr server"
+alias hdsr="herdr server reload-config"
+alias b64enc="base64"
+alias b64dec="base64 -d"
+
+# Icons in eza's output, also through the exa module's ls, ll, l and lr (off when piped).
+export EZA_ICONS_AUTO=1
+
+# fzf: the theme's colors (`.chezmoidata/themes.toml`; `-1` keeps the terminal's own background)
+# and a compact box under the prompt instead of full screen, as in PowerShell.
+{{- $palette := (index .themes .theme).palette }}
+export FZF_DEFAULT_OPTS='--color={{ range $i, $role := keys .roles.fzf | sortAlpha }}{{ if $i }},{{ end }}{{ $role }}:{{ template "theme/spec" (dict "palette" $palette "spec" (index $.roles.fzf $role)) }}{{ end }} --layout=reverse --height=40% --border=rounded --info=inline-right --prompt="❯ " --pointer="▌" --marker="✓"'
+
+# `conf <name>` jumps to a tool's config folder, `-o` opens it in Explorer (WSL) and `-e` in the
+# editor. `conf` alone lists them; Tab completes the names.
+typeset -A ConfDirs=(
+  chezmoi  ~/.local/share/chezmoi
+  claude   ~/.claude
+  codex    ~/.codex
+  opencode ~/.config/opencode
+  agents   ~/.agents
+  herdr    ~/.config/herdr
+  hermes   ~/.hermes
+  mise     ~/.config/mise
+  nvim     ~/.config/nvim
+)
+
+conf() {
+  local mode=cd
+  case $1 in
+    -o) mode=open; shift ;;
+    -e) mode=edit; shift ;;
+  esac
+  if [[ -z $1 ]]; then
+    local name
+    for name in ${(ko)ConfDirs}; printf '%-10s %s\n' $name $ConfDirs[$name]
+    return
+  fi
+  local dir=$ConfDirs[$1]
+  if [[ -z $dir ]]; then
+    local names=(${(ko)ConfDirs})
+    print -u2 "conf: unknown '$1', one of: ${(j:, :)names}"
+    return 1
+  fi
+  case $mode in
+    open) (cd $dir && open .) ;;
+    edit) $EDITOR $dir ;;
+    *) cd $dir ;;
+  esac
+}
+_conf() { _arguments '-o[open in Explorer]' '-e[open in the editor]' "1:name:(${(k)ConfDirs})" }
+compdef _conf conf
 
 if [[ -v WSL_DISTRO_NAME ]] then # wsl specific
   alias open="/mnt/c/Windows/explorer.exe" 
