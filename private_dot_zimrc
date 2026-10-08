@@ -8,6 +8,10 @@
 # Modules
 #
 
+# Homebrew's PATH and completions, first: exa and fzf check for their commands when they load,
+# and completion has to see brew's site-functions.
+zmodule homebrew
+
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
@@ -60,7 +64,6 @@ zmodule ohmyzsh/ohmyzsh --root plugins/tmux
 
 zmodule exa   # uses eza when installed, despite the name
 zmodule fzf
-zmodule homebrew
 zmodule joke/zim-chezmoi
 zmodule joke/zim-github-cli
 

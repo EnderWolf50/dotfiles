@@ -151,9 +151,6 @@ bindkey -s '^f' "tmux-sessionizer\n"
 # cargo
 export PATH="$PATH:$HOME/.cargo/bin"
 
-# homebrew
-[[ -x /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # pipx
 export PATH="$PATH:$HOME/.local/bin"
 
