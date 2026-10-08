@@ -1,9 +1,9 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/bin/sh
-# Install what .chezmoidata/tools.toml lists for Linux (`brew`) and this machine lacks. Runs before
-# the files on every apply, so a failed install is retried and the first .zshrc finds its tools;
-# with nothing missing it only looks the commands up. zsh comes from apt: a login shell has to be
-# in /etc/shells.
+# Install what .chezmoidata/tools.toml lists for Linux (`brew`, `cask`, `npm`) and this machine
+# lacks. Runs before the files on every apply, so a failed install is retried and the first .zshrc
+# finds its tools; with nothing missing it only looks the commands up. zsh comes from apt: a login
+# shell has to be in /etc/shells.
 brew=/home/linuxbrew/.linuxbrew/bin/brew
 
 if ! command -v zsh >/dev/null; then
@@ -19,15 +19,50 @@ if [ ! -x "$brew" ]; then
     { echo 'install-tools: installing Homebrew failed, tools skipped' >&2; exit 0; }
 fi
 eval "$("$brew" shellenv)"
+# Same PNPM_HOME as .zshrc, so the npm tools below are found, and pnpm (a brew formula) agrees to
+# a global add: it refuses one whose bin directory is not on PATH.
+export PNPM_HOME="$HOME/.local/share/pnpm"
+PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 
-missing=
+formulas=
+casks=
+npms=
+new=
 {{- range $tool := .tools }}
-{{- if and (hasKey $tool "brew") (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
-command -v {{ $tool.check }} >/dev/null || missing="$missing {{ $tool.brew }}"
+{{- if and (or (hasKey $tool "brew") (hasKey $tool "cask") (and (hasKey $tool "npm") (ne (index $tool "os" | default "") "windows"))) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
+{{- if hasKey $tool "brew" }}
+command -v {{ $tool.check }} >/dev/null || { formulas="$formulas {{ $tool.brew }}"; new="$new {{ $tool.check }}"; }
+{{- else if hasKey $tool "cask" }}
+command -v {{ $tool.check }} >/dev/null || { casks="$casks {{ $tool.cask }}"; new="$new {{ $tool.check }}"; }
+{{- else }}
+command -v {{ $tool.check }} >/dev/null || { npms="$npms {{ $tool.npm }}"; new="$new {{ $tool.check }}"; }
 {{- end }}
 {{- end }}
-[ -z "$missing" ] && exit 0
-echo "install-tools: brew install$missing"
-brew install $missing || echo 'install-tools: brew install failed' >&2
+{{- end }}
+if [ -n "$formulas" ]; then
+  echo "install-tools: brew install$formulas"
+  brew install $formulas || echo 'install-tools: brew install failed' >&2
+fi
+if [ -n "$casks" ]; then
+  echo "install-tools: brew install --cask$casks"
+  brew install --cask $casks || echo 'install-tools: brew install --cask failed' >&2
+fi
+if [ -n "$npms" ]; then
+  echo "install-tools: pnpm add -g$npms"
+  pnpm add -g $npms || echo 'install-tools: pnpm add -g failed' >&2
+fi
+
+# Print what the tools installed just now still need once (`after` in tools.toml), skipping any
+# install that failed.
+[ -z "$new" ] && exit 0
+steps=
+{{- range $tool := .tools }}
+{{- if hasKey $tool "after" }}
+case "$new " in *" {{ $tool.check }} "*) command -v {{ $tool.check }} >/dev/null && steps="$steps
+  {{ $tool.after }}" ;; esac
+{{- end }}
+{{- end }}
+[ -n "$steps" ] && echo "install-tools: to do once for what was just installed:$steps"
+echo 'install-tools: open a new terminal (or run exec zsh) to pick up the new commands'
 exit 0
 {{ end -}}

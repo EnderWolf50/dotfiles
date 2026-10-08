@@ -20,6 +20,7 @@ if ($IsInteractiveConsole) {
       PSGallery = '{{ index $tool "psgallery" | default "" }}'
       Go        = '{{ index $tool "go" | default "" }}'
       Note      = '{{ index $tool "note" | default "" | replace "'" "''" }}'
+      After     = '{{ index $tool "after" | default "" | replace "'" "''" }}'
     }
 {{- end }}
 {{- end }}
@@ -70,6 +71,7 @@ if ($IsInteractiveConsole) {
     $absent = @($rows | Where-Object Installed -eq 'NO')
 
     if ($Install) {
+      $installed = @()
       foreach ($row in $absent) {
         if (-not $row.Install) {
           Write-Warning "$($row.Name): no package manager entry, see $($row.Tool.Note)"
@@ -85,8 +87,19 @@ if ($IsInteractiveConsole) {
           if ($command.StartsWith('winget ')) {
             $command += ' --accept-package-agreements --accept-source-agreements'
           }
+          $global:LASTEXITCODE = 0
           Invoke-Expression $command
+          if ($? -and $LASTEXITCODE -eq 0) { $installed += $row }
         }
+      }
+      # What the tools installed just now still need once (`after` in tools.toml).
+      if ($installed.Count) {
+        $steps = @($installed | Where-Object { $_.Tool.After } | ForEach-Object { $_.Tool.After })
+        if ($steps.Count) {
+          Write-Host 'To do once for what was just installed:'
+          $steps | ForEach-Object { Write-Host "  $_" }
+        }
+        Write-Host 'Open a new PowerShell window to pick up the new commands.'
       }
       return
     }

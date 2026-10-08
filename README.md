@@ -21,8 +21,8 @@ is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery
 `.chezmoidata/tools.toml`. Creating the `%LOCALAPPDATA%\nvim` symlink needs Developer Mode
 (or an elevated shell).
 
-Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew`
-formulas in `tools.toml` that are missing (`run_before_install-tools.sh`); the first one asks for
+Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew` / `cask` /
+`npm` packages in `tools.toml` that are missing (`run_before_install-tools.sh`); the first one asks for
 the sudo password. After the files, `run_onchange_after_mise-install.sh` installs the tools in
 the shared mise config (`dot_config/mise/config.toml`: node, uv, ...); on Windows, run `mise install`.
 
