@@ -1,0 +1,3 @@
+# Ubuntu's /etc/zsh/zshrc runs compinit unless this is set; zim's completion module runs it
+# itself, and warns when it was already initialized.
+skip_global_compinit=1
