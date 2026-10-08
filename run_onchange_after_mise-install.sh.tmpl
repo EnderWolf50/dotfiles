@@ -1,0 +1,11 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Install the tools in the global mise config (dot_config/mise/config.toml: node, uv, ...); reruns
+# when that file changes. After the files, so the config is in place; before sync-skills, which
+# needs npx. Windows installs them by hand with `mise install`.
+# config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+{{ template "tool-path.sh" . }}
+command -v mise >/dev/null || { echo 'mise-install: mise not found, skipped' >&2; exit 0; }
+cd "$HOME" && mise install || echo 'mise-install: mise install failed' >&2
+exit 0
+{{ end -}}
