@@ -12,7 +12,7 @@ export CXX="clang++"
 # wsl specific environment variables
 # manually add some PATHs here since I disabled `interop.appendWindowsPath` in etc/wsl.conf
 if [[ -v WSL_DISTRO_NAME ]] then
-  export BROWSER="wslview"
+  export BROWSER="/mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler"
 
   path+=(
     "/mnt/c/Program Files/Microsoft VS Code/bin"
