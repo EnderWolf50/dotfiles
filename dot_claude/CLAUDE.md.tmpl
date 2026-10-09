@@ -29,6 +29,9 @@ When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi ap
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
 - Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
 - `!` commands get no stdin: a login that asks to paste a key or answer a prompt goes in a separate terminal window.
+{{- if ne .chezmoi.os "windows" }}
+- Stop processes by PID: `pgrep -f <pattern>`, check the list, then `kill <pid>`. `pkill -f` also matches the shell running it whenever the pattern sits in that shell's own command line, and kills it.
+{{- end }}
 {{- if eq .chezmoi.os "windows" }}
 
 ## Windows shell
