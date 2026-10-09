@@ -46,9 +46,6 @@ source = { source = "github", repo = "pbakaus/impeccable" }
 [claude.merge.extraKnownMarketplaces."ponytail"]
 source = { source = "github", repo = "DietrichGebert/ponytail" }
 
-[claude.merge.extraKnownMarketplaces."pstack-claude"]
-source = { source = "github", repo = "michael-denyer/pstack-claude" }
-
 # append: list entries added to an object's list when missing; the machine's own entries stay.
 # Asked first even in auto mode: TinyFish agent and browser runs bill per step / minute (search and fetch are free).
 [claude.append.permissions]
@@ -88,6 +85,5 @@ marketplaces = []
 "impeccable@impeccable"                    = true
 "playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
-"pstack@pstack-claude"                     = true
 "search-tools@enderwolf50"                 = true
 "security-guidance@claude-plugins-official" = true

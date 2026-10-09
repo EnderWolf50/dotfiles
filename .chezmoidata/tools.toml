@@ -209,6 +209,33 @@ brew    = "git-delta"
 winget  = "dandavison.delta"
 
 [[tools]]
+name    = "ripgrep"
+check   = "rg"
+purpose = "Literal code search; the search-tools plugin rewrites grep -r to it"
+used_by = "dot_claude/CLAUDE.md (Code search), search-tools plugin"
+url     = "https://github.com/BurntSushi/ripgrep"
+brew    = "ripgrep"
+scoop   = "ripgrep"
+
+[[tools]]
+name    = "tgrep"
+check   = "tgrep"
+purpose = "Indexed literal search for large repos; the search-tools plugin runs tgrep serve per session"
+used_by = "dot_claude/CLAUDE.md (Code search), search-tools plugin"
+url     = "https://github.com/microsoft/tgrep"
+brew    = "tgrep"
+scoop   = "tgrep"
+
+[[tools]]
+name    = "ast-grep"
+check   = "ast-grep"
+purpose = "Structural code search and rewrite"
+used_by = "dot_claude/CLAUDE.md (Code search)"
+url     = "https://ast-grep.github.io"
+brew    = "ast-grep"
+scoop   = "ast-grep"
+
+[[tools]]
 name    = "jq"
 check   = "jq"
 purpose = "JSON for the run scripts: settings.json drift, the installed skills list"
@@ -424,6 +451,16 @@ used_by = "the use-tinyfish skill (skills.toml)"
 url     = "https://tinyfish.ai"
 after   = "tinyfish auth login (free API key, no card)"
 npm     = "@tiny-fish/cli"
+
+[[tools]]
+name    = "Railway CLI"
+check   = "railway"
+purpose = "Deploys and manages Railway projects"
+used_by = "the use-railway skill"
+url     = "https://docs.railway.com/guides/cli"
+after   = "railway login"
+brew    = "railway"
+npm     = "@railway/cli"
 
 [[tools]]
 name    = "uv"

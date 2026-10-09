@@ -71,10 +71,6 @@ source = "herdrdev/herdr"
 names = ["herdr"]
 
 [[skills]]
-source = "pbakaus/impeccable"
-names = ["impeccable"]
-
-[[skills]]
 source = "upstash/context7"
 names = ["find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per machine raises the rate limit
 
