@@ -51,6 +51,7 @@ names = [
 [[skills]]
 source = "EnderWolf50/skills"
 names = [
+  "acceptance-checklist",
   "compare-alternatives",
   "dalamud-plugin-build",
   "dalamud-plugin-integration-auditing",
