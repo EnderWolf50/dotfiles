@@ -472,3 +472,57 @@ brew    = "uv"
 winget  = "astral-sh.uv"
 scoop   = "uv"
 note    = "This machine gets it from mise (`uv = \"latest\"` in the global mise config)."
+
+[[tools]]
+name    = "ImageMagick"
+check   = "magick"
+purpose = "Crops, blurs and resizes images from the command line (redacting screenshots before they go into a repo)"
+used_by = "coding agents"
+url     = "https://imagemagick.org"
+brew    = "imagemagick"
+winget  = "ImageMagick.ImageMagick"
+
+[[tools]]
+name    = "ffmpeg"
+check   = "ffmpeg"
+purpose = "Converts and trims video and audio; turns screen or Playwright recordings into GIF / MP4"
+used_by = "coding agents"
+url     = "https://ffmpeg.org"
+brew    = "ffmpeg"
+winget  = "Gyan.FFmpeg"
+
+[[tools]]
+name    = "ExifTool"
+check   = "exiftool"
+purpose = "Reads and strips image metadata (camera, paths, GPS) before a screenshot goes into a repo"
+used_by = "coding agents"
+url     = "https://exiftool.org"
+brew    = "exiftool"
+winget  = "OliverBetz.ExifTool"
+
+[[tools]]
+name    = "Poppler"
+check   = "pdftotext"
+purpose = "PDF to text (pdftotext) and to images (pdftoppm)"
+used_by = "coding agents"
+url     = "https://poppler.freedesktop.org"
+brew    = "poppler"
+winget  = "oschwartz10612.Poppler"
+
+[[tools]]
+name    = "yq"
+check   = "yq"
+purpose = "jq for YAML, TOML and XML: reads and edits config and front matter in the shell"
+used_by = "coding agents"
+url     = "https://github.com/mikefarah/yq"
+brew    = "yq"
+winget  = "MikeFarah.yq"
+
+[[tools]]
+name    = "oxipng"
+check   = "oxipng"
+purpose = "Lossless PNG compression, for screenshots before they go into a repo"
+used_by = "coding agents"
+url     = "https://github.com/oxipng/oxipng"
+brew    = "oxipng"
+scoop   = "oxipng"
