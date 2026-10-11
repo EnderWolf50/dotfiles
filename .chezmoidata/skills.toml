@@ -51,14 +51,23 @@ names = [
 [[skills]]
 source = "EnderWolf50/skills"
 names = [
+  "compare-alternatives",
   "dalamud-plugin-build",
   "dalamud-plugin-integration-auditing",
   "dalamud-regional-client-adaptation",
   "dalamud-traditional-chinese-localization",
+  "dotfiles",
   "github-fork-history-analysis",
+  "grilling-patch",
+  "implement-patch",
+  "implement-spec-patch",
   "land",
+  "move-claude-project",
   "pr-sweep",
   "prune",
+  "release-cli",
+  "retro-all",
+  "retro-patch",
   "ship",
 ]
 

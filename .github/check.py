@@ -55,6 +55,22 @@ with tempfile.TemporaryDirectory() as tmp, tarfile.open(fileobj=io.BytesIO(tar.s
             failed += 1
             print(f"{m.name}: {err}")
 
+# tools.toml: a tool without `os` installs on both OSes, or on neither (its `note` says how).
+WINDOWS, LINUX = {"winget", "scoop", "npm", "psgallery", "go"}, {"brew", "cask", "npm"}
+for tool in tomllib.load(open(".chezmoidata/tools.toml", "rb"))["tools"]:
+    os_ = tool.get("os")
+    win, lin = bool(WINDOWS & tool.keys()), bool(LINUX & tool.keys())
+    if os_ not in (None, "windows", "linux"):
+        err = f'os = "{os_}" is neither "windows" nor "linux"'
+    elif os_ is None and win != lin:
+        err = f'installs only on {"Windows" if win else "Linux"}: add the other OS\'s install field, or os = "..."'
+    elif os_ is None and not win and "note" not in tool:
+        err = "no install field and no note saying how to install it"
+    else:
+        continue
+    failed += 1
+    print(f".chezmoidata/tools.toml: {tool['name']}: {err}")
+
 # modify_settings.json `append`: the machine's own list entries stay, the repo's are added once.
 local = {"permissions": {"ask": ["Bash(rm:*)", "Bash(tinyfish agent:*)"]}}
 r = subprocess.run(["chezmoi", "execute-template", "--source", ".", "--with-stdin", "-f", "dot_claude/modify_settings.json"],

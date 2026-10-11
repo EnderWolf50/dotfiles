@@ -23,7 +23,10 @@
 #            missing ones on every apply
 #   cask     the Homebrew cask instead, for a tool that ships as one (installed with --cask)
 #            Linux falls back to `npm` (pnpm add -g) for a tool with neither
-#   os       "windows" for a tool only Windows uses; Linux skips its npm package
+#   os       "windows" or "linux" for a tool only that OS uses; the other OS skips it. Without `os`, a
+#            tool needs an install field for each OS (winget / scoop / npm / psgallery / go on
+#            Windows, brew / cask / npm on Linux), or none at all when `note` says how to install
+#            it; `.github/check.py` enforces this
 #   after    what to do once after installing it; the Linux install script and `Show-Tools -Install`
 #            print it for each tool they just installed
 #   note     anything else worth knowing
@@ -37,6 +40,7 @@ check   = "pwsh"
 purpose = "The shell this profile is written for"
 used_by = "everything"
 url     = "https://github.com/PowerShell/PowerShell"
+os      = "windows"
 winget  = "Microsoft.PowerShell"
 note    = "Windows PowerShell 5.1 does not read this profile; herdr 0.9.2 and later start pwsh by default."
 
@@ -46,6 +50,7 @@ check   = "chezmoi"
 purpose = "Applies this repository"
 used_by = "the dotfiles themselves"
 url     = "https://www.chezmoi.io"
+brew    = "chezmoi"
 winget  = "twpayne.chezmoi"
 
 [[tools]]
@@ -54,6 +59,7 @@ check   = "git"
 purpose = "git, plus the Unix tools aliased in PowerShell: head, tail, wc, sed, awk, xargs, cut, tr, uniq, env, printenv, less, tig"
 used_by = "45-unix-tools"
 url     = "https://gitforwindows.org"
+os      = "windows"
 winget  = "Git.Git"
 
 [[tools]]
@@ -80,8 +86,9 @@ check   = "tree"
 purpose = "Directory tree in zsh (PowerShell's tree is the eza function)"
 used_by = ".zshrc"
 url     = "https://oldmanprogrammer.net/source.php?dir=projects/tree"
+winget  = "GnuWin32.Tree"
 brew    = "tree"
-note    = "Windows has its own tree.com, so Show-Tools reports it installed there."
+note    = "On Windows, tree.com already answers the check and PowerShell's tree is the eza function; GNU tree from winget lands in C:\\Program Files (x86)\\GnuWin32\\bin, off PATH."
 
 [[tools]]
 name    = "wl-clipboard"
@@ -89,8 +96,9 @@ check   = "wl-copy"
 purpose = "Clipboard for CLIs on Linux / WSLg (gh copies its one-time login code with it)"
 used_by = "gh auth login"
 url     = "https://github.com/bugaevc/wl-clipboard"
+os      = "linux"
 brew    = "wl-clipboard"
-note    = "Windows has its own clipboard, so Show-Tools reports it installed there."
+note    = "Windows has its own clipboard."
 
 [[tools]]
 name    = "fd"
@@ -117,6 +125,7 @@ kind      = "module"
 purpose   = "Ctrl+t, Ctrl+r and Alt+c key bindings for fzf"
 used_by   = "30-readline"
 url       = "https://github.com/kelleyma49/PSFzf"
+os        = "windows"
 psgallery = "PSFzf"
 
 [[tools]]
@@ -143,6 +152,7 @@ check   = "carapace"
 purpose = "Tab completion for about a thousand commands, styled by the theme"
 used_by = "30-readline"
 url     = "https://carapace.sh"
+os      = "windows"
 winget  = "rsteube.Carapace"
 scoop   = "extras/carapace-bin"
 
@@ -161,6 +171,7 @@ check   = "gsudo"
 purpose = "sudo for Windows"
 used_by = "80-tools"
 url     = "https://github.com/gerardog/gsudo"
+os      = "windows"
 winget  = "gerardog.gsudo"
 
 [[tools]]
@@ -170,6 +181,7 @@ kind    = "module"
 purpose = "PowerShell wrapper for gsudo (scriptblocks, the current directory)"
 used_by = "80-tools"
 url     = "https://github.com/gerardog/gsudo"
+os      = "windows"
 note    = "Installed together with gsudo."
 
 [[tools]]
@@ -291,8 +303,9 @@ check   = "herdr"
 purpose = "Terminal workspace manager for coding agents (the hd, hds, hdsr aliases)"
 used_by = "40-aliases"
 url     = "https://herdr.dev"
+scoop   = "herdr"
 brew    = "herdr"
-note    = "On Windows it installs and updates itself (`herdr update`); no winget or scoop entry."
+note    = "Updates itself (`herdr update`) once installed."
 
 [[tools]]
 name    = "pathed"
@@ -300,6 +313,7 @@ check   = "pathed"
 purpose = "Edit the persistent User / Machine PATH (TUI and CLI); enved path as a command of its own"
 used_by = "80-tools"
 url     = "https://github.com/EnderWolf50/enved"
+os      = "windows"
 go      = "github.com/EnderWolf50/enved/cmd/pathed"
 note    = "Built from the enved repository; or download pathed.exe from enved's releases."
 
@@ -309,6 +323,7 @@ check   = "enved"
 purpose = "Edit the persistent User / Machine environment variables (TUI and CLI); enved path for the PATH"
 used_by = "80-tools"
 url     = "https://github.com/EnderWolf50/enved"
+os      = "windows"
 go      = "github.com/EnderWolf50/enved"
 note    = "Or download enved.exe from the GitHub releases."
 
@@ -318,6 +333,7 @@ check   = "bump"
 purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet, cargo and go install"
 used_by = "you, in a shell"
 url     = "https://github.com/EnderWolf50/bump"
+os      = "windows"
 go      = "github.com/EnderWolf50/bump"
 note    = "Or download bump.exe from the GitHub releases."
 
@@ -326,6 +342,7 @@ name    = "A Nerd Font"
 purpose = "Icons in eza and the prompt glyphs; the terminal has to use one"
 used_by = "50-ls, 20-prompt, Claude Code statusline"
 url     = "https://www.nerdfonts.com"
+os      = "windows"
 scoop   = "nerd-fonts/CascadiaCode-NF-Mono"
 note    = "Cannot be checked from PowerShell; any Nerd Font works."
 
@@ -345,6 +362,7 @@ check   = "pnpm"
 purpose = "Installs the npm-registry tools below (`pnpm add -g`), outside Node's own folder"
 used_by = "Show-Tools -Install"
 url     = "https://pnpm.io"
+winget  = "pnpm.pnpm"
 brew    = "pnpm"
 note    = "From corepack, which mise installs (`npm:corepack` in the global mise config): `corepack enable pnpm`."
 
@@ -395,6 +413,7 @@ purpose = "C / C++ language server"
 used_by = "Claude Code clangd-lsp plugin"
 lang    = "c-cpp"
 url     = "https://clangd.llvm.org"
+brew    = "llvm"
 scoop   = "clangd"
 
 [[tools]]
@@ -404,6 +423,7 @@ purpose = "Java runtime that jdtls runs on (21 or newer)"
 used_by = "jdtls"
 lang    = "java"
 url     = "https://adoptium.net"
+brew    = "openjdk"
 scoop   = "java/temurin21-jdk"
 
 [[tools]]
@@ -413,6 +433,7 @@ purpose = "Java language server (Eclipse JDT LS)"
 used_by = "Claude Code jdtls-lsp plugin"
 lang    = "java"
 url     = "https://github.com/eclipse-jdtls/eclipse.jdt.ls"
+brew    = "jdtls"
 scoop   = "jdtls"
 
 [[tools]]
@@ -431,6 +452,7 @@ purpose = "Rust language server"
 used_by = "Claude Code rust-analyzer-lsp plugin"
 lang    = "rust"
 url     = "https://rust-analyzer.github.io"
+scoop   = "rust-analyzer"
 brew    = "rust-analyzer"
 note    = "A rustup component: `rustup component add rust-analyzer` (the rustup proxy exists without it, so check with `rust-analyzer --version`)."
 
@@ -441,6 +463,7 @@ purpose = "Swift compiler and the sourcekit-lsp language server"
 used_by = "Claude Code swift-lsp plugin"
 lang    = "swift"
 url     = "https://www.swift.org"
+brew    = "swift"
 scoop   = "swift"
 
 [[tools]]
