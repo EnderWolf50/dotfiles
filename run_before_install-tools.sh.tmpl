@@ -1,6 +1,6 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/bin/sh
-# Install what .chezmoidata/tools.toml lists for Linux (`brew`, `cask`, `npm`) and this machine
+# Install what .chezmoidata/tools.toml lists for Linux (`brew`, `cask`, `npm`, `go`) and this machine
 # lacks. Runs before the files on every apply, so a failed install is retried and the first .zshrc
 # finds its tools; with nothing missing it only looks the commands up. zsh comes from apt: a login
 # shell has to be in /etc/shells.
@@ -27,15 +27,18 @@ PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 formulas=
 casks=
 npms=
+gos=
 new=
 {{- range $tool := .tools }}
-{{- if and (ne (index $tool "os" | default "") "windows") (or (hasKey $tool "brew") (hasKey $tool "cask") (hasKey $tool "npm")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
+{{- if and (ne (index $tool "os" | default "") "windows") (or (hasKey $tool "brew") (hasKey $tool "cask") (hasKey $tool "npm") (hasKey $tool "go")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
 {{- if hasKey $tool "brew" }}
 command -v {{ $tool.check }} >/dev/null || { formulas="$formulas {{ $tool.brew }}"; new="$new {{ $tool.check }}"; }
 {{- else if hasKey $tool "cask" }}
 command -v {{ $tool.check }} >/dev/null || { casks="$casks {{ $tool.cask }}"; new="$new {{ $tool.check }}"; }
-{{- else }}
+{{- else if hasKey $tool "npm" }}
 command -v {{ $tool.check }} >/dev/null || { npms="$npms {{ $tool.npm }}"; new="$new {{ $tool.check }}"; }
+{{- else }}
+command -v {{ $tool.check }} >/dev/null || { gos="$gos {{ $tool.go }}"; new="$new {{ $tool.check }}"; }
 {{- end }}
 {{- end }}
 {{- end }}
@@ -50,6 +53,17 @@ fi
 if [ -n "$npms" ]; then
   echo "install-tools: pnpm add -g$npms"
   pnpm add -g $npms || echo 'install-tools: pnpm add -g failed' >&2
+fi
+# Go comes from mise, whose shims may not be on PATH yet. Into ~/.local/bin, as on Windows: mise's
+# GOBIN changes with each Go.
+go=$(command -v go || echo "$HOME/.local/share/mise/shims/go")
+if [ -n "$gos" ] && [ ! -x "$go" ]; then
+  echo "install-tools: no go yet, skipped go install$gos; the next apply after mise installs Go picks them up"
+elif [ -n "$gos" ]; then
+  for m in $gos; do
+    echo "install-tools: go install $m@latest"
+    GOBIN="$HOME/.local/bin" "$go" install "$m@latest" || echo "install-tools: go install $m failed" >&2
+  done
 fi
 
 # Print what the tools installed just now still need once (`after` in tools.toml), skipping any

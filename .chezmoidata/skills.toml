@@ -70,6 +70,7 @@ names = [
   "retro-all",
   "retro-patch",
   "ship",
+  "writing-for-agents-patch",
 ]
 
 [[skills]]

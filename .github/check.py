@@ -56,7 +56,7 @@ with tempfile.TemporaryDirectory() as tmp, tarfile.open(fileobj=io.BytesIO(tar.s
             print(f"{m.name}: {err}")
 
 # tools.toml: a tool without `os` installs on both OSes, or on neither (its `note` says how).
-WINDOWS, LINUX = {"winget", "scoop", "npm", "psgallery", "go"}, {"brew", "cask", "npm"}
+WINDOWS, LINUX = {"winget", "scoop", "npm", "psgallery", "go"}, {"brew", "cask", "npm", "go"}
 for tool in tomllib.load(open(".chezmoidata/tools.toml", "rb"))["tools"]:
     os_ = tool.get("os")
     win, lin = bool(WINDOWS & tool.keys()), bool(LINUX & tool.keys())

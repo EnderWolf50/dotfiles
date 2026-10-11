@@ -22,10 +22,10 @@
 #   brew     the Homebrew formula on Linux / WSL; `run_before_install-tools.sh` installs the
 #            missing ones on every apply
 #   cask     the Homebrew cask instead, for a tool that ships as one (installed with --cask)
-#            Linux falls back to `npm` (pnpm add -g) for a tool with neither
+#            Linux falls back to `npm` (pnpm add -g), then `go` (go install, once mise has Go), for a tool with neither
 #   os       "windows" or "linux" for a tool only that OS uses; the other OS skips it. Without `os`, a
 #            tool needs an install field for each OS (winget / scoop / npm / psgallery / go on
-#            Windows, brew / cask / npm on Linux), or none at all when `note` says how to install
+#            Windows, brew / cask / npm / go on Linux), or none at all when `note` says how to install
 #            it; `.github/check.py` enforces this
 #   after    what to do once after installing it; the Linux install script and `Show-Tools -Install`
 #            print it for each tool they just installed
@@ -333,9 +333,8 @@ check   = "bump"
 purpose = "Pick and upgrade outdated packages from winget, scoop, mise, npm, pnpm, yarn, bun, uv, dotnet, cargo and go install"
 used_by = "you, in a shell"
 url     = "https://github.com/EnderWolf50/bump"
-os      = "windows"
 go      = "github.com/EnderWolf50/bump"
-note    = "Or download bump.exe from the GitHub releases."
+note    = "Or download bump.exe (Windows) or the linux_amd64 build from the GitHub releases."
 
 [[tools]]
 name    = "A Nerd Font"
