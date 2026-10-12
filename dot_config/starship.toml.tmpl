@@ -7,6 +7,9 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
+# The first prompt after a cold start (WSL, or Windows with Defender scanning) can exceed the
+# 30ms default while listing the directory.
+scan_timeout = 100
 format = """
 $directory$git_branch$git_status$git_state\
 $fill\
