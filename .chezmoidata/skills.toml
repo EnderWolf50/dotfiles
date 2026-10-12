@@ -64,6 +64,7 @@ names = [
   "implement-spec-patch",
   "land",
   "move-claude-project",
+  "oss-alternatives-patch",
   "pr-sweep",
   "prune",
   "release-cli",
@@ -87,4 +88,4 @@ names = ["find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per machine r
 
 [[skills]]
 source = "tinyfish-io/tinyfish-cookbook"
-names = ["use-tinyfish"]  # web search / fetch through the tinyfish CLI (tools.toml)
+names = ["npm-package-comparator", "oss-alternatives", "use-tinyfish"]  # all run the tinyfish CLI (tools.toml)
