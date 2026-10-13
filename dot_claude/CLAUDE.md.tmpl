@@ -46,7 +46,7 @@ Before writing a command for the user to run, decide where it runs and write it 
 
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
 - Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
-- Wait on a long job by starting it with `run_in_background` and acting on its completion notice.
+- Wait on a long job by starting it with `run_in_background`, then end the turn: its completion notice resumes you. Poll only state that sends no notice (a CI pipeline, a remote deploy).
 {{- if ne .chezmoi.os "windows" }}
 - The shell is zsh with `noclobber`: overwrite an existing file with `>|`, since a plain `>` onto it fails with "file exists".
 - Stop processes by PID: `pgrep -f <pattern>`, check the list, then `kill <pid>`. `pkill -f` also matches the shell running it whenever the pattern sits in that shell's own command line, and kills it; a `pgrep -f` wait loop matches itself the same way and never ends.
@@ -55,5 +55,5 @@ Before writing a command for the user to run, decide where it runs and write it 
 
 ## Windows shell
 
-- Before a Bash command that passes a path, a file or another program's output between Git Bash, Node and pwsh, read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments.
+- Before a Bash command that passes a path, a file or another program's output between Git Bash, Node and pwsh, or inlines a script (`node -e`, `pwsh -c`, `sed`), read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments, inline scripts.
 {{- end }}
