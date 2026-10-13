@@ -23,4 +23,5 @@ README.md
 # Windows-only files
 AppData
 Documents
+.claude/docs/windows-shell.md
 {{- end }}
