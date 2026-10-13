@@ -29,11 +29,23 @@ chezmoi manages `~/.claude`, `~/.gitconfig` and the shared `~/.config` entries; 
 
 When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`. An `R` line is a script that runs on every apply, not drift.
 
+## Commands for the user
+
+Before writing a command for the user to run, decide where it runs and write it in that shell's syntax, the fence language naming it:
+
+{{ if eq .chezmoi.os "windows" -}}
+- A `!` command runs in the Bash tool's Git Bash: forward slashes, no PowerShell cmdlets, fenced as `bash`.
+- A command for the user's own terminal runs in PowerShell 7 (pwsh), fenced as `powershell`.
+{{- else -}}
+- A `!` command and a command for the user's own terminal both run in zsh, fenced as `zsh`.
+{{- end }}
+- The user's message overrides that default: a named shell, a pasted prompt (`PS C:\>`, `C:\>`, `$`, `%`), or an error from one. Write cmd syntax only then.
+- `!` commands get no stdin: a login that asks to paste a key or answer a prompt is a terminal command, for a separate window.
+
 ## Tools
 
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
 - Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
-- `!` commands get no stdin: a login that asks to paste a key or answer a prompt goes in a separate terminal window.
 - Wait on a long job by starting it with `run_in_background` and acting on its completion notice.
 {{- if ne .chezmoi.os "windows" }}
 - The shell is zsh with `noclobber`: overwrite an existing file with `>|`, since a plain `>` onto it fails with "file exists".
@@ -43,6 +55,5 @@ When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi ap
 
 ## Windows shell
 
-- `!` commands and the Bash tool run Git Bash: give the user `!` commands with forward slashes and no PowerShell cmdlets.
 - Before a Bash command that passes a path, a file or another program's output between Git Bash, Node and pwsh, read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments.
 {{- end }}
