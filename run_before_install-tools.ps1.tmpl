@@ -1,0 +1,53 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Install what .chezmoidata/tools.toml lists for Windows (`scoop`, `winget`, `npm`, `psgallery`, `go`,
+# tried in that order, as `Show-Tools -Install` does) and this machine lacks. Runs before the files on
+# every apply, so a failed install is retried; with nothing missing it only looks the commands up.
+$tools = @(
+{{- range $tool := .tools }}
+{{- if and (ne (index $tool "os" | default "") "linux") (hasKey $tool "check") (or (hasKey $tool "winget") (hasKey $tool "scoop") (hasKey $tool "npm") (hasKey $tool "psgallery") (hasKey $tool "go")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
+  @{ Check = '{{ $tool.check }}'; Kind = '{{ index $tool "kind" | default "command" }}'; Winget = '{{ index $tool "winget" | default "" }}'; Scoop = '{{ index $tool "scoop" | default "" }}'; Npm = '{{ index $tool "npm" | default "" }}'; PSGallery = '{{ index $tool "psgallery" | default "" }}'; Go = '{{ index $tool "go" | default "" }}'; After = '{{ index $tool "after" | default "" | replace "'" "''" }}' }
+{{- end }}
+{{- end }}
+)
+
+$steps = @()
+$new = $false
+foreach ($t in $tools) {
+  $found = if ($t.Kind -eq 'module') { Get-Module -ListAvailable -Name $t.Check } else { Get-Command $t.Check -CommandType Application, ExternalScript -ErrorAction Ignore }
+  if ($found) { continue }
+
+  $global:LASTEXITCODE = 0
+  if ($t.Scoop) {
+    Write-Host "install-tools: scoop install $($t.Scoop)"
+    # A scoop app may live in a bucket that is not added yet.
+    if ($t.Scoop -match '^([^/]+)/') { scoop bucket add $Matches[1] 2>$null }
+    scoop install $t.Scoop
+  } elseif ($t.Winget) {
+    Write-Host "install-tools: winget install $($t.Winget)"
+    winget install --id $t.Winget -e --accept-package-agreements --accept-source-agreements
+  } elseif ($t.Npm) {
+    # pnpm rather than npm -g: npm puts a global package in the current Node's folder, which the
+    # next Node upgrade replaces.
+    Write-Host "install-tools: pnpm add -g $($t.Npm)"
+    pnpm add -g $t.Npm
+  } elseif ($t.PSGallery) {
+    Write-Host "install-tools: Install-PSResource $($t.PSGallery)"
+    Install-PSResource $t.PSGallery -Scope CurrentUser -TrustRepository
+  } else {
+    # Into ~/.local/bin rather than GOBIN: mise points GOBIN at the current Go's own folder.
+    if (-not (Get-Command go -ErrorAction Ignore)) { Write-Host "install-tools: no go yet, skipped $($t.Go)"; continue }
+    Write-Host "install-tools: go install $($t.Go)@latest"
+    $env:GOBIN = "$HOME\.local\bin"; go install "$($t.Go)@latest"; Remove-Item Env:GOBIN
+  }
+  if ($? -and $LASTEXITCODE -eq 0) {
+    $new = $true
+    if ($t.After) { $steps += $t.After }
+  } else {
+    Write-Warning "install-tools: installing $($t.Check) failed"
+  }
+}
+
+if ($steps) { Write-Host "install-tools: to do once for what was just installed:"; $steps | ForEach-Object { Write-Host "  $_" } }
+if ($new) { Write-Host 'install-tools: open a new PowerShell window to pick up the new commands' }
+exit 0
+{{ end -}}

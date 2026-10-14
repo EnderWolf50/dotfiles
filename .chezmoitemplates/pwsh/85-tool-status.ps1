@@ -30,8 +30,8 @@ if ($IsInteractiveConsole) {
   function Get-ToolInstallCommand {
     param($Tool)
 
-    if ($Tool.Winget) { "winget install --id $($Tool.Winget) -e" }
-    elseif ($Tool.Scoop) { "scoop install $($Tool.Scoop)" }
+    if ($Tool.Scoop) { "scoop install $($Tool.Scoop)" }
+    elseif ($Tool.Winget) { "winget install --id $($Tool.Winget) -e" }
     # pnpm rather than npm -g: npm puts a global package in the current Node's folder, which the
     # next Node upgrade replaces; pnpm keeps it under PNPM_HOME.
     elseif ($Tool.Npm) { "pnpm add -g $($Tool.Npm)" }
@@ -79,7 +79,7 @@ if ($IsInteractiveConsole) {
         }
         if ($PSCmdlet.ShouldProcess($row.Name, $row.Install)) {
           # A scoop app may live in a bucket that is not added yet.
-          if ($row.Tool.Scoop -match '^([^/]+)/' -and -not $row.Tool.Winget) {
+          if ($row.Tool.Scoop -match '^([^/]+)/') {
             scoop bucket add $Matches[1] 2>$null
           }
           # winget would otherwise stop to ask about the package and source agreements.
