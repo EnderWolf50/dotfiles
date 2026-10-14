@@ -432,16 +432,6 @@ brew    = "llvm"
 scoop   = "clangd"
 
 [[tools]]
-name    = "JDK 21"
-check   = "java"
-purpose = "Java runtime that jdtls runs on (21 or newer)"
-used_by = "jdtls"
-lang    = "java"
-url     = "https://adoptium.net"
-brew    = "openjdk"
-scoop   = "java/temurin21-jdk"
-
-[[tools]]
 name    = "jdtls"
 check   = "jdtls"
 purpose = "Java language server (Eclipse JDT LS)"

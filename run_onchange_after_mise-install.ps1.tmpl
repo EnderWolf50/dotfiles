@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Install the tools in the global mise config (dot_config/mise/config.toml.tmpl: node, uv, java on a
+# java machine, ...); reruns when the rendered config changes. After the files, so the config is in
+# place; before sync-skills, which needs npx.
+# config.toml hash: {{ includeTemplate "dot_config/mise/config.toml.tmpl" . | sha256sum }}
+if (-not (Get-Command mise -ErrorAction Ignore)) { Write-Warning 'mise-install: mise not found, skipped'; exit 0 }
+Push-Location $HOME
+mise install
+if ($LASTEXITCODE) { Write-Warning 'mise-install: mise install failed' }
+Pop-Location
+exit 0
+{{ end -}}
