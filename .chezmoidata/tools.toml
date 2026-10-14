@@ -42,6 +42,7 @@ used_by = "everything"
 url     = "https://github.com/PowerShell/PowerShell"
 os      = "windows"
 winget  = "Microsoft.PowerShell"
+scoop   = "pwsh"
 note    = "Windows PowerShell 5.1 does not read this profile; herdr 0.9.2 and later start pwsh by default."
 
 [[tools]]
@@ -52,6 +53,7 @@ used_by = "the dotfiles themselves"
 url     = "https://www.chezmoi.io"
 brew    = "chezmoi"
 winget  = "twpayne.chezmoi"
+scoop   = "chezmoi"
 
 [[tools]]
 name    = "Git for Windows"
@@ -61,6 +63,7 @@ used_by = "45-unix-tools"
 url     = "https://gitforwindows.org"
 os      = "windows"
 winget  = "Git.Git"
+scoop   = "git"
 
 [[tools]]
 name    = "starship"
@@ -70,6 +73,7 @@ used_by = "20-prompt"
 url     = "https://starship.rs"
 brew    = "starship"
 winget  = "Starship.Starship"
+scoop   = "starship"
 
 [[tools]]
 name    = "eza"
@@ -79,6 +83,7 @@ used_by = "50-ls"
 url     = "https://github.com/eza-community/eza"
 brew    = "eza"
 winget  = "eza-community.eza"
+scoop   = "eza"
 
 [[tools]]
 name    = "tree"
@@ -108,6 +113,7 @@ used_by = "30-readline"
 url     = "https://github.com/sharkdp/fd"
 brew    = "fd"
 winget  = "sharkdp.fd"
+scoop   = "fd"
 
 [[tools]]
 name    = "fzf"
@@ -117,6 +123,7 @@ used_by = "30-readline"
 url     = "https://github.com/junegunn/fzf"
 brew    = "fzf"
 winget  = "junegunn.fzf"
+scoop   = "fzf"
 
 [[tools]]
 name      = "PSFzf"
@@ -136,6 +143,7 @@ used_by = "80-tools"
 url     = "https://github.com/ajeetdsouza/zoxide"
 brew    = "zoxide"
 winget  = "ajeetdsouza.zoxide"
+scoop   = "zoxide"
 
 [[tools]]
 name    = "mise"
@@ -145,6 +153,7 @@ used_by = "80-tools"
 url     = "https://mise.jdx.dev"
 brew    = "mise"
 winget  = "jdx.mise"
+scoop   = "mise"
 
 [[tools]]
 name    = "carapace"
@@ -173,6 +182,7 @@ used_by = "80-tools"
 url     = "https://github.com/gerardog/gsudo"
 os      = "windows"
 winget  = "gerardog.gsudo"
+scoop   = "gsudo"
 
 [[tools]]
 name    = "gsudoModule"
@@ -192,6 +202,7 @@ used_by = "40-aliases"
 url     = "https://github.com/sharkdp/bat"
 brew    = "bat"
 winget  = "sharkdp.bat"
+scoop   = "bat"
 
 [[tools]]
 name    = "Neovim"
@@ -201,6 +212,7 @@ used_by = "40-aliases, 10-environment"
 url     = "https://neovim.io"
 brew    = "neovim"
 winget  = "Neovim.Neovim"
+scoop   = "neovim"
 
 [[tools]]
 name    = "lazygit"
@@ -210,6 +222,7 @@ used_by = "40-aliases"
 url     = "https://github.com/jesseduffield/lazygit"
 brew    = "lazygit"
 winget  = "JesseDuffield.lazygit"
+scoop   = "extras/lazygit"
 
 [[tools]]
 name    = "delta"
@@ -219,6 +232,7 @@ used_by = ".gitconfig, lazygit config.yml"
 url     = "https://github.com/dandavison/delta"
 brew    = "git-delta"
 winget  = "dandavison.delta"
+scoop   = "delta"
 
 [[tools]]
 name    = "ripgrep"
@@ -265,6 +279,7 @@ url     = "https://github.com/cli/cli"
 after   = "gh auth login"
 brew    = "gh"
 winget  = "GitHub.cli"
+scoop   = "gh"
 
 [[tools]]
 name    = "Codex"
@@ -362,6 +377,7 @@ purpose = "Installs the npm-registry tools below (`pnpm add -g`), outside Node's
 used_by = "Show-Tools -Install"
 url     = "https://pnpm.io"
 winget  = "pnpm.pnpm"
+scoop   = "pnpm"
 brew    = "pnpm"
 note    = "From corepack, which mise installs (`npm:corepack` in the global mise config): `corepack enable pnpm`."
 
@@ -414,16 +430,6 @@ lang    = "c-cpp"
 url     = "https://clangd.llvm.org"
 brew    = "llvm"
 scoop   = "clangd"
-
-[[tools]]
-name    = "JDK 21"
-check   = "java"
-purpose = "Java runtime that jdtls runs on (21 or newer)"
-used_by = "jdtls"
-lang    = "java"
-url     = "https://adoptium.net"
-brew    = "openjdk"
-scoop   = "java/temurin21-jdk"
 
 [[tools]]
 name    = "jdtls"
@@ -503,6 +509,7 @@ used_by = "coding agents"
 url     = "https://imagemagick.org"
 brew    = "imagemagick"
 winget  = "ImageMagick.ImageMagick"
+scoop   = "imagemagick"
 
 [[tools]]
 name    = "ffmpeg"
@@ -512,6 +519,7 @@ used_by = "coding agents"
 url     = "https://ffmpeg.org"
 brew    = "ffmpeg"
 winget  = "Gyan.FFmpeg"
+scoop   = "ffmpeg"
 
 [[tools]]
 name    = "ExifTool"
@@ -521,6 +529,7 @@ used_by = "coding agents"
 url     = "https://exiftool.org"
 brew    = "exiftool"
 winget  = "OliverBetz.ExifTool"
+scoop   = "exiftool"
 
 [[tools]]
 name    = "Poppler"
@@ -530,6 +539,7 @@ used_by = "coding agents"
 url     = "https://poppler.freedesktop.org"
 brew    = "poppler"
 winget  = "oschwartz10612.Poppler"
+scoop   = "poppler"
 
 [[tools]]
 name    = "yq"
@@ -539,6 +549,7 @@ used_by = "coding agents"
 url     = "https://github.com/mikefarah/yq"
 brew    = "yq"
 winget  = "MikeFarah.yq"
+scoop   = "yq"
 
 [[tools]]
 name    = "oxipng"

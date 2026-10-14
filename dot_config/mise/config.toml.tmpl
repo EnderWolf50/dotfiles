@@ -1,0 +1,12 @@
+[tools]
+bun = "latest"
+go = "latest"
+{{- if and (hasKey . "languages") (has "java" .languages) }}
+# The JDK jdtls runs on (21 or newer); only on machines that chose java (chezmoi init).
+java = "temurin-21"
+{{- end }}
+node = "latest"
+"npm:corepack" = "latest"
+python = "latest"
+rust = "latest"
+uv = "latest"

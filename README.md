@@ -23,8 +23,8 @@ what is still not installed. Creating the `%LOCALAPPDATA%\nvim` symlink needs De
 
 Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew` / `cask` /
 `npm` packages in `tools.toml` that are missing (`run_before_install-tools.sh`); the first one asks for
-the sudo password. After the files, `run_onchange_after_mise-install.sh` installs the tools in
-the shared mise config (`dot_config/mise/config.toml`: node, uv, ...); on Windows, run `mise install`.
+the sudo password. After the files, `run_onchange_after_mise-install.*` installs the tools in
+the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a java machine, ...), on Windows too.
 
 ## Layout
 
