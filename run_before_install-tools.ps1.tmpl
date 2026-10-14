@@ -10,6 +10,10 @@ $tools = @(
 {{- end }}
 )
 
+# Some scoop apps (gsudo, imagemagick) add their folder to the user PATH instead of a shim; a shell
+# opened before that install still has the old PATH, so read it again or they reinstall every apply.
+$env:PATH = @([Environment]::GetEnvironmentVariable('PATH', 'Machine'), [Environment]::GetEnvironmentVariable('PATH', 'User'), $env:PATH) -join ';'
+
 $steps = @()
 $new = $false
 foreach ($t in $tools) {
