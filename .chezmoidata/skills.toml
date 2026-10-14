@@ -66,7 +66,6 @@ names = [
   "land",
   "move-claude-project",
   "oss-alternatives.patch",
-  "pr-sweep",
   "prune",
   "release-cli",
   "retro-all",
