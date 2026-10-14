@@ -40,6 +40,7 @@ the shared mise config (`dot_config/mise/config.toml`: node, uv, ...); on Window
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr, ripgrep (Claude Code sessions only, via `RIPGREP_CONFIG_PATH`): shared by Windows and Linux |
 | `dot_claude/` | Claude Code: `CLAUDE.md` (your own instructions), agents, statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
+| `dot_local/bin/executable_cua-driver`, `dot_claude/skills/symlink_cua-driver.tmpl` | WSL only: run the Windows cua-driver (paths in `call` JSON turned into Windows paths) and link the skill its `skills install` fetched, so a WSL agent drives the Windows desktop |
 | `.chezmoiignore` | What each OS skips |
 | `run_after_claude-settings-drift.*` | After every apply, lists the plugins and marketplaces in `~/.claude/settings.json` that `claude.toml` does not know (a removal made on another machine, or a local `/plugin` install), and on a terminal asks whether to remove each one. `[claude.local]` in `claude.toml` holds the ones a machine keeps on purpose |
 | `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it, and pins how `modify_settings.json` appends lists and sets LSP plugins; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |

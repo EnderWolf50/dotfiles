@@ -19,9 +19,17 @@ README.md
 .zprofile
 .zshenv
 .zshrc
+# WSL only: Windows runs cua-driver itself, and its `skills install` makes the skill link
+.local/bin/cua-driver
+.claude/skills/cua-driver
 {{- else -}}
 # Windows-only files
 AppData
 Documents
 .claude/docs/windows-shell.md
+{{- if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# WSL only: the cua-driver wrapper and skill reach the Windows binary through /mnt/c
+.local/bin/cua-driver
+.claude/skills/cua-driver
+{{- end }}
 {{- end }}

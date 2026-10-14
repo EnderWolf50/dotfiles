@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# cua-driver on WSL: runs the Windows binary, so `cua-driver call` drives the Windows desktop through
+# the Windows daemon. Windows cannot read WSL paths: in `call <tool> <json>`, absolute paths under a
+# key naming a path, file or dir become Windows paths (other strings, such as typed text, stay).
+exe=${CUA_DRIVER_EXE:-/mnt/c/Users/$USER/AppData/Local/Programs/Cua/cua-driver/bin/cua-driver.exe}
+if [[ $1 == call && $# -ge 3 ]]; then
+  set -- "$1" "$2" "$(python3 -c '
+import json, re, subprocess, sys
+win = lambda p: subprocess.run(["wslpath", "-w", p], capture_output=True, text=True).stdout.strip() or p
+def fix(v, pathy):
+    if isinstance(v, dict): return {k: fix(x, bool(re.search("path|file|dir", k))) for k, x in v.items()}
+    if isinstance(v, list): return [fix(x, pathy) for x in v]
+    return win(v) if pathy and isinstance(v, str) and v.startswith("/") else v
+print(json.dumps(fix(json.loads(sys.argv[1]), False)))' "$3")" "${@:4}"
+fi
+exec "$exe" "$@"
