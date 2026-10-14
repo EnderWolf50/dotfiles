@@ -15,7 +15,7 @@
 #   used_by  the fragment or feature that needs it
 #   lang     a language from `languages` (chezmoi init); the tool is listed only on machines that chose it
 #   url      home page
-#   winget / scoop / npm / psgallery / go   how to install it, tried in that order. A scoop
+#   scoop / winget / npm / psgallery / go   how to install it, tried in that order. A scoop
 #            value may be `bucket/app`; the bucket is added first. An npm value is a package on the npm registry,
 #            installed with `pnpm add -g` so a Node upgrade keeps it. A go value is a module path,
 #            built with `go install` into ~/.local/bin (mise's GOBIN changes with each Go).
@@ -24,7 +24,7 @@
 #   cask     the Homebrew cask instead, for a tool that ships as one (installed with --cask)
 #            Linux falls back to `npm` (pnpm add -g), then `go` (go install, once mise has Go), for a tool with neither
 #   os       "windows" or "linux" for a tool only that OS uses; the other OS skips it. Without `os`, a
-#            tool needs an install field for each OS (winget / scoop / npm / psgallery / go on
+#            tool needs an install field for each OS (scoop / winget / npm / psgallery / go on
 #            Windows, brew / cask / npm / go on Linux), or none at all when `note` says how to install
 #            it; `.github/check.py` enforces this
 #   after    what to do once after installing it; the Linux install script and `Show-Tools -Install`

@@ -16,9 +16,9 @@ chezmoi init --apply EnderWolf50
 `init` asks a few questions once (see `.chezmoi.toml.tmpl`) and writes
 `~/.config/chezmoi/chezmoi.toml`.
 
-Windows only, in a new PowerShell window: `tools -Missing` lists what the profile needs but
-is not installed, `tools -Install` installs it (winget / scoop / npm / PSGallery). The list is
-`.chezmoidata/tools.toml`. Creating the `%LOCALAPPDATA%\nvim` symlink needs Developer Mode
+Windows: every apply installs the tools in `.chezmoidata/tools.toml` that are missing (scoop / winget /
+npm / PSGallery / go, `run_before_install-tools.ps1`). In a PowerShell window, `tools -Missing` lists
+what is still not installed. Creating the `%LOCALAPPDATA%\nvim` symlink needs Developer Mode
 (or an elevated shell).
 
 Linux / WSL: every apply installs zsh (apt, made the login shell), Homebrew, and the `brew` / `cask` /
