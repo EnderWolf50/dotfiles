@@ -48,6 +48,11 @@ source = { source = "github", repo = "pbakaus/impeccable" }
 [claude.merge.extraKnownMarketplaces."ponytail"]
 source = { source = "github", repo = "DietrichGebert/ponytail" }
 
+# TemPad Dev: its MCP reads Figma through the Chrome extension's in-page API, so a View seat (6 REST
+# calls a month) still reads variables, component variants and layout. Needs the extension open in Chrome.
+[claude.merge.extraKnownMarketplaces."tempad-dev"]
+source = { source = "github", repo = "ecomfe/tempad-dev", sparsePaths = [".claude-plugin", "agent-plugin/targets/claude"] }
+
 # append: list entries added to an object's list when missing; the machine's own entries stay.
 # Asked first even in auto mode: TinyFish agent and browser runs bill per step / minute (search and fetch are free).
 [claude.append.permissions]
@@ -91,3 +96,4 @@ marketplaces = []
 "search-tools@enderwolf50"                 = true
 "security-guidance@claude-plugins-official" = true
 "skill-patches@enderwolf50"                = true
+"tempad-dev@tempad-dev"                    = true
