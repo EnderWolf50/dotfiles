@@ -14,6 +14,8 @@
 #   purpose  what it does here
 #   used_by  the fragment or feature that needs it
 #   lang     a language from `languages` (chezmoi init); the tool is listed only on machines that chose it
+#   personal true for a tool only personal projects need; listed only where `chezmoi init` answered
+#            yes to "personal development machine"
 #   url      home page
 #   scoop / winget / npm / psgallery / go   how to install it, tried in that order. A scoop
 #            value may be `bucket/app`; the bucket is added first. An npm value is a package on the npm registry,
@@ -485,6 +487,7 @@ name    = "Railway CLI"
 check   = "railway"
 purpose = "Deploys and manages Railway projects"
 used_by = "the use-railway skill"
+personal = true
 url     = "https://docs.railway.com/guides/cli"
 after   = "railway login"
 brew    = "railway"

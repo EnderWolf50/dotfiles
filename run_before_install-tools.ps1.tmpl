@@ -4,7 +4,7 @@
 # every apply, so a failed install is retried; with nothing missing it only looks the commands up.
 $tools = @(
 {{- range $tool := .tools }}
-{{- if and (ne (index $tool "os" | default "") "linux") (hasKey $tool "check") (or (hasKey $tool "winget") (hasKey $tool "scoop") (hasKey $tool "npm") (hasKey $tool "psgallery") (hasKey $tool "go")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) }}
+{{- if and (ne (index $tool "os" | default "") "linux") (hasKey $tool "check") (or (hasKey $tool "winget") (hasKey $tool "scoop") (hasKey $tool "npm") (hasKey $tool "psgallery") (hasKey $tool "go")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
   @{ Check = '{{ $tool.check }}'; Kind = '{{ index $tool "kind" | default "command" }}'; Winget = '{{ index $tool "winget" | default "" }}'; Scoop = '{{ index $tool "scoop" | default "" }}'; Npm = '{{ index $tool "npm" | default "" }}'; PSGallery = '{{ index $tool "psgallery" | default "" }}'; Go = '{{ index $tool "go" | default "" }}'; After = '{{ index $tool "after" | default "" | replace "'" "''" }}' }
 {{- end }}
 {{- end }}
