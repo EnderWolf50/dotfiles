@@ -58,6 +58,7 @@ names = [
   "dalamud-regional-client-adaptation",
   "dalamud-traditional-chinese-localization",
   "dotfiles",
+  "figma-design-to-code.patch",
   "github-fork-history-analysis",
   "grilling.patch",
   "implement.patch",
