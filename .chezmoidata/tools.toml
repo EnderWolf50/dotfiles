@@ -548,3 +548,12 @@ used_by = "coding agents"
 url     = "https://github.com/oxipng/oxipng"
 brew    = "oxipng"
 scoop   = "oxipng"
+
+[[tools]]
+name    = "cua-driver"
+check   = "cua-driver"
+purpose = "Drives native Windows apps for agents (UIA, background input) through `cua-driver call`"
+used_by = "the cua-driver skill, installed by the binary itself"
+url     = "https://github.com/trycua/cua/tree/main/libs/cua-driver"
+os      = "windows"
+note    = "No winget or scoop package, and npm's @trycua/cua-driver is an SDK with no bin: install with `irm https://cua.ai/driver/install.ps1 | iex`, which registers the daemon the CLI talks to as a logon task, then `cua-driver autostart kick` to start it now and `cua-driver skills install` (a skill matching the binary; skills.toml cannot clone trycua/cua in time). Update with `cua-driver update --apply`, then `autostart kick` again. Linux has none: on WSL, ~/.local/bin/cua-driver runs this Windows binary (Windows paths in `call` JSON) and ~/.claude/skills/cua-driver links its skill, so WSL agents drive the Windows desktop."
