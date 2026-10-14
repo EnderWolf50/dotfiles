@@ -1,7 +1,7 @@
 [tools]
 bun = "latest"
 go = "latest"
-{{- if has "java" (.languages | default list) }}
+{{- if and (hasKey . "languages") (has "java" .languages) }}
 # The JDK jdtls runs on (21 or newer); only on machines that chose java (chezmoi init).
 java = "temurin-21"
 {{- end }}
