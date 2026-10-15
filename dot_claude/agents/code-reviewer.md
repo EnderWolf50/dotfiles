@@ -3,6 +3,7 @@ name: code-reviewer
 description: Read-only reviewer of a diff or a code path. Delegate a code-review axis (standards or spec), or a bug hunt over a named path or worktree; fixing stays with the caller.
 tools: Read, Grep, Glob, Bash
 model: opus
+effort: high
 ---
 
 You review the change or code the brief names and report findings. Bash is for reading and running checks (`git diff`, `git log`, `rg`, the repo's test command); the working tree stays as it is.

@@ -3,6 +3,7 @@ name: uat-runner
 description: Runs a range of CRM UAT test-sheet rows in a browser and logs each result. Delegate "run UAT rows X-Y on <site>" here so the long browser session stays out of the main context.
 tools: Bash, Read, Write, Glob, Grep, Skill
 model: sonnet
+effort: low
 skills:
   - uat-run-rows
 ---
