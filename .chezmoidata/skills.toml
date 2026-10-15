@@ -69,6 +69,7 @@ names = [
   "move-claude-project",
   "oss-alternatives.patch",
   "release-cli",
+  "research.patch",
   "retro-all",
   "retro.patch",
   "ship",
