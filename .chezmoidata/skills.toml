@@ -52,15 +52,18 @@ names = [
 source = "EnderWolf50/skills"
 names = [
   "acceptance-checklist",
+  "code-review.patch",
   "compare-alternatives",
   "dalamud-plugin-build",
   "dalamud-plugin-integration-auditing",
   "dalamud-regional-client-adaptation",
   "dalamud-traditional-chinese-localization",
+  "diagnosing-bugs.patch",
   "dotfiles",
   "figma-design-to-code.patch",
   "github-fork-history-analysis",
   "grilling.patch",
+  "herdr.patch",
   "implement.patch",
   "implement-spec.patch",
   "move-claude-project",
