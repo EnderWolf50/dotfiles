@@ -52,6 +52,7 @@ names = [
 source = "EnderWolf50/skills"
 names = [
   "acceptance-checklist",
+  "code-review.patch",
   "compare-alternatives",
   "dalamud-plugin-build",
   "dalamud-plugin-integration-auditing",
