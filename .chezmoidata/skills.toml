@@ -63,6 +63,7 @@ names = [
   "figma-design-to-code.patch",
   "github-fork-history-analysis",
   "grilling.patch",
+  "herdr.patch",
   "implement.patch",
   "implement-spec.patch",
   "move-claude-project",
