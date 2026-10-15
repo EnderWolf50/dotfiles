@@ -44,7 +44,7 @@ Before writing a command for the user to run, decide where it runs and write it 
 
 ## Changes
 
-- Verify a tool's setting or capability in its docs or source (the `docs-researcher` agent, the `find-docs` skill) before stating or configuring it; a claim you could not check says "unverified".
+- Verify a tool's setting or capability in its docs or source (the `researcher` agent, the `find-docs` skill) before stating or configuring it; a claim you could not check says "unverified".
 - Before editing a config file chezmoi does not manage, copy it to `<file>.bak-<yyyymmdd>`, and list every touched file in the reply, so a revert is one copy back.
 - A visual choice (glyphs, colors, layout): show the options for the user to preview (`html_preview`, or an HTML file to open) and edit once they pick one.
 - Stage commits by path (`git add <path>...`): the guard hook rejects whole-tree staging, and each rejection costs a retry.
