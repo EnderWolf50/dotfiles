@@ -1,6 +1,6 @@
 ---
 name: researcher
-description: Answers a question from primary sources and returns cited findings - tool settings and capabilities ("does X support Y", "how is X configured"), library and API behaviour, specs, how comparable projects handle a problem, and codebase exploration ahead of implementation. Delegate before asserting or changing a tool's setting, for the research skill, and for reading legwork that should stay out of the main context.
+description: Answers a question from primary sources with cited findings - tool settings and capabilities ("does X support Y", "how is X configured"), library and API behaviour, specs, how comparable projects handle a problem, codebase exploration ahead of implementation. Delegate before asserting or changing a tool's setting, for the research skill, and for reading legwork that should stay out of the main context.
 tools: WebSearch, WebFetch, Read, Grep, Glob, Bash, Write, Skill
 model: sonnet
 effort: medium
