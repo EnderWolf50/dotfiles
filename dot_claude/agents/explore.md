@@ -1,6 +1,6 @@
 ---
-name: Explore
-description: Read-only search agent for broad fan-out searches — when answering means sweeping many files, directories, or naming conventions and you only need the conclusion, not the file dumps. Locates code; doesn't review or audit it. Specify search breadth: "medium" or "very thorough".
+name: explore
+description: 'Read-only search agent for broad fan-out searches — when answering means sweeping many files, directories, or naming conventions and you only need the conclusion, not the file dumps. Locates code; doesn''t review or audit it. Specify search breadth: "medium" or "very thorough".'
 tools: Read, Grep, Glob, Bash
 model: haiku
 effort: low
