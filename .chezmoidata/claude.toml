@@ -1,6 +1,6 @@
 # Claude Code settings this repo keeps the same on every machine (dot_claude/modify_settings.json).
 # ~/.claude/settings.json belongs to Claude Code; every key not listed here is left as the machine has it,
-# including autoMode (learned per machine and project) and the herdr hook (installed by herdr itself).
+# including autoMode's environment (learned per machine and project) and the herdr hook (installed by herdr itself).
 # theme and statusLine are set in the template from the theme and statusline data.
 
 # set: top-level keys owned by this repo, written on every apply.
@@ -58,12 +58,30 @@ source = { source = "github", repo = "ecomfe/tempad-dev", sparsePaths = [".claud
 [claude.append.permissions]
 ask = ["Bash(tinyfish agent:*)", "Bash(tinyfish browser:*)", "PowerShell(tinyfish agent:*)", "PowerShell(tinyfish browser:*)"]
 
+# Auto-mode classifier exceptions (prose, read by the classifier; "$defaults" keeps the built-in list).
+# permissions.allow cannot cover these: ~/.claude is a protected path, and a cwd-free Bash rule would
+# allow the same git commands in every repo. The classifier denied each case in the user's own repos
+# ("Self-Modification" x2, "Irreversible Local Destruction" x3, 2026-10 retro).
+[claude.append.autoMode]
+allow = [
+  "$defaults",
+  "Own-repo cleanup: in the user's own repos (EnderWolf50/dotfiles at ~/.local/share/chezmoi with its worktrees under ~/.local/share/.wt/, EnderWolf50/skills at D:\\skills, EnderWolf50/claude-plugins at D:\\claude-plugins), `git worktree remove` of a clean worktree and `git branch -D` of a branch are allowed when that branch is merged or its commits are on origin, since GitHub keeps every commit.",
+  "Own plugin edits: editing files of the user's own EnderWolf50/claude-plugins plugins under ~/.claude/plugins/marketplaces/enderwolf50/ or ~/.claude/plugins/cache/enderwolf50/ is allowed when the user asked for that change; it adds no permission rule, hook or guard bypass.",
+]
+
 # mcp: user-scope MCP servers (they live in ~/.claude.json, not settings.json), registered by
 # run_onchange_after_claude-mcp whenever this list changes. semble is one despite the CLI-first rule:
 # its server keeps the index in memory, while the CLI rescans the repo on every call (~20 s in D:\CRM).
 [claude.mcp.semble]
 command = "uvx"
 args    = ["--from", "semble[mcp]@latest", "semble"]
+
+# Replaces the playwright@claude-plugins-official plugin, whose server shares one Chrome profile:
+# a second session failed with "Browser is already in use ... use --isolated". --isolated keeps
+# each session's profile in memory.
+[claude.mcp.playwright]
+command = "npx"
+args    = ["-y", "@playwright/mcp@latest", "--isolated"]
 
 # lsp: the LSP plugin for each language. On a machine whose chezmoi config has `languages` (asked by
 # `chezmoi init`), every apply turns on the plugins of the chosen languages and turns the rest off.
@@ -91,7 +109,6 @@ marketplaces = []
 "document-skills@anthropic-agent-skills"   = true
 "guards@enderwolf50"                       = true
 "impeccable@impeccable"                    = true
-"playwright@claude-plugins-official"       = true
 "ponytail@ponytail"                        = true
 "search-tools@enderwolf50"                 = true
 "security-guidance@claude-plugins-official" = true

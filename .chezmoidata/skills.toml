@@ -57,6 +57,7 @@ names = [
   "dalamud-plugin-integration-auditing",
   "dalamud-regional-client-adaptation",
   "dalamud-traditional-chinese-localization",
+  "diagnosing-bugs.patch",
   "dotfiles",
   "figma-design-to-code.patch",
   "github-fork-history-analysis",
