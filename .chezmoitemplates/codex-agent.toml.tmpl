@@ -1,0 +1,8 @@
+{{- $source := include (joinPath "dot_claude" "agents" (printf "%s.md" .name)) -}}
+{{- $parts := splitList "---" $source -}}
+{{- $meta := index $parts 1 | fromYaml -}}
+{{- $body := regexReplaceAll "(?s)^---\r?\n.*?\r?\n---\r?\n" $source "" | trim -}}
+{{- if hasKey $meta "skills" -}}
+{{- $body = printf "Load the %s skill before starting.\n\n%s" (join ", " $meta.skills) $body -}}
+{{- end -}}
+{{- dict "name" $meta.name "description" $meta.description "developer_instructions" $body "model_reasoning_effort" $meta.effort | toToml -}}

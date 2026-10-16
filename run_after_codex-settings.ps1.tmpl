@@ -1,0 +1,6 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Apply every time: config.toml remains local and Codex can edit it between applies.
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) { throw 'codex-settings: uv is required; install tools.toml tools first' }
+uv run --no-project --script '{{ joinPath .chezmoi.homeDir ".codex" "sync-settings.py" }}'
+if ($LASTEXITCODE) { throw 'codex-settings: sync failed' }
+{{ end -}}

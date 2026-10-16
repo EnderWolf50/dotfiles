@@ -1,0 +1,66 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["tomlkit==0.15.1"]
+# ///
+"""Merge shared settings into the local Codex config, keeping comments and local keys."""
+import json
+import os
+from pathlib import Path
+import shutil
+import tempfile
+from datetime import datetime
+
+import tomlkit
+
+{{ $palette := (index .themes .theme).palette -}}
+SHARED = json.loads({{ dict "mcp_servers" .claude.mcp "tui" (dict "theme" .theme) "desktop" (dict "appearanceDarkChromeTheme" (dict "accent" $palette.accent "accentSource" "custom" "surface" $palette.bg "ink" $palette.fg)) "shell_environment_policy" (dict "set" (dict "LEFTHOOK_OUTPUT" .claude.merge.env.LEFTHOOK_OUTPUT "ENABLE_STOP_REVIEW" .claude.merge.env.ENABLE_STOP_REVIEW)) | toJson | toJson }})
+
+
+def merge_config(original, shared=SHARED):
+    config = tomlkit.parse(original)
+    fallbacks = config.setdefault("project_doc_fallback_filenames", [])
+    if "CLAUDE.md" not in fallbacks:
+        fallbacks.append("CLAUDE.md")
+
+    def merge(target, source):
+        for key, value in source.items():
+            if isinstance(value, dict):
+                merge(target.setdefault(key, tomlkit.table()), value)
+            elif target.get(key) != value:
+                target[key] = value
+
+    # Repo-owned servers use stdio. Clear old HTTP transport fields if one was registered before.
+    for name in shared["mcp_servers"]:
+        server = config.get("mcp_servers", {}).get(name, {})
+        for key in ("url", "http_headers", "env_http_headers", "bearer_token_env_var"):
+            server.pop(key, None)
+    merge(config, shared)
+    return tomlkit.dumps(config)
+
+
+def sync(path):
+    original = path.read_bytes() if path.exists() else b""
+    updated = merge_config(original.decode("utf-8-sig")).encode("utf-8")
+    if original == updated:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        backup = path.with_name(path.name + datetime.now().strftime(".bak-%Y%m%d-%H%M%S-%f"))
+        shutil.copy2(path, backup)
+    # Replace only after parsing and writing succeeds. Reject a concurrent edit.
+    fd, temporary = tempfile.mkstemp(dir=path.parent, prefix=".config-sync-", suffix=".toml")
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(updated)
+        current = path.read_bytes() if path.exists() else b""
+        if current != original:
+            raise RuntimeError("Codex config changed during sync; rerun chezmoi apply")
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+    return True
+
+
+if __name__ == "__main__":
+    config_path = Path(__file__).with_name("config.toml")
+    print(f"codex-settings: {config_path}: {'updated (backup saved)' if sync(config_path) else 'up to date'}")

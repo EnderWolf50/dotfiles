@@ -11,12 +11,12 @@ $knownPlugins = @(
 {{- range $id, $_ := .claude.seed.enabledPlugins }}
   '{{ $id }}'
 {{- end }}
-{{- range $_, $id := .claude.lsp }}
-  '{{ $id }}'
-{{- end }}
 {{- range .claude.local.plugins }}
   '{{ . }}'
 {{- end }}
+{{- range .agent_plugins.plugins }}{{ if has "claude" .hosts }}
+  '{{ .id }}'
+{{- end }}{{ end }}
 )
 $knownMarketplaces = @(
 {{- range $name, $_ := .claude.merge.extraKnownMarketplaces }}
@@ -25,6 +25,9 @@ $knownMarketplaces = @(
 {{- range .claude.local.marketplaces }}
   '{{ . }}'
 {{- end }}
+{{- range $name, $entry := .agent_plugins.marketplaces }}{{ if has "claude" $entry.hosts }}
+  '{{ $name }}'
+{{- end }}{{ end }}
 )
 
 $installedPath = Join-Path $HOME '.claude\plugins\installed_plugins.json'

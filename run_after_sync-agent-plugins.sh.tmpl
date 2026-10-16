@@ -1,0 +1,6 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+set -eu
+{{ template "tool-path.sh" . }}
+uv run --no-project --script {{ joinPath .chezmoi.homeDir ".agents" "sync-plugins.py" | quote }}
+{{ end -}}

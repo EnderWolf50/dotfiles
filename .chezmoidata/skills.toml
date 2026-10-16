@@ -6,6 +6,7 @@
 # sparse-clones only those folders: `skills add owner/repo` clones the whole repository, and cli/cli
 # is 43 MB for one SKILL.md.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
+# `personal = true` entries install only when this machine has data.personal = true.
 
 [[skills]]
 source = "mattpocock/skills"
@@ -57,10 +58,6 @@ paths = [
   "workflow/acceptance-checklist",
   "patches/code-review.patch",
   "workflow/compare-alternatives",
-  "dalamud/dalamud-plugin-build",
-  "dalamud/dalamud-plugin-integration-auditing",
-  "dalamud/dalamud-regional-client-adaptation",
-  "dalamud/dalamud-traditional-chinese-localization",
   "patches/diagnosing-bugs.patch",
   "dotfiles/dotfiles",
   "patches/figma-design-to-code.patch",
@@ -77,6 +74,16 @@ paths = [
   "patches/retro.patch",
   "git/ship",
   "patches/writing-for-agents.patch",
+]
+
+[[skills]]
+source = "EnderWolf50/skills"
+personal = true
+paths = [
+  "dalamud/dalamud-plugin-build",
+  "dalamud/dalamud-plugin-integration-auditing",
+  "dalamud/dalamud-regional-client-adaptation",
+  "dalamud/dalamud-traditional-chinese-localization",
 ]
 
 [[skills]]

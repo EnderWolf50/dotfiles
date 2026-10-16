@@ -30,7 +30,7 @@ npms=
 gos=
 new=
 {{- range $tool := .tools }}
-{{- if and (ne (index $tool "os" | default "") "windows") (or (hasKey $tool "brew") (hasKey $tool "cask") (hasKey $tool "npm") (hasKey $tool "go")) (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
+{{- if and (ne (index $tool "os" | default "") "windows") (or (hasKey $tool "brew") (hasKey $tool "cask") (hasKey $tool "npm") (hasKey $tool "go")) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
 {{- if hasKey $tool "brew" }}
 command -v {{ $tool.check }} >/dev/null || { formulas="$formulas {{ $tool.brew }}"; new="$new {{ $tool.check }}"; }
 {{- else if hasKey $tool "cask" }}

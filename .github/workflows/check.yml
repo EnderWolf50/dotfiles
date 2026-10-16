@@ -24,3 +24,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           sudo apt-get update -qq && sudo apt-get install -y -qq zsh
       - run: python3 .github/check.py
+      - run: |
+          python3 -m pip install tomlkit==0.15.1
+          python3 .github/check-codex.py
+          python3 .github/check-agent-plugins.py

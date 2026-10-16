@@ -1,0 +1,16 @@
+{{- $p := .themes.vesper.palette -}}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>name</key><string>Vesper</string>
+<key>settings</key><array>
+<dict><key>settings</key><dict>
+<key>background</key><string>{{ $p.bg }}</string>
+<key>foreground</key><string>{{ $p.fg }}</string>
+<key>caret</key><string>{{ $p.accent }}</string>
+<key>selection</key><string>{{ $p.selection }}</string>
+</dict></dict>
+{{ range $scope, $role := dict "comment" "comment" "string" "accent2" "constant.numeric, entity.name.function, entity.name.type, support.function" "accent" "keyword, storage, punctuation" "subtle" "invalid" "danger" -}}
+<dict><key>scope</key><string>{{ $scope }}</string><key>settings</key><dict><key>foreground</key><string>{{ index $p $role }}</string></dict></dict>
+{{ end -}}
+</array></dict></plist>
