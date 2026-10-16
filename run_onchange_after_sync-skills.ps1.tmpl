@@ -7,11 +7,12 @@
 if (-not (Get-Command npx -ErrorAction SilentlyContinue)) { Write-Warning 'sync-skills: npx not found, skipped'; exit 0 }
 $env:GIT_TERMINAL_PROMPT = '0'
 $wanted = @(
-{{- range .skills }}{{ range .paths }}
+{{- range .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}{{ range .paths }}
   '{{ base . }}'
-{{- end }}{{ end }}
+{{- end }}{{ end }}{{ end }}
 )
 {{ range .skills -}}
+{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
 $src = Join-Path ([IO.Path]::GetTempPath()) 'skills-src-{{ .source | replace "/" "-" }}'
 Remove-Item -Recurse -Force $src -ErrorAction SilentlyContinue
 git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source }} $src &&
@@ -19,7 +20,7 @@ git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source
   npx -y skills add $src -g -a claude-code codex -y -s {{ range $i, $p := .paths }}{{ if $i }} {{ end }}{{ base $p }}{{ end }}
 if ($LASTEXITCODE) { Write-Warning 'sync-skills: installing from {{ .source }} failed' }
 Remove-Item -Recurse -Force $src -ErrorAction SilentlyContinue
-{{ end -}}
+{{ end }}{{ end -}}
 $installed = npx -y skills ls -g --json 2>$null | ConvertFrom-Json
 $extra = @($installed | Where-Object { $_.source -and $_.name -notin $wanted } | ForEach-Object name)
 if ($extra) { npx -y skills remove -g -y @extra }

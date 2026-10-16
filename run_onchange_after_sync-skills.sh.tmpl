@@ -9,8 +9,9 @@
 command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
 export GIT_TERMINAL_PROMPT=0
-wanted='{{ range .skills }}{{ range .paths }} {{ base . }}{{ end }}{{ end }} '
+wanted='{{ range .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}{{ range .paths }} {{ base . }}{{ end }}{{ end }}{{ end }} '
 {{ range .skills -}}
+{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
 src="${TMPDIR:-/tmp}/skills-src-{{ .source | replace "/" "-" }}"
 rm -rf "$src"
 git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source }} "$src" &&
@@ -18,7 +19,7 @@ git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source
   npx -y skills add "$src" -g -a claude-code codex -y -s {{ range $i, $p := .paths }}{{ if $i }} {{ end }}{{ base $p }}{{ end }} ||
   echo 'sync-skills: installing from {{ .source }} failed' >&2
 rm -rf "$src"
-{{ end -}}
+{{ end }}{{ end -}}
 extra=$(npx -y skills ls -g --json 2>/dev/null | jq -r '.[] | select(.source) | .name' |
   while read -r name; do case "$wanted" in *" $name "*) ;; *) echo "$name" ;; esac; done)
 [ -n "$extra" ] && npx -y skills remove -g -y $extra

@@ -123,6 +123,11 @@ catalog migration and generated agents without installing anything.
 
 ## Per-machine overrides
 
+Dalamud skills are marked `personal = true` in `.chezmoidata/skills.toml`: only machines with
+`data.personal = true` install them. Other machines omit them from the desired list and the skills
+sync removes previously CLI-installed copies/links for both Claude Code and Codex. The source repo
+and plugin build outputs are untouched. Unset `personal` is treated as false.
+
 Agent LSP plugins and the `languages` machine selector have been retired. An audit on 2026-10-16
 found zero LSP tool calls across 488 retained CC JSONL files and 231 sessions with tool calls on this
 Windows machine; this does not measure editor LSP use or deleted/other-machine sessions. Language-server
