@@ -5,20 +5,35 @@
 # Each source is sparse-cloned to only its skill folders and handed to the CLI as a local path:
 # `skills add owner/repo` would clone the whole repository. A local install leaves `skills update`
 # nothing to pull, so the date below reruns this on the first apply of each day: {{ now | date "2006-01-02" }}
+# The clones run in parallel (each is a few GitHub round trips, not bandwidth); the installs stay
+# sequential because they all write ~/.agents/skills.
 {{ template "tool-path.sh" . }}
 command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
 export GIT_TERMINAL_PROMPT=0
 wanted='{{ range .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}{{ range .paths }} {{ base . }}{{ end }}{{ end }}{{ end }} '
-{{ range .skills -}}
+# fetch <dir> <owner/repo> <path>...
+fetch() {
+  dir=$1 repo=$2; shift 2
+  rm -rf "$dir"
+  git clone -q --depth 1 --filter=blob:none --sparse "https://github.com/$repo" "$dir" &&
+    git -C "$dir" sparse-checkout set "$@"
+}
+# add_skills <dir> <owner/repo> <name>...
+add_skills() {
+  dir=$1 repo=$2; shift 2
+  npx -y skills add "$dir" -g -a claude-code codex -y -s "$@" ||
+    echo "sync-skills: installing from $repo failed" >&2
+  rm -rf "$dir"
+}
+{{ range $i, $s := .skills -}}
 {{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
-src="${TMPDIR:-/tmp}/skills-src-{{ .source | replace "/" "-" }}"
-rm -rf "$src"
-git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source }} "$src" &&
-  git -C "$src" sparse-checkout set {{ .paths | join " " }} &&
-  npx -y skills add "$src" -g -a claude-code codex -y -s {{ range $i, $p := .paths }}{{ if $i }} {{ end }}{{ base $p }}{{ end }} ||
-  echo 'sync-skills: installing from {{ .source }} failed' >&2
-rm -rf "$src"
+fetch "${TMPDIR:-/tmp}/skills-src-{{ $i }}-{{ .source | replace "/" "-" }}" {{ .source }} {{ .paths | join " " }} &
+{{ end }}{{ end -}}
+wait
+{{ range $i, $s := .skills -}}
+{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
+add_skills "${TMPDIR:-/tmp}/skills-src-{{ $i }}-{{ .source | replace "/" "-" }}" {{ .source }}{{ range .paths }} {{ base . }}{{ end }}
 {{ end }}{{ end -}}
 extra=$(npx -y skills ls -g --json 2>/dev/null | jq -r '.[] | select(.source) | .name' |
   while read -r name; do case "$wanted" in *" $name "*) ;; *) echo "$name" ;; esac; done)
