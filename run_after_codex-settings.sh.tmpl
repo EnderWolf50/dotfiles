@@ -1,0 +1,7 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+set -eu
+{{ template "tool-path.sh" . }}
+command -v uv >/dev/null || { echo 'codex-settings: uv is required; install tools.toml tools first' >&2; exit 1; }
+uv run --no-project --script {{ joinPath .chezmoi.homeDir ".codex" "sync-settings.py" | quote }}
+{{ end -}}

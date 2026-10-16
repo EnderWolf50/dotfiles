@@ -30,6 +30,11 @@ def check(path, name):
         return run("zsh", "-n", path, path=path)
     if base.endswith(".js"):
         return run("node", "--check", path, path=path)
+    if base.endswith(".py"):
+        try:
+            compile(open(path, encoding="utf-8").read(), name, "exec")
+        except SyntaxError as e:
+            return str(e)
     try:
         if base.endswith(".json") and base not in JSONC:
             json.load(open(path, encoding="utf-8"))
