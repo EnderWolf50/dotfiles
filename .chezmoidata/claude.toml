@@ -69,19 +69,6 @@ args    = ["--from", "semble[mcp]@latest", "semble"]
 command = "npx"
 args    = ["-y", "@playwright/mcp@latest", "--isolated"]
 
-# lsp: the LSP plugin for each language. On a machine whose chezmoi config has `languages` (asked by
-# `chezmoi init`), every apply turns on the plugins of the chosen languages and turns the rest off.
-[claude.lsp]
-c-cpp      = "clangd-lsp@claude-plugins-official"
-csharp     = "csharp-lsp@claude-plugins-official"
-go         = "gopls-lsp@claude-plugins-official"
-java       = "jdtls-lsp@claude-plugins-official"
-kotlin     = "kotlin-lsp@claude-plugins-official"
-python     = "pyright-lsp@claude-plugins-official"
-rust       = "rust-analyzer-lsp@claude-plugins-official"
-swift      = "swift-lsp@claude-plugins-official"
-typescript = "typescript-lsp@claude-plugins-official"
-
 # local: plugins and marketplaces some machines keep on purpose. run_after_claude-settings-drift
 # lists every settings.json plugin or marketplace this file does not know, except these.
 [claude.local]

@@ -47,8 +47,11 @@ class CodexSettingsTests(unittest.TestCase):
     def test_preserves_local_settings_comments_and_server_policy(self):
         result = merge_config(LOCAL)
         original, updated = tomllib.loads(LOCAL), tomllib.loads(result)
-        for key in ("model", "model_reasoning_effort", "desktop"):
+        for key in ("model", "model_reasoning_effort"):
             self.assertEqual(updated[key], original[key])
+        self.assertEqual(updated['desktop']['appearanceTheme'], original['desktop']['appearanceTheme'])
+        self.assertEqual(updated['desktop']['appearanceDarkChromeTheme']['surface'], '#101010')
+        self.assertEqual(updated['tui']['theme'], 'vesper')
         self.assertIn('# Keep my model and experimental provider notes.', result)
         self.assertIn('# keep this comment', result)
         self.assertEqual(updated["mcp_servers"]["local"], original["mcp_servers"]["local"])

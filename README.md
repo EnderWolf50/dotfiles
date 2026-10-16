@@ -36,7 +36,7 @@ the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a 
 | `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset` layout, `theme` colors, `icons`) |
 | `.chezmoidata/skills.toml` | Global agent skills (`skills` CLI), as folder paths inside each source repo; `run_onchange_after_sync-skills.*` sparse-clones only those folders, installs them from the clone and removes the rest, on change and on the first apply of each day |
 | `.chezmoidata/plugins.toml`, `dot_agents/sync-plugins.py.tmpl` | Shared native plugin catalog for CC and Codex; every apply installs missing entries, preserves local disabled choices, and uses host-specific refs/sparse checkouts |
-| `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere: set / merged / seeded / appended keys of `settings.json`, the LSP plugin per language, and the user-scope MCP servers (`[claude.mcp]`, registered by `run_onchange_after_claude-mcp.*`). Removing a key here does not remove it from `settings.json` |
+| `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere: set / merged / seeded / appended keys of `settings.json`, the user-scope MCP servers (`[claude.mcp]`, registered by `run_onchange_after_claude-mcp.*`). Removing a key here does not remove it from `settings.json` |
 | `.chezmoitemplates/agent-instructions.md.tmpl` | Shared global instructions, rendered as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, with tool-specific adapters |
 | `dot_codex/`, `run_after_codex-settings.*` | Codex instructions and a comment-preserving settings sync helper; every apply merges shared MCP connections, Claude instruction fallback and shared shell environment into the local Codex config |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
@@ -46,7 +46,7 @@ the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a 
 | `dot_local/bin/executable_cua-driver`, `dot_claude/skills/symlink_cua-driver.tmpl` | WSL only: run the Windows cua-driver (paths in `call` JSON turned into Windows paths) and link the skill its `skills install` fetched, so a WSL agent drives the Windows desktop |
 | `.chezmoiignore` | What each OS skips |
 | `run_after_claude-settings-drift.*` | After every apply, lists the plugins and marketplaces in `~/.claude/settings.json` that `claude.toml` does not know (a removal made on another machine, or a local `/plugin` install), and on a terminal asks whether to remove each one. `[claude.local]` in `claude.toml` holds the ones a machine keeps on purpose |
-| `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it, and pins how `modify_settings.json` appends lists and sets LSP plugins; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
+| `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it, and pins how `modify_settings.json` appends lists; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
 
 ## Claude Code and Codex
 
@@ -66,9 +66,13 @@ in its inline dependency metadata and merges only:
   guidance and `@path` imports when needed.
 - MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently Semble and isolated
   Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
-- `LEFTHOOK_OUTPUT` from the Claude environment settings into Codex's shell environment.
+- `LEFTHOOK_OUTPUT` and `ENABLE_STOP_REVIEW` from Claude into Codex's shell environment.
+- The shared theme into `tui.theme` and desktop dark chrome accent, background and foreground.
+  `dot_codex/themes/vesper.tmTheme.tmpl` generates CLI highlighting from the same palette; desktop
+  syntax highlighting stays on its existing built-in code theme. Fonts, light theme, contrast,
+  transparency and system/light/dark selection remain local.
 
-`~/.codex/config.toml` remains a local file: models, providers, desktop preferences, hooks, trust,
+`~/.codex/config.toml` remains a local file: models, providers, unrelated desktop preferences, hooks, trust,
 plugins and unrelated settings and comments are preserved. Before each change the helper saves
 `config.toml.bak-YYYYMMDD-HHMMSS-microseconds`; unchanged applies do not rewrite it. Removing an MCP
 entry from the shared list does not delete its existing registration from either agent.
@@ -78,14 +82,17 @@ hosted sessions and third-party harnesses may supply their own instructions, too
 The five personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
 same descriptions and bodies. They inherit the Codex session model, map the source effort, and load
 required skills through instructions. CC tool allowlists and a separate read-only sandbox are not
-recreated; parent session permissions still apply. Auto mode, security-guidance, LSP, themes and
-statusline remain separate integrations.
+recreated; parent session permissions still apply. Auto mode and statusline remain separate.
+The native security bridge preserves Stop-review-off and uses Codex for commit/push reviews; it
+cannot wake an idle thread like CC asyncRewake. Custom security rules, dynamic Git wrappers and
+full baseline suppression remain unbridged. Search-tools shares live-process leases between hosts.
+See the plugin READMEs for coverage and failure behavior.
 
 ## Native agent plugins
 
 Declare a plugin once in `.chezmoidata/plugins.toml`, with its hosts and marketplace source. The shared
-catalog currently installs guards, skill-patches, TemPad Dev, Ponytail and Impeccable through native
-CC/Codex CLIs. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
+catalog currently installs guards, skill-patches, search-tools, TemPad Dev, Ponytail and Impeccable
+through native CC/Codex CLIs, plus the Codex-only security-guidance bridge. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
 CC marketplace declarations and seeded enablement come from this same catalog, replacing the entries
 previously kept in `claude.toml`. Other CC plugins and marketplaces remain in that file.
 
@@ -101,7 +108,7 @@ uv run --no-project --script "$HOME/.agents/sync-plugins.py" --update
 ```
 
 Updates preserve disabled plugins. CC's existing auto-update marketplace preferences are retained.
-The Codex guards/patches marketplace is pinned to the tested adapter commit; bump `codex_ref` to adopt
+The Codex adapter marketplace is pinned to the tested adapter commit; bump `codex_ref` to adopt
 a newer reviewed release. Installing these hooks does not trust them: open Codex `/hooks`, review the
 definitions and trust those you want active, then start a new chat. Third-party hook behavior still
 depends on its upstream package and OS; installation/inventory checks do not prove a hook ran.
@@ -116,7 +123,12 @@ catalog migration and generated agents without installing anything.
 
 ## Per-machine overrides
 
-`chezmoi init` asks which languages the machine works in and stores them as `languages`. Every apply turns on those languages' LSP plugins and turns the rest off (`[claude.lsp]` in `.chezmoidata/claude.toml`), and `tools` lists only their language servers (`lang` in `tools.toml`). Rerun `chezmoi init` to change the answer.
+Agent LSP plugins and the `languages` machine selector have been retired. An audit on 2026-10-16
+found zero LSP tool calls across 488 retained CC JSONL files and 231 sessions with tool calls on this
+Windows machine; this does not measure editor LSP use or deleted/other-machine sessions. Language-server
+install entries are removed, while development runtimes, the Java JDK, existing Swift installations and editor
+settings stay independent. Existing machines can remove obsolete `data.languages` and uninstall
+their CC LSP plugins; removing a source declaration alone never uninstalls system packages.
 
 In `~/.config/chezmoi/chezmoi.toml`:
 

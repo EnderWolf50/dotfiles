@@ -5,7 +5,7 @@ source = "EnderWolf50/claude-plugins"
 hosts = ["claude", "codex"]
 auto_update = true
 # Pin the Codex adapters to the reviewed commit; CC keeps its existing main source.
-codex_ref = "520b5c820a38796e3c8ffbb8e37f232ff11082b3"
+codex_ref = "ca18f065a779746209d361fcf4fcd1b03d66c48b"
 
 [agent_plugins.marketplaces.ponytail]
 source = "DietrichGebert/ponytail"
@@ -23,6 +23,14 @@ hosts = ["claude", "codex"]
 claude_sparse = [".claude-plugin", "agent-plugin/targets/claude"]
 codex_sparse = [".agents", "agent-plugin/targets/codex"]
 codex_ref = "main"
+
+[[agent_plugins.plugins]]
+id = "search-tools@enderwolf50"
+hosts = ["claude", "codex"]
+
+[[agent_plugins.plugins]]
+id = "security-guidance@enderwolf50"
+hosts = ["codex"]
 
 [[agent_plugins.plugins]]
 id = "guards@enderwolf50"

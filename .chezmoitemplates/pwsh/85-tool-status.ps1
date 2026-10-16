@@ -7,7 +7,7 @@
 if ($IsInteractiveConsole) {
   $DotTools = @(
 {{- range $tool := .tools }}
-{{- if and (ne (index $tool "os" | default "") "linux") (or (not (hasKey $tool "lang")) (not (hasKey $ "languages")) (has $tool.lang $.languages)) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
+{{- if and (ne (index $tool "os" | default "") "linux") (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
     @{
       Name      = '{{ $tool.name | replace "'" "''" }}'
       Check     = '{{ index $tool "check" | default "" | replace "'" "''" }}'

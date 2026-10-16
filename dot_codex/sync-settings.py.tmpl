@@ -12,7 +12,8 @@ from datetime import datetime
 
 import tomlkit
 
-SHARED = json.loads({{ dict "mcp_servers" .claude.mcp "shell_environment_policy" (dict "set" (dict "LEFTHOOK_OUTPUT" .claude.merge.env.LEFTHOOK_OUTPUT)) | toJson | toJson }})
+{{ $palette := (index .themes .theme).palette -}}
+SHARED = json.loads({{ dict "mcp_servers" .claude.mcp "tui" (dict "theme" .theme) "desktop" (dict "appearanceDarkChromeTheme" (dict "accent" $palette.accent "accentSource" "custom" "surface" $palette.bg "ink" $palette.fg)) "shell_environment_policy" (dict "set" (dict "LEFTHOOK_OUTPUT" .claude.merge.env.LEFTHOOK_OUTPUT "ENABLE_STOP_REVIEW" .claude.merge.env.ENABLE_STOP_REVIEW)) | toJson | toJson }})
 
 
 def merge_config(original, shared=SHARED):

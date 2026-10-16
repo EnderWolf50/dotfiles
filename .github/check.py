@@ -86,21 +86,4 @@ if (r.returncode or "Bash(rm:*)" not in ask or ask.count("Bash(tinyfish agent:*)
     failed += 1
     print(f"dot_claude/modify_settings.json: append lost or duplicated permissions.ask entries: {ask or r.stderr.strip()}")
 
-# modify_settings.json `lsp`: the chosen languages' LSP plugins on, the others off; without
-# `languages` the machine's enabledPlugins are left alone.
-local = {"enabledPlugins": {"gopls-lsp@claude-plugins-official": False, "swift-lsp@claude-plugins-official": True}}
-for data, want in ((["go"], {"gopls-lsp@claude-plugins-official": True, "swift-lsp@claude-plugins-official": False}),
-                   (None, local["enabledPlugins"])):
-    with tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False) as cfg:  # no machine config: no `languages`
-        pass
-    cmd = ["chezmoi", "execute-template", "--config", cfg.name, "--source", ".", "--with-stdin",
-           "-f", "dot_claude/modify_settings.json"]
-    if data is not None:
-        cmd[1:1] = ["--override-data", json.dumps({"languages": data})]
-    r = subprocess.run(cmd, input=json.dumps(local), capture_output=True, text=True, encoding="utf-8")
-    os.unlink(cfg.name)
-    got = json.loads(r.stdout or "{}").get("enabledPlugins", {})
-    if r.returncode or any(got.get(k) != v for k, v in want.items()):
-        failed += 1
-        print(f"dot_claude/modify_settings.json: lsp with languages={data}: {got or r.stderr.strip()}")
 sys.exit(failed and 1)
