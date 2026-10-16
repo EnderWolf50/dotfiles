@@ -4,6 +4,8 @@
 # Each source is sparse-cloned to only its skill folders and handed to the CLI as a local path:
 # `skills add owner/repo` would clone the whole repository. A local install leaves `skills update`
 # nothing to pull, so the date below reruns this on the first apply of each day: {{ now | date "2006-01-02" }}
+# The clones run in parallel (each is a few GitHub round trips, not bandwidth); the installs stay
+# sequential because they all write ~/.agents/skills. Start-Process keeps this working in Windows PowerShell.
 if (-not (Get-Command npx -ErrorAction SilentlyContinue)) { Write-Warning 'sync-skills: npx not found, skipped'; exit 0 }
 $env:GIT_TERMINAL_PROMPT = '0'
 $wanted = @(
@@ -11,16 +13,21 @@ $wanted = @(
   '{{ base . }}'
 {{- end }}{{ end }}{{ end }}
 )
-{{ range .skills -}}
-{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
-$src = Join-Path ([IO.Path]::GetTempPath()) 'skills-src-{{ .source | replace "/" "-" }}'
-Remove-Item -Recurse -Force $src -ErrorAction SilentlyContinue
-git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source }} $src &&
-  git -C $src sparse-checkout set {{ .paths | join " " }} &&
-  npx -y skills add $src -g -a claude-code codex -y -s {{ range $i, $p := .paths }}{{ if $i }} {{ end }}{{ base $p }}{{ end }}
-if ($LASTEXITCODE) { Write-Warning 'sync-skills: installing from {{ .source }} failed' }
-Remove-Item -Recurse -Force $src -ErrorAction SilentlyContinue
-{{ end }}{{ end -}}
+$sources = @(
+{{- range $i, $s := .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}
+  @{ repo = '{{ .source }}'; src = Join-Path ([IO.Path]::GetTempPath()) 'skills-src-{{ $i }}-{{ .source | replace "/" "-" }}'; paths = '{{ .paths | join " " }}'; names = '{{ range $j, $p := .paths }}{{ if $j }} {{ end }}{{ base $p }}{{ end }}' }
+{{- end }}{{ end }}
+)
+foreach ($s in $sources) { Remove-Item -Recurse -Force $s.src -ErrorAction SilentlyContinue }
+$sources | ForEach-Object { Start-Process git -NoNewWindow -PassThru -ArgumentList "clone -q --depth 1 --filter=blob:none --sparse https://github.com/$($_.repo) `"$($_.src)`"" } | Wait-Process
+$sources | Where-Object { Test-Path $_.src } |
+  ForEach-Object { Start-Process git -NoNewWindow -PassThru -ArgumentList "-C `"$($_.src)`" sparse-checkout set $($_.paths)" } | Wait-Process
+foreach ($s in $sources) {
+  $names = $s.names -split ' '
+  npx -y skills add $s.src -g -a claude-code codex -y -s @names
+  if ($LASTEXITCODE) { Write-Warning "sync-skills: installing from $($s.repo) failed" }
+  Remove-Item -Recurse -Force $s.src -ErrorAction SilentlyContinue
+}
 $installed = npx -y skills ls -g --json 2>$null | ConvertFrom-Json
 $extra = @($installed | Where-Object { $_.source -and $_.name -notin $wanted } | ForEach-Object name)
 if ($extra) { npx -y skills remove -g -y @extra }
