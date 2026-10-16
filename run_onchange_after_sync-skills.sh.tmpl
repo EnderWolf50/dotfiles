@@ -2,13 +2,22 @@
 #!/bin/sh
 # Make the global skills match .chezmoidata/skills.toml. Codex makes the CLI install into
 # ~/.agents/skills (read by Codex, Copilot, OpenCode); Claude Code gets a symlink to it.
+# Each source is sparse-cloned to only its skill folders and handed to the CLI as a local path:
+# `skills add owner/repo` would clone the whole repository. A local install leaves `skills update`
+# nothing to pull, so the date below reruns this on the first apply of each day: {{ now | date "2006-01-02" }}
 {{ template "tool-path.sh" . }}
 command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
-wanted='{{ range .skills }}{{ range .names }} {{ . }}{{ end }}{{ end }} '
+export GIT_TERMINAL_PROMPT=0
+wanted='{{ range .skills }}{{ range .paths }} {{ base . }}{{ end }}{{ end }} '
 {{ range .skills -}}
-npx -y skills add {{ .source }} -g -a claude-code codex -y -s {{ .names | join " " }} ||
+src="${TMPDIR:-/tmp}/skills-src-{{ .source | replace "/" "-" }}"
+rm -rf "$src"
+git clone -q --depth 1 --filter=blob:none --sparse https://github.com/{{ .source }} "$src" &&
+  git -C "$src" sparse-checkout set {{ .paths | join " " }} &&
+  npx -y skills add "$src" -g -a claude-code codex -y -s {{ range $i, $p := .paths }}{{ if $i }} {{ end }}{{ base $p }}{{ end }} ||
   echo 'sync-skills: installing from {{ .source }} failed' >&2
+rm -rf "$src"
 {{ end -}}
 extra=$(npx -y skills ls -g --json 2>/dev/null | jq -r '.[] | select(.source) | .name' |
   while read -r name; do case "$wanted" in *" $name "*) ;; *) echo "$name" ;; esac; done)

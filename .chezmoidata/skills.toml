@@ -1,93 +1,96 @@
 # Global agent skills installed with the `skills` CLI (https://skills.sh), one entry per source repo.
-# `chezmoi apply` runs run_onchange_after_sync-skills whenever this list changes: it installs every
-# skill listed here and removes any CLI-installed global skill that is not. Skills installed by hand
-# without a source (plugin ones) are left alone.
+# `chezmoi apply` runs run_onchange_after_sync-skills whenever this list changes (and once a day): it
+# installs every skill listed here and removes any CLI-installed global skill that is not. Skills
+# installed by hand without a source (plugin ones) are left alone.
+# `paths` are the skill folders inside the repo; the skill's name is the folder's name. The script
+# sparse-clones only those folders: `skills add owner/repo` clones the whole repository, and cli/cli
+# is 43 MB for one SKILL.md.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
 
 [[skills]]
 source = "mattpocock/skills"
-names = [
-  "ask-matt",
-  "code-review",
-  "codebase-design",
-  "diagnosing-bugs",
-  "domain-modeling",
-  "grill-me",
-  "grill-with-docs",
-  "grilling",
-  "handoff",
-  "implement",
-  "implement-spec",
-  "improve-codebase-architecture",
-  "pr",
-  "prototype",
-  "research",
-  "retro",
-  "setup-matt-pocock-skills",
-  "tdd",
-  "teach",
-  "to-questionnaire",
-  "to-spec",
-  "to-tickets",
-  "triage",
-  "wait-what",
-  "wayfinder",
-  "wizard",
-  "writing-for-agents",
+paths = [
+  "skills/engineering/ask-matt",
+  "skills/engineering/code-review",
+  "skills/engineering/codebase-design",
+  "skills/engineering/diagnosing-bugs",
+  "skills/engineering/domain-modeling",
+  "skills/productivity/grill-me",
+  "skills/engineering/grill-with-docs",
+  "skills/productivity/grilling",
+  "skills/productivity/handoff",
+  "skills/engineering/implement",
+  "skills/engineering/implement-spec",
+  "skills/engineering/improve-codebase-architecture",
+  "skills/engineering/pr",
+  "skills/engineering/prototype",
+  "skills/engineering/research",
+  "skills/engineering/retro",
+  "skills/engineering/setup-matt-pocock-skills",
+  "skills/engineering/tdd",
+  "skills/productivity/teach",
+  "skills/productivity/to-questionnaire",
+  "skills/engineering/to-spec",
+  "skills/engineering/to-tickets",
+  "skills/engineering/triage",
+  "skills/productivity/wait-what",
+  "skills/engineering/wayfinder",
+  "skills/engineering/wizard",
+  "skills/productivity/writing-for-agents",
 ]
 
 [[skills]]
 source = "humanlayer/skills"
-names = [
-  "build-iterated-agentic-loop",
-  "design-control-loop",
-  "improve-claude-md",
-  "narrow-react-prop-types",
-  "show-me",
-  "visual-pr",
+paths = [
+  "plugins/build-iterated-agentic-loop/skills/build-iterated-agentic-loop",
+  "plugins/design-control-loop/skills/design-control-loop",
+  "plugins/improve-claude-md/skills/improve-claude-md",
+  "plugins/narrow-react-prop-types/skills/narrow-react-prop-types",
+  "plugins/show-me/skills/show-me",
+  "plugins/visual-pr/skills/visual-pr",
 ]
 
-# Private repo: needs `gh auth login` first.
+# Private repo: needs `gh auth login` first (git's credential helper is `gh auth git-credential`).
 [[skills]]
 source = "EnderWolf50/skills"
-names = [
-  "acceptance-checklist",
-  "code-review.patch",
-  "compare-alternatives",
-  "dalamud-plugin-build",
-  "dalamud-plugin-integration-auditing",
-  "dalamud-regional-client-adaptation",
-  "dalamud-traditional-chinese-localization",
-  "diagnosing-bugs.patch",
-  "dotfiles",
-  "figma-design-to-code.patch",
-  "github-fork-history-analysis",
-  "grilling.patch",
-  "herdr.patch",
-  "implement.patch",
-  "implement-spec.patch",
-  "move-claude-project",
-  "oss-alternatives.patch",
-  "release-cli",
-  "research.patch",
-  "retro-all",
-  "retro.patch",
-  "ship",
-  "writing-for-agents.patch",
+paths = [
+  "workflow/acceptance-checklist",
+  "patches/code-review.patch",
+  "workflow/compare-alternatives",
+  "dalamud/dalamud-plugin-build",
+  "dalamud/dalamud-plugin-integration-auditing",
+  "dalamud/dalamud-regional-client-adaptation",
+  "dalamud/dalamud-traditional-chinese-localization",
+  "patches/diagnosing-bugs.patch",
+  "dotfiles/dotfiles",
+  "patches/figma-design-to-code.patch",
+  "git/github-fork-history-analysis",
+  "patches/grilling.patch",
+  "patches/herdr.patch",
+  "patches/implement.patch",
+  "patches/implement-spec.patch",
+  "workflow/move-claude-project",
+  "patches/oss-alternatives.patch",
+  "workflow/release-cli",
+  "patches/research.patch",
+  "workflow/retro-all",
+  "patches/retro.patch",
+  "git/ship",
+  "patches/writing-for-agents.patch",
 ]
 
 [[skills]]
 source = "cli/cli"
-names = ["gh"]
+paths = ["skills/gh"]
 
 [[skills]]
 source = "herdrdev/herdr"
-names = ["herdr"]
+paths = ["skills/herdr"]
 
 [[skills]]
 source = "upstash/context7"
-names = ["find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per machine raises the rate limit
+paths = ["skills/find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per machine raises the rate limit
 
 [[skills]]
 source = "tinyfish-io/tinyfish-cookbook"
-names = ["npm-package-comparator", "oss-alternatives", "use-tinyfish"]  # all run the tinyfish CLI (tools.toml)
+paths = ["skills/npm-package-comparator", "skills/oss-alternatives", "skills/use-tinyfish"]  # all run the tinyfish CLI (tools.toml)
