@@ -1,0 +1,4 @@
+{{ if eq .chezmoi.os "windows" -}}
+uv run --no-project --script '{{ joinPath .chezmoi.homeDir ".agents" "sync-plugins.py" }}'
+if ($LASTEXITCODE) { throw 'agent-plugins: sync failed; rerun chezmoi apply after fixing the reported command' }
+{{ end -}}

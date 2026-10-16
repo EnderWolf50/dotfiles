@@ -37,21 +37,7 @@ effortLevel = "high"
 [claude.merge.extraKnownMarketplaces."anthropic-agent-skills"]
 source = { source = "github", repo = "anthropics/skills" }
 
-[claude.merge.extraKnownMarketplaces."enderwolf50"]
-autoUpdate = true
-source = { source = "github", repo = "EnderWolf50/claude-plugins" }
-
-[claude.merge.extraKnownMarketplaces."impeccable"]
-autoUpdate = true
-source = { source = "github", repo = "pbakaus/impeccable" }
-
-[claude.merge.extraKnownMarketplaces."ponytail"]
-source = { source = "github", repo = "DietrichGebert/ponytail" }
-
-# TemPad Dev: its MCP reads Figma through the Chrome extension's in-page API, so a View seat (6 REST
-# calls a month) still reads variables, component variants and layout. Needs the extension open in Chrome.
-[claude.merge.extraKnownMarketplaces."tempad-dev"]
-source = { source = "github", repo = "ecomfe/tempad-dev", sparsePaths = [".claude-plugin", "agent-plugin/targets/claude"] }
+# Shared native plugins and their marketplaces live in .chezmoidata/plugins.toml.
 
 # append: list entries added to an object's list when missing; the machine's own entries stay.
 # Asked first even in auto mode: TinyFish agent and browser runs bill per step / minute (search and fetch are free).
@@ -107,10 +93,5 @@ marketplaces = []
 [claude.seed.enabledPlugins]
 "cc-plugin-you-should-know@builtin"        = true
 "document-skills@anthropic-agent-skills"   = true
-"guards@enderwolf50"                       = true
-"impeccable@impeccable"                    = true
-"ponytail@ponytail"                        = true
 "search-tools@enderwolf50"                 = true
 "security-guidance@claude-plugins-official" = true
-"skill-patches@enderwolf50"                = true
-"tempad-dev@tempad-dev"                    = true

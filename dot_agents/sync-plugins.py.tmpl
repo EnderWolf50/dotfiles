@@ -1,0 +1,127 @@
+# /// script
+# requires-python = ">=3.11"
+# ///
+"""Reconcile declared plugins through each host's native CLI. No shell execution or trust edits."""
+import argparse
+from datetime import datetime
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tomllib
+
+CATALOG = json.loads({{ .agent_plugins | toJson | toJson }})
+
+
+def output(command):
+    result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", check=True)
+    return json.loads(result.stdout)
+
+
+def plan(host, installed, marketplaces, update=False, catalog=CATALOG):
+    """Plan only missing registrations/installs; update explicitly refreshes owned entries."""
+    commands = []
+    changed = set()
+    for name, entry in catalog["marketplaces"].items():
+        if host not in entry["hosts"]:
+            continue
+        actual = marketplaces.get(name) if isinstance(marketplaces, dict) else None
+        desired = {"source_type": "git", "source": "https://github.com/" + entry["source"] + ".git",
+                   "ref": entry.get("codex_ref"), "sparse_paths": entry.get("codex_sparse", [])}
+        drifted = host == "codex" and actual is not None and any(actual.get(k, [] if k == "sparse_paths" else None) != v for k, v in desired.items())
+        if name not in marketplaces or drifted:
+            if drifted:
+                # Native removal keeps plugin enablement entries. Re-register only this owned source.
+                commands.append([host, "plugin", "marketplace", "remove", name])
+                changed.add(name)
+            command = [host, "plugin", "marketplace", "add", entry["source"]]
+            if host == "codex" and entry.get("codex_ref"):
+                command += ["--ref", entry["codex_ref"]]
+            sparse = entry.get(host + "_sparse", [])
+            if host == "codex":
+                for item in sparse:
+                    command += ["--sparse", item]
+            elif sparse:
+                command += ["--sparse", *sparse]
+            commands.append(command)
+        elif update:
+            commands.append([host, "plugin", "marketplace", "upgrade" if host == "codex" else "update", name])
+    for entry in catalog["plugins"]:
+        if host not in entry["hosts"]:
+            continue
+        plugin = entry["id"]
+        if plugin not in installed:
+            command = [host, "plugin", "add" if host == "codex" else "install", plugin]
+            if host == "claude":
+                command += ["--scope", "user"]
+            commands.append(command)
+        elif (update or plugin.split("@", 1)[1] in changed) and installed[plugin] is not False:
+            commands.append([host, "plugin", "add" if host == "codex" else "update", plugin])
+    return commands
+
+
+def snapshot(host, home):
+    if host == "codex":
+        plugins = output([host, "plugin", "list", "--json"])["installed"]
+        installed = {p.get("pluginId", p["name"] + "@" + p["marketplaceName"]): p.get("enabled", True) for p in plugins}
+        markets = output([host, "plugin", "marketplace", "list", "--json"])["marketplaces"]
+        config_path = Path(os.environ.get("CODEX_HOME", str(home / ".codex"))) / "config.toml"
+        config = tomllib.loads(config_path.read_text(encoding="utf-8-sig")) if config_path.exists() else {}
+        for name, entry in config.get("plugins", {}).items():
+            if entry.get("enabled") is False:
+                installed[name] = False
+        configured = config.get("marketplaces", {})
+        return installed, {p["name"]: configured.get(p["name"]) for p in markets}
+    installed = {p["id"]: p.get("enabled", True) for p in output([host, "plugin", "list", "--json"]) if p.get("scope") == "user"}
+    # A local disabled choice may exist before installation. Keep it disabled and absent.
+    settings = home / ".claude/settings.json"
+    if settings.exists():
+        for name, enabled in json.loads(settings.read_text(encoding="utf-8-sig")).get("enabledPlugins", {}).items():
+            if enabled is False:
+                installed[name] = False
+    markets = output([host, "plugin", "marketplace", "list", "--json"])
+    return installed, {p["name"] for p in markets}
+
+
+def backup_config(home, host):
+    configs = ([Path(os.environ.get("CODEX_HOME", str(home / ".codex"))) / "config.toml"] if host == "codex" else
+               [home / ".claude/settings.json", home / ".claude/plugins/installed_plugins.json", home / ".claude/plugins/known_marketplaces.json"])
+    for config in configs:
+        if config.exists():
+            backup = config.with_name(config.name + datetime.now().strftime(".bak-%Y%m%d-%H%M%S-%f"))
+            shutil.copy2(config, backup)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--host", choices=["claude", "codex", "all"], default="all")
+    parser.add_argument("--update", action="store_true", help="Refresh only declared marketplaces/plugins; preserve disabled entries")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+    hosts = ["claude", "codex"] if args.host == "all" else [args.host]
+    failed = False
+    for host in hosts:
+        if not shutil.which(host):
+            print(f"agent-plugins: {host} not installed, skipped")
+            continue
+        try:
+            installed, markets = snapshot(host, Path.home())
+            commands = plan(host, installed, markets, args.update)
+            if commands and not args.dry_run:
+                backup_config(Path.home(), host)
+            for command in commands:
+                print("agent-plugins:", json.dumps(command, ensure_ascii=False), flush=True)
+                if not args.dry_run:
+                    subprocess.run(command, check=True)
+            if not commands:
+                print(f"agent-plugins: {host} up to date")
+        except (subprocess.CalledProcessError, ValueError, OSError) as error:
+            print(f"agent-plugins: {host}: {error}", file=sys.stderr)
+            failed = True
+    return int(failed)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

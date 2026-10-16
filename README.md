@@ -35,6 +35,7 @@ the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a 
 | `.chezmoidata/tools.toml` | Programs the PowerShell profile and Claude Code use (CLIs, language servers by `lang`); npm-registry ones install with `pnpm add -g` |
 | `.chezmoidata/statusline.toml` | Claude Code statusline options (`preset` layout, `theme` colors, `icons`) |
 | `.chezmoidata/skills.toml` | Global agent skills (`skills` CLI), as folder paths inside each source repo; `run_onchange_after_sync-skills.*` sparse-clones only those folders, installs them from the clone and removes the rest, on change and on the first apply of each day |
+| `.chezmoidata/plugins.toml`, `dot_agents/sync-plugins.py.tmpl` | Shared native plugin catalog for CC and Codex; every apply installs missing entries, preserves local disabled choices, and uses host-specific refs/sparse checkouts |
 | `.chezmoidata/claude.toml` | Claude Code settings kept the same everywhere: set / merged / seeded / appended keys of `settings.json`, the LSP plugin per language, and the user-scope MCP servers (`[claude.mcp]`, registered by `run_onchange_after_claude-mcp.*`). Removing a key here does not remove it from `settings.json` |
 | `.chezmoitemplates/agent-instructions.md.tmpl` | Shared global instructions, rendered as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, with tool-specific adapters |
 | `dot_codex/`, `run_after_codex-settings.*` | Codex instructions and a comment-preserving settings sync helper; every apply merges shared MCP connections, Claude instruction fallback and shared shell environment into the local Codex config |
@@ -53,8 +54,9 @@ Both agents use the same global instructions and skills. Edit the shared instruc
 `.chezmoitemplates/agent-instructions.md.tmpl`; its adapters keep Claude's tool names and model aliases
 out of Codex instructions. The existing skills sync installs into `~/.agents/skills` for Codex and links
 them for Claude Code. In Codex, use `$skill-name` or `/skills`; Claude's `/skill-name` syntax is not copied.
-The Codex instructions also ask it to read matching skill patches and project-only Claude skills or
-commands when needed. This is instruction-based adaptation, not Claude's plugin hook execution.
+The Codex skill-patches plugin injects matching patches for explicit skill mentions, observed skill
+file reads and matching MCP calls. The global instructions retain a fallback for implicit skill
+activation with no observable read, and for project-only Claude skills or commands.
 
 Every apply runs `uv run --no-project --script ~/.codex/sync-settings.py`. The script pins TOML Kit
 in its inline dependency metadata and merges only:
@@ -73,14 +75,44 @@ entry from the shared list does not delete its existing registration from either
 
 Restart Codex or start a new CLI session after applying. This setup covers local Codex installations;
 hosted sessions and third-party harnesses may supply their own instructions, tools and configuration.
-Claude-specific permissions/auto mode, plugins, LSP plugins, agents, hooks, themes and statusline are
-separate integrations and are not translated by this sync.
+The five personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
+same descriptions and bodies. They inherit the Codex session model, map the source effort, and load
+required skills through instructions. CC tool allowlists and a separate read-only sandbox are not
+recreated; parent session permissions still apply. Auto mode, security-guidance, LSP, themes and
+statusline remain separate integrations.
+
+## Native agent plugins
+
+Declare a plugin once in `.chezmoidata/plugins.toml`, with its hosts and marketplace source. The shared
+catalog currently installs guards, skill-patches, TemPad Dev, Ponytail and Impeccable through native
+CC/Codex CLIs. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
+CC marketplace declarations and seeded enablement come from this same catalog, replacing the entries
+previously kept in `claude.toml`. Other CC plugins and marketplaces remain in that file.
+
+`chezmoi apply` runs the shared helper after files are installed. It checks live native inventories,
+installs only missing entries, skips absent hosts, preserves local disabled choices, and leaves unrelated
+plugins alone. A failed install exits nonzero and is retried by the next apply. Native CLIs own caches;
+the helper backs up configuration/registries before changing them and never edits hook trust records.
+Removing a declaration does not uninstall anything. To preview or update only declared entries:
+
+```powershell
+uv run --no-project --script "$HOME/.agents/sync-plugins.py" --dry-run
+uv run --no-project --script "$HOME/.agents/sync-plugins.py" --update
+```
+
+Updates preserve disabled plugins. CC's existing auto-update marketplace preferences are retained.
+The Codex guards/patches marketplace is pinned to the tested adapter commit; bump `codex_ref` to adopt
+a newer reviewed release. Installing these hooks does not trust them: open Codex `/hooks`, review the
+definitions and trust those you want active, then start a new chat. Third-party hook behavior still
+depends on its upstream package and OS; installation/inventory checks do not prove a hook ran.
 
 Verified against the official [instruction discovery guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md),
 [configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference), and
 [skills guide](https://learn.chatgpt.com/docs/build-skills).
 Run `python .github/check.py` and `uv run --no-project --script .github/check-codex.py` to validate
 rendered files, settings preservation, backups, idempotency and the instructions for both OSes.
+`python .github/check-agent-plugins.py` validates reconciliation, sparse arguments, local disablement,
+catalog migration and generated agents without installing anything.
 
 ## Per-machine overrides
 

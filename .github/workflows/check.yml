@@ -27,3 +27,4 @@ jobs:
       - run: |
           python3 -m pip install tomlkit==0.15.1
           python3 .github/check-codex.py
+          python3 .github/check-agent-plugins.py

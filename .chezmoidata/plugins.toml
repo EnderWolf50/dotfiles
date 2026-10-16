@@ -1,0 +1,45 @@
+# Native installers own downloads, caches and hook trust. This list owns desired presence.
+# Existing local disabled states and unrelated plugins are preserved; removal is explicit.
+[agent_plugins.marketplaces.enderwolf50]
+source = "EnderWolf50/claude-plugins"
+hosts = ["claude", "codex"]
+auto_update = true
+# Pin the Codex adapters to the reviewed commit; CC keeps its existing main source.
+codex_ref = "520b5c820a38796e3c8ffbb8e37f232ff11082b3"
+
+[agent_plugins.marketplaces.ponytail]
+source = "DietrichGebert/ponytail"
+hosts = ["claude", "codex"]
+
+[agent_plugins.marketplaces.impeccable]
+source = "pbakaus/impeccable"
+hosts = ["claude", "codex"]
+auto_update = true
+codex_sparse = [".claude-plugin", "plugin"]
+
+[agent_plugins.marketplaces.tempad-dev]
+source = "ecomfe/tempad-dev"
+hosts = ["claude", "codex"]
+claude_sparse = [".claude-plugin", "agent-plugin/targets/claude"]
+codex_sparse = [".agents", "agent-plugin/targets/codex"]
+codex_ref = "main"
+
+[[agent_plugins.plugins]]
+id = "guards@enderwolf50"
+hosts = ["claude", "codex"]
+
+[[agent_plugins.plugins]]
+id = "skill-patches@enderwolf50"
+hosts = ["claude", "codex"]
+
+[[agent_plugins.plugins]]
+id = "ponytail@ponytail"
+hosts = ["claude", "codex"]
+
+[[agent_plugins.plugins]]
+id = "impeccable@impeccable"
+hosts = ["claude", "codex"]
+
+[[agent_plugins.plugins]]
+id = "tempad-dev@tempad-dev"
+hosts = ["claude", "codex"]

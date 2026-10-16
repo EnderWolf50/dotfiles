@@ -6,7 +6,7 @@ Always reply in 繁體中文, including after a long session or a compaction, an
 {{ if eq .agent "codex" -}}
 ## Skills
 
-Use the shared skills in `~/.agents/skills`. When loading a skill, also read its matching `<name>.patch/SKILL.md`, when present, from `~/.agents/skills`, then the project's `.agents/skills` and `.claude/skills`; apply patches in that order, with project patches last. A patch extends its base skill; invoke the base workflow.
+Use the shared skills in `~/.agents/skills`. The skill-patches plugin injects patches on explicit skill mentions, observed skill reads and matching MCP calls. When a skill's patch has not already been supplied, read its matching `<name>.patch/SKILL.md`, when present, from `~/.claude/skills`, `~/.agents/skills`, then the repository root's `.claude/skills` and `.agents/skills`; deduplicate symlinked files and apply patches in that order. Project patches come last and override global ones. A patch extends its base skill; invoke the base workflow.
 
 For a project workflow absent from the skill catalog, check `.claude/skills/<name>/SKILL.md` and `.claude/commands/<name>.md` and follow the matching instructions with available Codex tools.
 
@@ -79,6 +79,7 @@ Before writing a command for the user to run, decide where it runs and write it 
 
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
 - Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
+- Declare native agent plugins and marketplaces in `.chezmoidata/plugins.toml`; `~/.agents/sync-plugins.py` reconciles them through each host's CLI. Existing local disabled choices stay local; update explicitly with `--update`.
 {{ if eq .agent "claude" -}}
 - Wait on a long job by starting it with `run_in_background`, then end the turn: its completion notice resumes you. Poll only state that sends no notice (a CI pipeline, a remote deploy).
 - Edit one place with the Edit tool, which refuses an ambiguous match.{{ else -}}

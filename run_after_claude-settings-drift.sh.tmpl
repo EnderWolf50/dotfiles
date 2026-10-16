@@ -9,8 +9,8 @@ settings="$HOME/.claude/settings.json"
 [ -f "$settings" ] || exit 0
 command -v jq >/dev/null || { echo 'claude-settings-drift: jq not found, skipped' >&2; exit 0; }
 
-known_plugins='{{ range $id, $_ := .claude.seed.enabledPlugins }} {{ $id }}{{ end }}{{ range $_, $id := .claude.lsp }} {{ $id }}{{ end }}{{ range .claude.local.plugins }} {{ . }}{{ end }} '
-known_marketplaces='{{ range $name, $_ := .claude.merge.extraKnownMarketplaces }} {{ $name }}{{ end }}{{ range .claude.local.marketplaces }} {{ . }}{{ end }} '
+known_plugins='{{ range $id, $_ := .claude.seed.enabledPlugins }} {{ $id }}{{ end }}{{ range $_, $id := .claude.lsp }} {{ $id }}{{ end }}{{ range .claude.local.plugins }} {{ . }}{{ end }}{{ range .agent_plugins.plugins }}{{ if has "claude" .hosts }} {{ .id }}{{ end }}{{ end }} '
+known_marketplaces='{{ range $name, $_ := .claude.merge.extraKnownMarketplaces }} {{ $name }}{{ end }}{{ range .claude.local.marketplaces }} {{ . }}{{ end }}{{ range $name, $entry := .agent_plugins.marketplaces }}{{ if has "claude" $entry.hosts }} {{ $name }}{{ end }}{{ end }} '
 installed=" $(jq -r '.plugins | keys[]' "$HOME/.claude/plugins/installed_plugins.json" 2>/dev/null | tr '\n' ' ') "
 
 # @builtin, @inline, @skills-dir and @synced plugins are not settings Claude Code keeps for a marketplace.

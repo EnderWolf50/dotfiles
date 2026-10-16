@@ -33,6 +33,22 @@
 {{-   end -}}
 {{-   $_ := set $s $obj $o -}}
 {{- end -}}
+{{- /* Shared plugin catalog: seed enablement and register the CC marketplace shape. */ -}}
+{{- $plugins := dict -}}
+{{- if hasKey $s "enabledPlugins" }}{{ $plugins = index $s "enabledPlugins" }}{{ end -}}
+{{- range .agent_plugins.plugins }}{{ if and (has "claude" .hosts) (not (hasKey $plugins .id)) }}{{ $_ := set $plugins .id true }}{{ end }}{{ end -}}
+{{- $_ := set $s "enabledPlugins" $plugins -}}
+{{- $markets := dict -}}
+{{- if hasKey $s "extraKnownMarketplaces" }}{{ $markets = index $s "extraKnownMarketplaces" }}{{ end -}}
+{{- range $name, $entry := .agent_plugins.marketplaces -}}
+{{- if has "claude" $entry.hosts -}}
+{{- $source := dict "source" "github" "repo" $entry.source -}}
+{{- if hasKey $entry "claude_sparse" }}{{ $_ := set $source "sparsePaths" $entry.claude_sparse }}{{ end -}}
+{{- $market := dict "source" $source -}}
+{{- if hasKey $entry "auto_update" }}{{ $_ := set $market "autoUpdate" $entry.auto_update }}{{ end -}}
+{{- $_ := set $markets $name $market -}}
+{{- end }}{{ end -}}
+{{- $_ := set $s "extraKnownMarketplaces" $markets -}}
 {{- if hasKey . "languages" -}}
 {{-   $p := dict -}}
 {{-   if hasKey $s "enabledPlugins" }}{{ $p = index $s "enabledPlugins" }}{{ end -}}
