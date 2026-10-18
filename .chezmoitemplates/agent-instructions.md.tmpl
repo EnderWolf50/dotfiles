@@ -69,11 +69,28 @@ Before writing a command for the user to run, decide where it runs and write it 
 - Before editing a config file chezmoi does not manage, copy it to `<file>.bak-<yyyymmdd>`, and list every touched file in the reply, so a revert is one copy back.
 - A visual choice (glyphs, colors, layout): show the options for the user to preview (`html_preview`, or an HTML file to open) and edit once they pick one.
 - Stage commits by path (`git add <path>...`): the guard hook rejects whole-tree staging, and each rejection costs a retry.
+- A merge, a close, or a pick between open options waits for the user's answer to that item; "繼續" or "continue" moves the rest of the work forward around it, and the reply lists what still waits.
+- A pull request merges on a green pipeline. When the pipeline does not start (billing, quota), say so and leave the merge waiting; a local check does not stand in for it.
+- A file committed to a repository names no machine-local path or folder and adds no environment variable for one: machine-local values live in the repository's gitignored `.local/` or its local git config, and the file names only that.
+- Work a program can decide and you would otherwise type twice (a merge-and-clean chain, a setup, a cleanup) becomes a script in the repository (py, js, ps1 or sh); add the packages it needs.
 {{ if eq .agent "claude" -}}
-- Delegate with the model matched to the task: `haiku` for mechanical inventories, `sonnet` by default, `opus` for hard reasoning. Pass `effort` with it: `low` for mechanical inventories, `high` for bug hunts and hard reasoning, `medium` otherwise. A named agent's frontmatter already sets both; override only when the task departs from its usual work.
+- Delegate with the model matched to the task: `haiku` for mechanical inventories, `sonnet` by default, `opus` for hard reasoning. Pass `effort` with it: `low` for mechanical inventories, `high` for bug hunts and hard reasoning, `medium` otherwise. A named agent's frontmatter already sets both; keep it, and move to `opus` with `high` only for a diagnosis a `sonnet` run already failed.
+- A brief marks each fact about state (a game, CI, a device, a cause) `verified` (checked this session) or `unverified`, and names no model for commit trailers: the subagent copies its own attribution reminder.
 {{ else -}}
 - When delegating work, use the available Codex model and agent catalog; inherit the session model unless the user or applicable workflow selects another. Claude model aliases and agent frontmatter need a supported Codex equivalent.
 {{ end }}
+
+## Reports
+
+- A question for the user defines each term they have not seen, with the real screen or output beside it when there is one, and says where every number comes from. A relayed subagent report carries what the user must decide.
+- A change that shows on screen (a UI, a bot run, a live test) comes back with evidence: a clip or annotated stills (the `screen-record` and `evidence-annotate` skills), as finished as the run allows.
+
+## T3 Code
+
+When the `t3-code` MCP tools are present, the session runs in a T3 thread:
+
+- Long or live delegated work runs through the `t3-code` `delegate_task`, so it shows in the user's sidebar; a native subagent is for a short read whose result comes straight back.
+- `link_pull_request` is best effort: on an error, say so in one line and carry on with the task in the same turn.
 
 ## Tools
 
@@ -82,9 +99,10 @@ Before writing a command for the user to run, decide where it runs and write it 
 - Declare native agent plugins and marketplaces in `.chezmoidata/plugins.toml`; `~/.agents/sync-plugins.py` reconciles them through each host's CLI. Existing local disabled choices stay local; update explicitly with `--update`.
 {{ if eq .agent "claude" -}}
 - Wait on a long job by starting it with `run_in_background`, then end the turn: its completion notice resumes you. Poll only state that sends no notice (a CI pipeline, a remote deploy).
+- A notice that a background task is still waiting on its own work ends the turn with no text; a finish, a failure, or a question for the user gets one reply.
 - Edit one place with the Edit tool, which refuses an ambiguous match.{{ else -}}
 - Wait on long jobs using the session or task identifier returned by the execution tool, and report completion after checking its exit status.
-- Make focused edits with the available patch tool.{{ end }} A scripted batch of edits asserts that each search string occurs exactly once and passes each replacement as a function (`s.replace(a, () => b)`), so a `$` in the new text stays literal.
+- Make focused edits with the available patch tool.{{ end }} A scripted batch of edits asserts that each search string occurs exactly once and passes each replacement literally: a function in JavaScript (`s.replace(a, () => b)`), so a `$` in the new text stays literal; Python's `str.replace` is literal already, `re.sub` takes a lambda.
 {{- if ne .chezmoi.os "windows" }}
 - The shell is zsh with `noclobber`: overwrite an existing file with `>|`, since a plain `>` onto it fails with "file exists".
 - Stop processes by PID: `pgrep -f <pattern>`, check the list, then `kill <pid>`. `pkill -f` also matches the shell running it whenever the pattern sits in that shell's own command line, and kills it; a `pgrep -f` wait loop matches itself the same way and never ends.

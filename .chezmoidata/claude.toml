@@ -22,10 +22,6 @@ defaultMode = "auto"
 [claude.merge.env]
 # Only Claude Code sessions get this env: lefthook prints nothing unless a hook fails, keeping commit output short.
 LEFTHOOK_OUTPUT       = "failure"
-# Carried into Codex's shell environment for the Codex-only security-guidance bridge (dot_codex/sync-settings.py).
-# The Claude plugin is off: its per-commit reviews found 4 issues in 115 runs on maalc (2026-10); one review
-# of the whole branch before landing (code-review, /security-review) replaces them.
-ENABLE_STOP_REVIEW    = "0"
 
 [claude.merge.worktree]
 baseRef = "fresh"
