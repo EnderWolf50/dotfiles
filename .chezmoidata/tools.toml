@@ -236,6 +236,17 @@ winget  = "dandavison.delta"
 scoop   = "delta"
 
 [[tools]]
+name    = "lefthook"
+check   = "lefthook"
+purpose = "Git hooks manager: runs a repo's pre-commit checks (.lefthook.yml); this repo's own hook runs .github/check.py"
+used_by = ".lefthook.yml, LEFTHOOK_OUTPUT in claude.toml"
+url     = "https://lefthook.dev"
+brew    = "lefthook"
+winget  = "evilmartians.lefthook"
+scoop   = "lefthook"
+after   = "Run `lefthook install` once in each clone that has a .lefthook.yml."
+
+[[tools]]
 name    = "ripgrep"
 check   = "rg"
 purpose = "Literal code search; the search-tools plugin rewrites grep -r to it"
