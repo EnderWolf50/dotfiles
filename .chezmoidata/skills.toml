@@ -60,6 +60,7 @@ paths = [
   "workflow/compare-alternatives",
   "patches/diagnosing-bugs.patch",
   "dotfiles/dotfiles",
+  "workflow/evidence-annotate",
   "patches/figma-design-to-code.patch",
   "git/github-fork-history-analysis",
   "patches/grilling.patch",
@@ -72,6 +73,7 @@ paths = [
   "patches/research.patch",
   "workflow/retro-all",
   "patches/retro.patch",
+  "workflow/screen-record",
   "git/ship",
   "patches/writing-for-agents.patch",
 ]
