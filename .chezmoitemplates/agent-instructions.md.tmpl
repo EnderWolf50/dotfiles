@@ -70,12 +70,13 @@ Before writing a command for the user to run, decide where it runs and write it 
 - A visual choice (glyphs, colors, layout): show the options for the user to preview (`html_preview`, or an HTML file to open) and edit once they pick one.
 - Stage commits by path (`git add <path>...`): the guard hook rejects whole-tree staging, and each rejection costs a retry.
 - A merge, a close, or a pick between open options waits for the user's answer to that item; "繼續" or "continue" moves the rest of the work forward around it, and the reply lists what still waits.
-- A pull request merges on a green pipeline. When the pipeline does not start (billing, quota), say so and leave the merge waiting; a local check does not stand in for it.
-- A file committed to a repository names no machine-local path or folder and adds no environment variable for one: machine-local values live in the repository's gitignored `.local/` or its local git config, and the file names only that.
-- Work a program can decide and you would otherwise type twice (a merge-and-clean chain, a setup, a cleanup) becomes a script in the repository (py, js, ps1 or sh); add the packages it needs.
+- A pull request merges only after the user's go-ahead (above) and, where the repository has a pipeline, only on a green one. When a configured pipeline does not start (billing, quota), say so and leave the merge waiting; a local check does not stand in for it.
+- A file committed to a repository names no path that exists only on this machine (a drive letter, a user folder, a local folder's name); home-relative and repository-relative paths are fine. A machine-local value lives in the repository's own local-override mechanism (a gitignored `.local/`, a `*.local.*` file, or local git config), not in a new environment variable, and the committed file names only where to find it.
+- Work a program can decide that you have run by hand twice this session (a merge-and-clean chain, a setup, a cleanup) becomes a script (py, js, ps1 or sh) in the repository you are working in; name it in the reply, and add a package when the standard library falls short.
+- A brief marks each fact about state (a game, CI, a device, a cause) `verified` (checked this session) or `unverified`.
 {{ if eq .agent "claude" -}}
-- Delegate with the model matched to the task: `haiku` for mechanical inventories, `sonnet` by default, `opus` for hard reasoning. Pass `effort` with it: `low` for mechanical inventories, `high` for bug hunts and hard reasoning, `medium` otherwise. A named agent's frontmatter already sets both; keep it, and move to `opus` with `high` only for a diagnosis a `sonnet` run already failed.
-- A brief marks each fact about state (a game, CI, a device, a cause) `verified` (checked this session) or `unverified`, and names no model for commit trailers: the subagent copies its own attribution reminder.
+- Delegate with the model matched to the task: `haiku` for mechanical inventories, `sonnet` by default, `opus` for hard reasoning. Pass `effort` with it: `low` for mechanical inventories, `high` for bug hunts and hard reasoning, `medium` otherwise. A named agent's frontmatter already sets both: keep its model and effort, and raise it to `opus` with `high` only to retry a diagnosis its `sonnet` run got wrong.
+- A brief names no model for commit trailers: the subagent copies its own attribution reminder.
 {{ else -}}
 - When delegating work, use the available Codex model and agent catalog; inherit the session model unless the user or applicable workflow selects another. Claude model aliases and agent frontmatter need a supported Codex equivalent.
 {{ end }}
@@ -83,7 +84,7 @@ Before writing a command for the user to run, decide where it runs and write it 
 ## Reports
 
 - A question for the user defines each term they have not seen, with the real screen or output beside it when there is one, and says where every number comes from. A relayed subagent report carries what the user must decide.
-- A change that shows on screen (a UI, a bot run, a live test) comes back with evidence: a clip or annotated stills (the `screen-record` and `evidence-annotate` skills), as finished as the run allows.
+- A change that shows on screen (a UI, a bot run, a live test) comes back with evidence: a clip or annotated stills, as finished as the run allows.
 
 ## T3 Code
 
@@ -111,5 +112,5 @@ When the `t3-code` MCP tools are present, the session runs in a T3 thread:
 
 ## Windows shell
 
-- Before a Bash command that names a `/tmp` path another program reads (node, python, pwsh), passes a path or another program's output between Git Bash, Node and pwsh, or feeds a script to an interpreter (`-e`, `-c`, a pipe or heredoc), read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments, inline scripts.
+- Before a Bash command that names a `/tmp` path another program reads (node, python, pwsh), passes a path or another program's output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe or heredoc), or runs `python -I` / `-E` on text with CJK, read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments, inline scripts.
 {{- end }}
