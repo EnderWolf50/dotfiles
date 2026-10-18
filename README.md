@@ -66,7 +66,7 @@ in its inline dependency metadata and merges only:
   guidance and `@path` imports when needed.
 - MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently Semble and isolated
   Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
-- `LEFTHOOK_OUTPUT` and `ENABLE_STOP_REVIEW` from Claude into Codex's shell environment.
+- `LEFTHOOK_OUTPUT` from Claude into Codex's shell environment.
 - The shared theme into `tui.theme` and desktop dark chrome accent, background and foreground.
   `dot_codex/themes/vesper.tmTheme.tmpl` generates CLI highlighting from the same palette; desktop
   syntax highlighting stays on its existing built-in code theme. Fonts, light theme, contrast,
@@ -92,7 +92,7 @@ See the plugin READMEs for coverage and failure behavior.
 
 Declare a plugin once in `.chezmoidata/plugins.toml`, with its hosts and marketplace source. The shared
 catalog currently installs guards, skill-patches, search-tools, TemPad Dev, Ponytail and Impeccable
-through native CC/Codex CLIs, plus the Codex-only security-guidance bridge. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
+through native CC/Codex CLIs. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
 CC marketplace declarations and seeded enablement come from this same catalog, replacing the entries
 previously kept in `claude.toml`. Other CC plugins and marketplaces remain in that file.
 

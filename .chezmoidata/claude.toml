@@ -19,14 +19,9 @@ syncClaudeAiPlugins     = false
 [claude.merge.permissions]
 defaultMode = "auto"
 
-# security-guidance reviews default to the newest Opus; Sonnet keeps most of the catch at a fraction of the usage.
 [claude.merge.env]
-SECURITY_REVIEW_MODEL = "claude-sonnet-5-5"
-SG_AGENTIC_MODEL      = "claude-sonnet-5-5"
 # Only Claude Code sessions get this env: lefthook prints nothing unless a hook fails, keeping commit output short.
 LEFTHOOK_OUTPUT       = "failure"
-# security-guidance Stop-hook reviews re-reviewed the same diff 2-4x (~400 of ~950 sessions); commit reviews stay on.
-ENABLE_STOP_REVIEW    = "0"
 
 [claude.merge.worktree]
 baseRef = "fresh"
@@ -81,4 +76,3 @@ marketplaces = []
 "cc-plugin-you-should-know@builtin"        = true
 "document-skills@anthropic-agent-skills"   = true
 "search-tools@enderwolf50"                 = true
-"security-guidance@claude-plugins-official" = true
