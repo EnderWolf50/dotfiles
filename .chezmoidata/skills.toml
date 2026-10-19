@@ -61,7 +61,6 @@ paths = [
   "patches/diagnosing-bugs.patch",
   "dotfiles/dotfiles",
   "workflow/evidence-annotate",
-  "patches/figma-design-to-code.patch",
   "git/github-fork-history-analysis",
   "patches/grilling.patch",
   "patches/herdr.patch",
