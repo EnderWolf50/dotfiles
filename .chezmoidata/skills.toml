@@ -68,13 +68,13 @@ paths = [
   "patches/implement-spec.patch",
   "workflow/move-claude-project",
   "patches/oss-alternatives.patch",
+  "patches/pr.patch",
   "workflow/release-cli",
   "patches/research.patch",
   "workflow/retro-all",
   "patches/retro.patch",
   "workflow/screen-record",
   "git/ship",
-  "patches/writing-for-agents.patch",
 ]
 
 [[skills]]
