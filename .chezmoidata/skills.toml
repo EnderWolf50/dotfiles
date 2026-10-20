@@ -75,7 +75,6 @@ paths = [
   "patches/retro.patch",
   "workflow/screen-record",
   "git/ship",
-  "patches/writing-patches.patch",
 ]
 
 [[skills]]
