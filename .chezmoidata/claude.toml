@@ -22,6 +22,7 @@ defaultMode = "auto"
 [claude.merge.env]
 # Only Claude Code sessions get this env: lefthook prints nothing unless a hook fails, keeping commit output short.
 LEFTHOOK_OUTPUT       = "failure"
+CLAUDE_CODE_ENABLE_TODO_TOOLS = "1"
 
 [claude.merge.worktree]
 baseRef = "fresh"
