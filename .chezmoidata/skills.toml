@@ -74,7 +74,6 @@ paths = [
   "workflow/retro-all",
   "patches/retro.patch",
   "workflow/screen-record",
-  "git/ship",
 ]
 
 [[skills]]
