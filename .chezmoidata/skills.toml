@@ -1,10 +1,11 @@
 # Global agent skills installed with the `skills` CLI (https://skills.sh), one entry per source repo.
 # `chezmoi apply` runs run_onchange_after_sync-skills whenever this list changes (and once a day): it
-# installs every skill listed here and removes any CLI-installed global skill that is not. Skills
-# installed by hand without a source (plugin ones) are left alone.
-# `paths` are the skill folders inside the repo; the skill's name is the folder's name. The script
-# sparse-clones only those folders: `skills add owner/repo` clones the whole repository, and cli/cli
-# is 43 MB for one SKILL.md.
+# installs every skill listed here that is missing, runs `skills update` (reinstalls only skills
+# whose folder changed upstream) and removes any CLI-installed global skill that is not listed.
+# Skills installed by hand without a source (plugin ones) are left alone.
+# `paths` are the skill folders inside the repo; the skill's name is the folder's name. Installing
+# clones the whole repository once (`--depth 1`; cli/cli is 43 MB for one SKILL.md), only when a
+# skill is missing or changed.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
 # `personal = true` entries install only when this machine has data.personal = true.
 
