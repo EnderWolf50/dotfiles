@@ -4,7 +4,7 @@
 # apply of each day: {{ now | date "2006-01-02" }}
 {{ template "tool-path.sh" . }}
 command -v bump >/dev/null || exit 0
-found=$(bump -l 2>&1 | grep -E '^\s+\S+\s+[1-9][0-9]* outdated' | sed 's/^ *//')
+found=$(bump -l 2>&1 | grep -F ' -> ')
 [ -n "$found" ] && printf 'update-check: updates available (`bump` to pick):\n%s\n' "$(echo "$found" | sed 's/^/  /')"
 exit 0
 {{ end -}}

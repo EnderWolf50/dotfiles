@@ -4,7 +4,7 @@
 # day: {{ now | date "2006-01-02" }}
 $found = @()
 if (Get-Command bump -ErrorAction SilentlyContinue) {
-  $found += bump -l 2>&1 | ForEach-Object { "$_" } | Where-Object { $_ -match '^\s+\S+\s+[1-9]\d* outdated' } | ForEach-Object Trim
+  $found += bump -l 2>&1 | ForEach-Object { "$_" } | Where-Object { $_ -match ' -> ' }
 }
 if (Get-Command cua-driver -ErrorAction SilentlyContinue) {
   $u = cua-driver check-update --json 2>$null | ConvertFrom-Json
