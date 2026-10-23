@@ -19,6 +19,7 @@ if ($IsInteractiveConsole) {
       Npm       = '{{ index $tool "npm" | default "" }}'
       PSGallery = '{{ index $tool "psgallery" | default "" }}'
       Go        = '{{ index $tool "go" | default "" }}'
+      Ps1       = '{{ index $tool "ps1" | default "" | replace "'" "''" }}'
       Note      = '{{ index $tool "note" | default "" | replace "'" "''" }}'
       After     = '{{ index $tool "after" | default "" | replace "'" "''" }}'
     }
@@ -39,6 +40,7 @@ if ($IsInteractiveConsole) {
     # Into ~/.local/bin rather than GOBIN: mise points GOBIN at the current Go's own folder,
     # which the next Go upgrade replaces.
     elseif ($Tool.Go) { "`$env:GOBIN = `"`$HOME\.local\bin`"; go install $($Tool.Go)@latest; Remove-Item Env:GOBIN" }
+    elseif ($Tool.Ps1) { $Tool.Ps1 }
   }
 
   function Show-Tools {

@@ -17,7 +17,7 @@ chezmoi init --apply EnderWolf50
 `~/.config/chezmoi/chezmoi.toml`.
 
 Windows: every apply installs the tools in `.chezmoidata/tools.toml` that are missing (scoop / winget /
-npm / PSGallery / go, `run_before_install-tools.ps1`). In a PowerShell window, `tools -Missing` lists
+npm / PSGallery / go / a tool's own installer script, `run_before_install-tools.ps1`). In a PowerShell window, `tools -Missing` lists
 what is still not installed. Creating the `%LOCALAPPDATA%\nvim` symlink needs Developer Mode
 (or an elevated shell).
 

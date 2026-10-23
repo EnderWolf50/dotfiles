@@ -1,11 +1,11 @@
 {{ if eq .chezmoi.os "windows" -}}
-# Install what .chezmoidata/tools.toml lists for Windows (`scoop`, `winget`, `npm`, `psgallery`, `go`,
+# Install what .chezmoidata/tools.toml lists for Windows (`scoop`, `winget`, `npm`, `psgallery`, `go`, `ps1`,
 # tried in that order, as `Show-Tools -Install` does) and this machine lacks. Runs before the files on
 # every apply, so a failed install is retried; with nothing missing it only looks the commands up.
 $tools = @(
 {{- range $tool := .tools }}
-{{- if and (ne (index $tool "os" | default "") "linux") (hasKey $tool "check") (or (hasKey $tool "winget") (hasKey $tool "scoop") (hasKey $tool "npm") (hasKey $tool "psgallery") (hasKey $tool "go")) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
-  @{ Check = '{{ $tool.check }}'; Kind = '{{ index $tool "kind" | default "command" }}'; Winget = '{{ index $tool "winget" | default "" }}'; Scoop = '{{ index $tool "scoop" | default "" }}'; Npm = '{{ index $tool "npm" | default "" }}'; PSGallery = '{{ index $tool "psgallery" | default "" }}'; Go = '{{ index $tool "go" | default "" }}'; After = '{{ index $tool "after" | default "" | replace "'" "''" }}' }
+{{- if and (ne (index $tool "os" | default "") "linux") (hasKey $tool "check") (or (hasKey $tool "winget") (hasKey $tool "scoop") (hasKey $tool "npm") (hasKey $tool "psgallery") (hasKey $tool "go") (hasKey $tool "ps1")) (or (not (index $tool "personal" | default false)) (and (hasKey $ "personal") $.personal)) }}
+  @{ Check = '{{ $tool.check }}'; Kind = '{{ index $tool "kind" | default "command" }}'; Winget = '{{ index $tool "winget" | default "" }}'; Scoop = '{{ index $tool "scoop" | default "" }}'; Npm = '{{ index $tool "npm" | default "" }}'; PSGallery = '{{ index $tool "psgallery" | default "" }}'; Go = '{{ index $tool "go" | default "" }}'; Ps1 = '{{ index $tool "ps1" | default "" | replace "'" "''" }}'; After = '{{ index $tool "after" | default "" | replace "'" "''" }}' }
 {{- end }}
 {{- end }}
 )
@@ -37,6 +37,9 @@ foreach ($t in $tools) {
   } elseif ($t.PSGallery) {
     Write-Host "install-tools: Install-PSResource $($t.PSGallery)"
     Install-PSResource $t.PSGallery -Scope CurrentUser -TrustRepository
+  } elseif ($t.Ps1) {
+    Write-Host "install-tools: $($t.Ps1)"
+    Invoke-Expression $t.Ps1
   } else {
     # Into ~/.local/bin rather than GOBIN: mise points GOBIN at the current Go's own folder.
     if (-not (Get-Command go -ErrorAction Ignore)) { Write-Host "install-tools: no go yet, skipped $($t.Go)"; continue }
