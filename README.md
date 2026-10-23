@@ -46,6 +46,7 @@ the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a 
 | `dot_local/bin/executable_cua-driver`, `dot_claude/skills/symlink_cua-driver.tmpl` | WSL only: run the Windows cua-driver (paths in `call` JSON turned into Windows paths) and link the skill its `skills install` fetched, so a WSL agent drives the Windows desktop |
 | `.chezmoiignore` | What each OS skips |
 | `run_after_claude-settings-drift.*` | After every apply, lists the plugins and marketplaces in `~/.claude/settings.json` that `claude.toml` does not know (a removal made on another machine, or a local `/plugin` install), and on a terminal asks whether to remove each one. `[claude.local]` in `claude.toml` holds the ones a machine keeps on purpose |
+| `run_onchange_after_update-check.*` | On the first apply of each day, prints what has an update (`bump -l` counts per manager, and cua-driver's own check on Windows) without updating anything |
 | `.github/check.py` | Renders every target (`chezmoi archive`) and syntax-checks it, and pins how `modify_settings.json` appends lists; the pre-commit hook (`.lefthook.yml`, enable with `lefthook install`) runs it on this OS, CI on Linux |
 
 ## Claude Code and Codex

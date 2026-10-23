@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Say what has an update, without updating anything: `bump -l` for the package managers and
+# cua-driver's own check (bump does not know it). The date below runs it on the first apply of each
+# day: {{ now | date "2006-01-02" }}
+$found = @()
+if (Get-Command bump -ErrorAction SilentlyContinue) {
+  $found += bump -l 2>&1 | ForEach-Object { "$_" } | Where-Object { $_ -match '^\s+\S+\s+[1-9]\d* outdated' } | ForEach-Object Trim
+}
+if (Get-Command cua-driver -ErrorAction SilentlyContinue) {
+  $u = cua-driver check-update --json 2>$null | ConvertFrom-Json
+  if ($u.update_available) { $found += "cua-driver $($u.current_version) -> $($u.latest_version)" }
+}
+if ($found) {
+  Write-Host 'update-check: updates available (`bump` to pick; cua-driver: `cua-driver update --apply`, see tools.toml):'
+  $found | ForEach-Object { Write-Host "  $_" }
+}
+{{ end -}}

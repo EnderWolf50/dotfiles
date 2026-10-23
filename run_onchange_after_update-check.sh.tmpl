@@ -1,0 +1,10 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Say what has an update, without updating anything (`bump -l`). The date below runs it on the first
+# apply of each day: {{ now | date "2006-01-02" }}
+{{ template "tool-path.sh" . }}
+command -v bump >/dev/null || exit 0
+found=$(bump -l 2>&1 | grep -E '^\s+\S+\s+[1-9][0-9]* outdated' | sed 's/^ *//')
+[ -n "$found" ] && printf 'update-check: updates available (`bump` to pick):\n%s\n' "$(echo "$found" | sed 's/^/  /')"
+exit 0
+{{ end -}}
