@@ -7,18 +7,18 @@
 # `skills update` asks the GitHub API for each source's tree and reinstalls only the skills whose
 # folder changed; the date below runs it on the first apply of each day: {{ now | date "2006-01-02" }}
 {{ template "tool-path.sh" . }}
-command -v npx >/dev/null || { echo 'sync-skills: npx not found, skipped' >&2; exit 0; }
+command -v pnpm >/dev/null || { echo 'sync-skills: pnpm not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
 export GIT_TERMINAL_PROMPT=0
 wanted='{{ range .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}{{ range .paths }} {{ base . }}{{ end }}{{ end }}{{ end }} '
-installed=$(npx -y skills ls -g --json 2>/dev/null)
+installed=$(pnpm dlx skills@latest ls -g --json 2>/dev/null)
 tracked=" $(echo "$installed" | jq -r '.[] | select(.sourceType == "github") | .name' | tr '\n' ' ') "
 # add_skills <owner/repo> <name>...: install from GitHub unless every name is already tracked
 add_skills() {
   repo=$1; shift
   for name in "$@"; do
     case "$tracked" in *" $name "*) ;; *)
-      npx -y skills add "$repo" -g -a claude-code codex -y -s "$@" ||
+      pnpm dlx skills@latest add "$repo" -g -a claude-code codex -y -s "$@" ||
         echo "sync-skills: installing from $repo failed" >&2
       return ;;
     esac
@@ -28,9 +28,9 @@ add_skills() {
 {{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) -}}
 add_skills {{ .source }}{{ range .paths }} {{ base . }}{{ end }}
 {{ end }}{{ end -}}
-npx -y skills update -g -y
+pnpm dlx skills@latest update -g -y
 extra=$(echo "$installed" | jq -r '.[] | select(.source) | .name' |
   while read -r name; do case "$wanted" in *" $name "*) ;; *) echo "$name" ;; esac; done)
-[ -n "$extra" ] && npx -y skills remove -g -y $extra
+[ -n "$extra" ] && pnpm dlx skills@latest remove -g -y $extra
 exit 0
 {{ end -}}

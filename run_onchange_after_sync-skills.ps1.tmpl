@@ -5,7 +5,7 @@
 # path (the old sparse-clone sync), so the CLI's lock records it and `skills update` can track it.
 # `skills update` asks the GitHub API for each source's tree and reinstalls only the skills whose
 # folder changed; the date below runs it on the first apply of each day: {{ now | date "2006-01-02" }}
-if (-not (Get-Command npx -ErrorAction SilentlyContinue)) { Write-Warning 'sync-skills: npx not found, skipped'; exit 0 }
+if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) { Write-Warning 'sync-skills: pnpm not found, skipped'; exit 0 }
 $env:GIT_TERMINAL_PROMPT = '0'
 $wanted = @(
 {{- range .skills }}{{ if or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal) }}{{ range .paths }}
@@ -17,15 +17,15 @@ $sources = @(
   @{ repo = '{{ .source }}'; names = '{{ range $j, $p := .paths }}{{ if $j }} {{ end }}{{ base $p }}{{ end }}' }
 {{- end }}{{ end }}
 )
-$installed = @(npx -y skills ls -g --json 2>$null | ConvertFrom-Json)
+$installed = @(pnpm dlx skills@latest ls -g --json 2>$null | ConvertFrom-Json)
 $tracked = @($installed | Where-Object sourceType -eq 'github' | ForEach-Object name)
 foreach ($s in $sources) {
   $names = $s.names -split ' '
   if (-not @($names | Where-Object { $_ -notin $tracked })) { continue }
-  npx -y skills add $s.repo -g -a claude-code codex -y -s @names
+  pnpm dlx skills@latest add $s.repo -g -a claude-code codex -y -s @names
   if ($LASTEXITCODE) { Write-Warning "sync-skills: installing from $($s.repo) failed" }
 }
-npx -y skills update -g -y
+pnpm dlx skills@latest update -g -y
 $extra = @($installed | Where-Object { $_.source -and $_.name -notin $wanted } | ForEach-Object name)
-if ($extra) { npx -y skills remove -g -y @extra }
+if ($extra) { pnpm dlx skills@latest remove -g -y @extra }
 {{ end -}}
