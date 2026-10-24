@@ -19,17 +19,7 @@ When a `CLAUDE.md` uses `@path` imports, read the referenced instructions relati
 {{ end -}}
 ## Code search
 
-Route by what the question asks for:
-
-| Ask | Tool |
-|---|---|
-| **Intent** — where is X implemented, how does Y work, code like this spot | `mcp__semble__search` (`content`: `docs`\|`config`\|`all` beyond code; `repo`: the project root); from a hit, `mcp__semble__find_related` |
-| **Literal** — every occurrence of a string or regex, all callers of a symbol, an exact message | `rg`{{ if eq .agent "claude" }} (the Grep tool is ripgrep). Large repo (the search-tools plugin runs `tgrep serve` for it): `tgrep` from `<root>` with the same flags{{ end }} |
-| **Shape** — a construct with variable parts (`foo($$$ARGS)`), a mechanical rewrite across files, a file's symbol outline | `ast-grep run -p '<pattern>' -l <lang>`; `-r '<fix>'` shows a diff, `-U` applies it; `ast-grep outline <path>` |
-
-One search per question: land on the top intent hit and read there; the exhaustive list is for literal asks. From Bash, a tree search is `rg -n <pattern> [path]`{{ if eq .agent "claude" }} (`grep -r` and `xargs grep` are refused by the plugin and cost a retry).
-
-Before the first `tgrep` or `ast-grep` call in a session, load the `search-tools:reference` skill.{{ else }}. If the Semble MCP is unavailable, use `semble search` with the same query and content selection.{{ end }}
+Search with `rg -n <pattern> [path]`{{ if eq .agent "claude" }} or the Grep tool (also ripgrep){{ end }}.
 
 ## File references
 
@@ -96,7 +86,7 @@ When the `t3-code` MCP tools are present, the session runs in a T3 thread:
 ## Tools
 
 - Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
-- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (semble's index); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
+- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (playwright's isolated browser); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
 - Declare native agent plugins and marketplaces in `.chezmoidata/plugins.toml`; `~/.agents/sync-plugins.py` reconciles them through each host's CLI. Existing local disabled choices stay local; update explicitly with `--update`.
 {{ if eq .agent "claude" -}}
 - Wait on a long job by starting it with `run_in_background`, then end the turn: its completion notice resumes you. Poll only state that sends no notice (a CI pipeline, a remote deploy).

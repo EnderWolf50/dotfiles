@@ -53,12 +53,7 @@ allow = [
 ]
 
 # mcp: user-scope MCP servers (they live in ~/.claude.json, not settings.json), registered by
-# run_onchange_after_claude-mcp whenever this list changes. semble is one despite the CLI-first rule:
-# its server keeps the index in memory, while the CLI rescans the repo on every call (~20 s in D:\CRM).
-[claude.mcp.semble]
-command = "uvx"
-args    = ["--from", "semble[mcp]@latest", "semble"]
-
+# run_onchange_after_claude-mcp whenever this list changes.
 # Replaces the playwright@claude-plugins-official plugin, whose server shares one Chrome profile:
 # a second session failed with "Browser is already in use ... use --isolated". --isolated keeps
 # each session's profile in memory.
@@ -77,4 +72,3 @@ marketplaces = []
 [claude.seed.enabledPlugins]
 "cc-plugin-you-should-know@builtin"        = true
 "document-skills@anthropic-agent-skills"   = true
-"search-tools@enderwolf50"                 = true

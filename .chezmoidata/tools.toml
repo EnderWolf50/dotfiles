@@ -250,29 +250,11 @@ after   = "Run `lefthook install` once in each clone that has a .lefthook.yml."
 [[tools]]
 name    = "ripgrep"
 check   = "rg"
-purpose = "Literal code search; the search-tools plugin rewrites grep -r to it"
-used_by = "dot_claude/CLAUDE.md (Code search), search-tools plugin"
+purpose = "Literal code search"
+used_by = "dot_claude/CLAUDE.md (Code search)"
 url     = "https://github.com/BurntSushi/ripgrep"
 brew    = "ripgrep"
 scoop   = "ripgrep"
-
-[[tools]]
-name    = "tgrep"
-check   = "tgrep"
-purpose = "Indexed literal search for large repos; the search-tools plugin runs tgrep serve per session"
-used_by = "dot_claude/CLAUDE.md (Code search), search-tools plugin"
-url     = "https://github.com/microsoft/tgrep"
-brew    = "tgrep"
-scoop   = "tgrep"
-
-[[tools]]
-name    = "ast-grep"
-check   = "ast-grep"
-purpose = "Structural code search and rewrite"
-used_by = "dot_claude/CLAUDE.md (Code search)"
-url     = "https://ast-grep.github.io"
-brew    = "ast-grep"
-scoop   = "ast-grep"
 
 [[tools]]
 name    = "jq"
@@ -417,8 +399,8 @@ npm     = "@railway/cli"
 [[tools]]
 name    = "uv"
 check   = "uvx"
-purpose = "Runs the semble MCP server (uvx), declared in claude.toml [claude.mcp]"
-used_by = "run_onchange_after_claude-mcp"
+purpose = "Runs the Codex and agent-plugin sync scripts (uv run --script)"
+used_by = "run_after_codex-settings, run_after_sync-agent-plugins"
 url     = "https://docs.astral.sh/uv"
 brew    = "uv"
 winget  = "astral-sh.uv"

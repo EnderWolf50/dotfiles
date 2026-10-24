@@ -25,10 +25,6 @@ codex_sparse = [".agents", "agent-plugin/targets/codex"]
 codex_ref = "main"
 
 [[agent_plugins.plugins]]
-id = "search-tools@enderwolf50"
-hosts = ["claude", "codex"]
-
-[[agent_plugins.plugins]]
 id = "guards@enderwolf50"
 hosts = ["claude", "codex"]
 
