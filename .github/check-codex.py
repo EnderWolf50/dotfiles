@@ -32,8 +32,8 @@ appearanceTheme = "system"
 [mcp_servers.local]
 url = "https://example.invalid/mcp"
 
-[mcp_servers.semble]
-command = "old-uvx"
+[mcp_servers.playwright]
+command = "old-npx"
 args = ["old"]
 enabled = false
 startup_timeout_sec = 120
@@ -55,9 +55,9 @@ class CodexSettingsTests(unittest.TestCase):
         self.assertIn('# Keep my model and experimental provider notes.', result)
         self.assertIn('# keep this comment', result)
         self.assertEqual(updated["mcp_servers"]["local"], original["mcp_servers"]["local"])
-        self.assertFalse(updated["mcp_servers"]["semble"]["enabled"])
-        self.assertEqual(updated["mcp_servers"]["semble"]["startup_timeout_sec"], 120)
-        self.assertEqual(updated["mcp_servers"]["semble"]["command"], "uvx")
+        self.assertFalse(updated["mcp_servers"]["playwright"]["enabled"])
+        self.assertEqual(updated["mcp_servers"]["playwright"]["startup_timeout_sec"], 120)
+        self.assertEqual(updated["mcp_servers"]["playwright"]["command"], "npx")
         self.assertEqual(updated["mcp_servers"]["playwright"]["args"][-1], "--isolated")
         self.assertEqual(updated["project_doc_fallback_filenames"], ["TEAM.md", "CLAUDE.md"])
         self.assertEqual(updated["shell_environment_policy"]["set"]["MY_LOCAL_ENV"], "keep")
@@ -66,9 +66,9 @@ class CodexSettingsTests(unittest.TestCase):
     def test_new_config_and_transport_change(self):
         config = tomllib.loads(merge_config(""))
         self.assertEqual(config["project_doc_fallback_filenames"], ["CLAUDE.md"])
-        result = tomllib.loads(merge_config('[mcp_servers.semble]\nurl = "https://old.invalid"\n'))
-        self.assertNotIn("url", result["mcp_servers"]["semble"])
-        self.assertEqual(result["mcp_servers"]["semble"]["command"], "uvx")
+        result = tomllib.loads(merge_config('[mcp_servers.playwright]\nurl = "https://old.invalid"\n'))
+        self.assertNotIn("url", result["mcp_servers"]["playwright"])
+        self.assertEqual(result["mcp_servers"]["playwright"]["command"], "npx")
 
     def test_backup_and_idempotent_write(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -98,7 +98,7 @@ class CodexSettingsTests(unittest.TestCase):
             codex = render("dot_codex/AGENTS.md.tmpl", os_name)
             for text in (claude, codex):
                 self.assertIn("Always reply in 繁體中文", text)
-                self.assertIn("mcp__semble__search", text)
+                self.assertNotIn("playwright", text)
                 self.assertIn("Package manager: pnpm", text)
             self.assertIn("<name>.patch/SKILL.md", codex)
             self.assertNotIn("`haiku`", codex)

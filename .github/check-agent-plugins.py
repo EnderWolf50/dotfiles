@@ -41,7 +41,7 @@ class AgentPlugins(unittest.TestCase):
     def test_missing_plugins_and_sparse_flags(self):
         commands = plan('codex', {}, set())
         self.assertEqual(sum(c[1:4] == ['plugin', 'marketplace', 'add'] for c in commands), 4)
-        self.assertEqual(sum(c[1:3] == ['plugin', 'add'] for c in commands), 6)
+        self.assertEqual(sum(c[1:3] == ['plugin', 'add'] for c in commands), 5)
         tempad = next(c for c in commands if c[4:5] == ['ecomfe/tempad-dev'])
         self.assertEqual(tempad.count('--sparse'), 2)
         cc = plan('claude', {}, set())

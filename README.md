@@ -65,7 +65,7 @@ in its inline dependency metadata and merges only:
 - `CLAUDE.md` into `project_doc_fallback_filenames`, keeping existing fallbacks. Codex discovers it
   only where `AGENTS.md` is absent; the global instructions explain how to consult additional Claude
   guidance and `@path` imports when needed.
-- MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently Semble and isolated
+- MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently isolated
   Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
 - `LEFTHOOK_OUTPUT` from Claude into Codex's shell environment.
 - The shared theme into `tui.theme` and desktop dark chrome accent, background and foreground.
@@ -86,13 +86,13 @@ required skills through instructions. CC tool allowlists and a separate read-onl
 recreated; parent session permissions still apply. Auto mode and statusline remain separate.
 The native security bridge preserves Stop-review-off and uses Codex for commit/push reviews; it
 cannot wake an idle thread like CC asyncRewake. Custom security rules, dynamic Git wrappers and
-full baseline suppression remain unbridged. Search-tools shares live-process leases between hosts.
+full baseline suppression remain unbridged.
 See the plugin READMEs for coverage and failure behavior.
 
 ## Native agent plugins
 
 Declare a plugin once in `.chezmoidata/plugins.toml`, with its hosts and marketplace source. The shared
-catalog currently installs guards, skill-patches, search-tools, TemPad Dev, Ponytail and Impeccable
+catalog currently installs guards, skill-patches, TemPad Dev, Ponytail and Impeccable
 through native CC/Codex CLIs. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
 CC marketplace declarations and seeded enablement come from this same catalog, replacing the entries
 previously kept in `claude.toml`. Other CC plugins and marketplaces remain in that file.
