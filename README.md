@@ -63,7 +63,8 @@ Every apply runs `uv run --no-project --script ~/.codex/sync-settings.py`. The s
 in its inline dependency metadata and merges only:
 
 - `CLAUDE.md` into `project_doc_fallback_filenames`, keeping existing fallbacks. Codex discovers it
-  only where `AGENTS.md` is absent.
+  only where `AGENTS.md` is absent, and leaves its `@path` imports as text; the global instructions
+  tell Codex to read those files itself.
 - MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently isolated
   Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
 - `LEFTHOOK_OUTPUT` from Claude into Codex's shell environment.
