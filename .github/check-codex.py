@@ -104,7 +104,8 @@ class CodexSettingsTests(unittest.TestCase):
             self.assertNotIn("run_in_background", codex)
             self.assertNotIn("Edit tool", codex)
             self.assertIn("`haiku`", claude)
-            self.assertEqual("## Windows shell" in codex, os_name == "windows")
+            self.assertNotIn("## Windows shell", codex)
+            self.assertEqual("## Windows shell" in claude, os_name == "windows")
 
 
 if __name__ == "__main__":

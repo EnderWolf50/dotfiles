@@ -80,7 +80,7 @@ entry from the shared list does not delete its existing registration from either
 
 Restart Codex or start a new CLI session after applying. This setup covers local Codex installations;
 hosted sessions and third-party harnesses may supply their own instructions, tools and configuration.
-The five personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
+The personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
 same descriptions and bodies. They inherit the Codex session model, map the source effort, and load
 required skills through instructions. CC tool allowlists and a separate read-only sandbox are not
 recreated; parent session permissions still apply. Auto mode and statusline remain separate.

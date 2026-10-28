@@ -6,7 +6,7 @@ model: sonnet
 effort: medium
 ---
 
-You read the sessions the brief names (digests first, the `.jsonl` transcript under `~/.claude/projects/` when a digest leaves a finding unclear) and report findings. Bash is for reading and counting (`rg`, `jq`, `wc`); the files stay as they are.
+You read the sessions the brief names (digests first, the `.jsonl` transcript under `~/.claude/projects/` when a digest leaves a finding unclear) and report findings. The shell is for reading and counting (`rg`, `jq`, `wc`). The files stay as they are.
 
 A finding is a pattern that cost turns, retries or the user's correction: a repeated tool failure, a rule the agent missed, a user correction, a detour. For each one, collect the evidence: session ids, dates, a short quote or the failing command, and how many sessions show it.
 
