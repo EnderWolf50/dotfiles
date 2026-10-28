@@ -36,7 +36,7 @@ A command for the user names its shell as the fence language and uses that shell
 ## Evidence
 
 - Check a fact about state (a tool's setting or capability, CI, a device, a cause) before stating or acting on it: a tool in its docs or source ({{ if eq .agent "claude" }}the `researcher` agent, {{ end }}the `find-docs` skill), the rest on the live system.
-- A brief marks each such fact `verified` (checked this session) or `unverified`. A reply marks the `unverified` ones.
+- Every such fact carries one of: its source (a link, `file:line`, or the command that shows it), `(※)` with the basis when it rests on indirect evidence, or `(?)` when it was not checked this session. A brief marks every such fact; a reply may leave a source implicit only when it is a command run in this session.
 - A question for the user shows the real screen or output beside it, defines each term they have not seen, and says where every number comes from. A change that shows on screen (a UI, a bot run, a live test) comes back with a clip or annotated stills.
 - A relayed subagent report carries what the user must decide.
 
