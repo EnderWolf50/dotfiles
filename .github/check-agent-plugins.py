@@ -84,15 +84,18 @@ class AgentPlugins(unittest.TestCase):
                          catalog['marketplaces']['tempad-dev']['claude_sparse'])
 
     def test_agents_share_body_and_inherit_model(self):
-        for name in ('code-reviewer', 'implementer', 'researcher', 'retro-analyst'):
+        names = {'code-reviewer': 'CodeReviewer', 'implementer': 'Implementer',
+                 'researcher': 'Researcher', 'retro-analyst': 'RetroAnalyst'}
+        for file, name in names.items():
             with self.subTest(name=name):
-                config = tomllib.loads(render(f'dot_codex/agents/{name}.toml.tmpl'))
+                config = tomllib.loads(render(f'dot_codex/agents/{file}.toml.tmpl'))
                 self.assertEqual(config['name'], name)
                 self.assertIn('Done:', config['developer_instructions'])
+                self.assertNotRegex(config['developer_instructions'], r'\b(WebFetch|WebSearch|Bash|Grep|Glob|Skill|Edit tool|Write tool)\b')
                 self.assertNotIn('model', config)
                 self.assertNotIn('sandbox_mode', config)
                 self.assertIn(config['model_reasoning_effort'], ('low', 'medium', 'high'))
-                if name == 'implementer':
+                if name == 'Implementer':
                     self.assertIn('Load the tdd skill', config['developer_instructions'])
 
 

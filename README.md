@@ -41,7 +41,7 @@ the shared mise config (`dot_config/mise/config.toml.tmpl`: node, uv, java on a 
 | `dot_codex/`, `run_after_codex-settings.*` | Codex instructions and a comment-preserving settings sync helper; every apply merges shared MCP connections, Claude instruction fallback and shared shell environment into the local Codex config |
 | `.chezmoitemplates/pwsh/` | PowerShell profile fragments, assembled by `Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`; `*.local.ps1` there is machine-local and git-ignored |
 | `dot_config/` | starship, nvim (LazyVim), lazygit, herdr, ripgrep (Claude Code sessions only, via `RIPGREP_CONFIG_PATH`): shared by Windows and Linux |
-| `dot_claude/` | Claude Code: `CLAUDE.md` (your own instructions), agents, statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode.environment`, stays Claude Code's) |
+| `dot_claude/` | Claude Code: `CLAUDE.md` (your own instructions), agents, `rules/pstack-models.md` (pstack's model per role; `/pstack:setup-pstack` rewrites the target, then `chezmoi re-add ~/.claude/rules/pstack-models.md`), statusline, theme (`custom:vesper`, one file per theme), and the `settings.json` keys from `claude.toml` (the rest of that file, such as `autoMode.environment`, stays Claude Code's) |
 | `private_dot_zshrc`, `private_dot_zimrc`, `dot_zprofile`, `dot_tmux.conf.tmpl` | Linux / WSL shell |
 | `dot_local/bin/executable_cua-driver`, `dot_claude/skills/symlink_cua-driver.tmpl` | WSL only: run the Windows cua-driver (paths in `call` JSON turned into Windows paths) and link the skill its `skills install` fetched, so a WSL agent drives the Windows desktop |
 | `.chezmoiignore` | What each OS skips |
@@ -80,7 +80,7 @@ entry from the shared list does not delete its existing registration from either
 
 Restart Codex or start a new CLI session after applying. This setup covers local Codex installations;
 hosted sessions and third-party harnesses may supply their own instructions, tools and configuration.
-The five personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
+The personal agents under `dot_claude/agents/` also generate Codex TOML definitions from the
 same descriptions and bodies. They inherit the Codex session model, map the source effort, and load
 required skills through instructions. CC tool allowlists and a separate read-only sandbox are not
 recreated; parent session permissions still apply. Auto mode and statusline remain separate.
