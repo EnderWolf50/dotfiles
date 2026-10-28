@@ -8,7 +8,7 @@ A `CLAUDE.md` read in place of `AGENTS.md` may hold `@path` import lines, which 
 {{ end -}}
 ## Dotfiles
 
-chezmoi owns the targets `chezmoi managed` lists: parts of `~/.claude`, the shared files under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries. Change one through its source in `~/.local/share/chezmoi` (the `dotfiles` skill), not the target: a hand-edited target drifts, and the next `chezmoi apply` hangs the shell on an interactive prompt. A skill changes in its source repository (`.chezmoidata/skills.toml` names it), and a plugin in its marketplace repository. Any other file, such as one under `~/.claude/rules/` or `~/.claude/projects/`, is local: edit it in place.
+chezmoi owns the targets `chezmoi managed` lists: parts of `~/.claude`, the shared files under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries. Change one through its source in `~/.local/share/chezmoi` (the `dotfiles` skill), not the target: a hand-edited target drifts, and the next `chezmoi apply` hangs the shell on an interactive prompt. A skill changes in its source repository (`.chezmoidata/skills.toml` names it), and a plugin in its marketplace repository. Any other file, such as one under `~/.claude/projects/`, is local: edit it in place.
 
 ## Commands for the user
 
