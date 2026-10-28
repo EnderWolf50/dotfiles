@@ -1,5 +1,5 @@
 ---
-name: implementer
+name: Implementer
 description: Implements one ticket or fix test-first in its own worktree and commits it. Delegate implement-spec's implementer, merger and review-fix subagents here.
 model: sonnet
 effort: medium

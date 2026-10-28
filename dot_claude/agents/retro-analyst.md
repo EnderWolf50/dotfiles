@@ -1,5 +1,5 @@
 ---
-name: retro-analyst
+name: RetroAnalyst
 description: Read-only analyst of Claude Code session digests and transcripts for retro and retro-all. Delegate reading a batch of sessions and ranking what went wrong or cost turns.
 tools: Read, Grep, Glob, Bash
 model: sonnet

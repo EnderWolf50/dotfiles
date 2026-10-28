@@ -1,5 +1,5 @@
 ---
-name: code-reviewer
+name: CodeReviewer
 description: Read-only reviewer of a diff or a code path. Delegate a code-review axis (standards or spec), or a bug hunt over a named path or worktree; fixing stays with the caller.
 tools: Read, Grep, Glob, Bash
 model: opus
