@@ -7,9 +7,10 @@ auto_update = true
 # Pin the Codex adapters to the reviewed commit; CC keeps its existing main source.
 codex_ref = "16b364776e639dd1438922df6bad1ed76b6d9f3a"
 
-[agent_plugins.marketplaces.ponytail]
-source = "DietrichGebert/ponytail"
-hosts = ["claude", "codex"]
+# Claude only: cursor/plugins publishes no Codex package, and cursor-team-kit is not in its CC marketplace.
+[agent_plugins.marketplaces.cursor-plugins]
+source = "cursor/plugins"
+hosts = ["claude"]
 
 [agent_plugins.marketplaces.impeccable]
 source = "pbakaus/impeccable"
@@ -33,8 +34,8 @@ id = "skill-patches@enderwolf50"
 hosts = ["claude", "codex"]
 
 [[agent_plugins.plugins]]
-id = "ponytail@ponytail"
-hosts = ["claude", "codex"]
+id = "pstack@cursor-plugins"
+hosts = ["claude"]
 
 [[agent_plugins.plugins]]
 id = "impeccable@impeccable"
