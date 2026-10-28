@@ -1,102 +1,59 @@
-{{/* Keep ## Language: the language setting alone drifts. Dropped in 925a722, replies went English the next day (sessions d752718b, 49a6178b). */ -}}
-## Language
-
-Always reply in 繁體中文, including after a long session or a compaction, and when relaying a subagent's English report. Code, identifiers and technical terms stay in their original form.
-
 {{ if eq .agent "codex" -}}
 ## Skills
 
-Use the shared skills in `~/.agents/skills`. The skill-patches plugin injects patches on explicit skill mentions, observed skill reads and matching MCP calls. When a skill's patch has not already been supplied, read its matching `<name>.patch/SKILL.md`, when present, from `~/.claude/skills`, `~/.agents/skills`, then the repository root's `.claude/skills` and `.agents/skills`; deduplicate symlinked files and apply patches in that order. Project patches come last and override global ones. A patch extends its base skill; invoke the base workflow.
-
-For a project workflow absent from the skill catalog, check `.claude/skills/<name>/SKILL.md` and `.claude/commands/<name>.md` and follow the matching instructions with available Codex tools.
-
-## Claude instructions
-
-Codex reads `CLAUDE.md` as a fallback when a directory has no `AGENTS.md`. If both exist, follow `AGENTS.md` and read `CLAUDE.md` when it contains additional project guidance. Resolve Claude tool names to available Codex equivalents; use shell commands for file reads and checks, skills for workflows, and supported subagent tools for explicitly delegated work.
-
-When a `CLAUDE.md` uses `@path` imports, read the referenced instructions relative to that file (or expand `~/` against the user's home), once per file to avoid import cycles.
+Shared skills live in `~/.agents/skills`. The skill-patches plugin injects a skill's patch on an explicit mention, an observed skill read or a matching MCP call. When it has not, read `<name>.patch/SKILL.md` yourself from `~/.claude/skills`, `~/.agents/skills`, then the repository's `.claude/skills` and `.agents/skills`, and apply them in that order, a later patch overriding an earlier one. A patch extends its base skill: run the base workflow.
 
 {{ end -}}
-## File references
-
-{{ if eq .agent "codex" -}}
-Link every local file or directory to its absolute path using Markdown, with an optional `:line` suffix, for example `[src/app.ts:42](/absolute/path/src/app.ts:42)`. Use forward slashes; on Windows include the drive letter, as in `C:/Users/...`. Code blocks and commands keep plain paths.
-{{ else -}}
-Write every file or directory you mention in a reply (a worktree too) as a markdown link to its absolute `file://` URL, with the repo-relative path (and `:line` when it points at a line) as the text: [src/app.ts:42](file:///home/me/repo/src/app.ts). The terminal turns it into a clickable OSC 8 link; a bare path is not clickable. Forward slashes, spaces as `%20`{{ if eq .chezmoi.os "windows" }}, drive letter after the third slash (`file:///C:/Users/...`){{ end }}. Code blocks and commands keep plain paths.
-{{ end }}
-A web address gets the same shape, with a short name as the text, never a bare URL. Every pull request, merge request, issue, pipeline or commit you mention is such a link, named by its short form: [herdr#4748](https://github.com/herdrdev/herdr/issues/4748), [CRM!2612](https://git.gss.com.tw/CRM/CRM/-/merge_requests/2612); a bare `#4748` or `!2612` is not clickable.
-
 ## Dotfiles
 
-chezmoi manages `~/.claude`, the shared Codex instructions and settings sync helper under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them, `~/.local/share/chezmoi/README.md` maps the source. Change a target only through its source (`chezmoi edit <target>`, then `chezmoi apply`): a drifted target makes `chezmoi apply` stop on an interactive prompt and hang the shell. In `settings.json`, only the keys listed in `.chezmoidata/claude.toml` come from the source; every other key stays local. Codex config stays local too: `~/.codex/sync-settings.py` merges the repo-owned keys and MCP connection fields while preserving other settings and comments.
-
-When `chezmoi status` shows drift, run `chezmoi diff <target>`, then `chezmoi apply --force <target>`. An `R` line is a script that runs on every apply, not drift.
+chezmoi owns `~/.claude`, the shared files under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries; `chezmoi managed` lists them. Change one through its source in `~/.local/share/chezmoi` (the `dotfiles` skill), not the target: a hand-edited target drifts, and the next `chezmoi apply` hangs the shell on an interactive prompt.
 
 ## Commands for the user
 
-Before writing a command for the user to run, decide where it runs and write it in that shell's syntax, the fence language naming it:
+A command for the user names its shell as the fence language and uses that shell's syntax:
 
 {{ if eq .chezmoi.os "windows" -}}
 {{ if eq .agent "claude" -}}
-- A `!` command runs in the Bash tool's Git Bash: forward slashes, no PowerShell cmdlets, fenced as `bash`.
-{{ else -}}
-- Commands executed by Codex use the active session shell; inspect it before choosing PowerShell or Bash syntax.
+- A `!` command runs in Git Bash, the Bash tool's shell: `bash`.
 {{ end -}}
-- A command for the user's own terminal runs in PowerShell 7 (pwsh), fenced as `powershell`.
+- A command for the user's own terminal runs in PowerShell 7: `powershell`.
 {{- else -}}
-- A `!` command and a command for the user's own terminal both run in zsh, fenced as `zsh`.
+- A `!` command and a command for the user's own terminal both run in zsh: `zsh`.
 {{- end }}
-- The user's message overrides that default: a named shell, a pasted prompt (`PS C:\>`, `C:\>`, `$`, `%`), or an error from one. Write cmd syntax only then.
-- `!` commands get no stdin: a login that asks to paste a key or answer a prompt is a terminal command, for a separate window.
+- When the user's message shows another shell (names it, or pastes its prompt or an error from it), write for that shell instead.
+- A `!` command has no stdin: a login that prompts for a key or an answer goes to the user's own terminal.
 
 ## Changes
 
-- Verify a tool's setting or capability in its docs or source ({{ if eq .agent "claude" }}the `researcher` agent, {{ end }}the `find-docs` skill) before stating or configuring it; a claim you could not check says "unverified".
-- Before editing a config file chezmoi does not manage, copy it to `<file>.bak-<yyyymmdd>`, and list every touched file in the reply, so a revert is one copy back.
-- A visual choice (glyphs, colors, layout): show the options for the user to preview (`html_preview`, or an HTML file to open) and edit once they pick one.
-- Stage commits by path (`git add <path>...`): the guard hook rejects whole-tree staging, and each rejection costs a retry.
-- A merge, a close, or a pick between open options waits for the user's answer to that item; "繼續" or "continue" moves the rest of the work forward around it, and the reply lists what still waits.
-- A pull request merges only after the user's go-ahead (above) and, where the repository has a pipeline, only on a green one. When a configured pipeline does not start (billing, quota), say so and leave the merge waiting; a local check does not stand in for it.
-- A file committed to a repository names no path that exists only on this machine (a drive letter, a user folder, a local folder's name); home-relative and repository-relative paths are fine. A machine-local value lives in the repository's own local-override mechanism (a gitignored `.local/`, a `*.local.*` file, or local git config), not in a new environment variable, and the committed file names only where to find it.
-- Work a program can decide that you have run by hand twice this session (a merge-and-clean chain, a setup, a cleanup) becomes a script (py, js, ps1 or sh) in the repository you are working in; name it in the reply, and add a package when the standard library falls short.
-- A brief marks each fact about state (a game, CI, a device, a cause) `verified` (checked this session) or `unverified`.
-{{ if eq .agent "claude" -}}
-- A pstack skill delegates with the roles in `~/.claude/rules/pstack-models.md` (written by `/pstack:setup-pstack`). Other work delegates with the model matched to the task: `haiku` for mechanical inventories, `sonnet` by default, `opus` for hard reasoning. Pass `effort` with it: `low` for mechanical inventories, `high` for bug hunts and hard reasoning, `medium` otherwise. A named agent's frontmatter already sets both: keep its model and effort, and raise it to `opus` with `high` only to retry a diagnosis its `sonnet` run got wrong.
-- A brief names no model for commit trailers: the subagent copies its own attribution reminder.
-{{ else -}}
-- When delegating work, use the available Codex model and agent catalog; inherit the session model unless the user or applicable workflow selects another. Claude model aliases and agent frontmatter need a supported Codex equivalent.
-{{ end }}
+- Before editing a config file chezmoi does not own, copy it to `<file>.bak-<yyyymmdd>`; the reply lists every touched file, so a revert is one copy back.
+- A merge, a close, or a choice between options waits for the user's answer on that item. "繼續" or "continue" moves the other work forward, and the reply lists what still waits.
+- A pull request merges after the user's go-ahead, and on a green pipeline where the repository has one. A pipeline that does not start (billing, quota) leaves the merge waiting and the reply says why; a local check does not stand in for it.
+- A committed file names only home-relative or repository-relative paths. A machine-local value goes in the repository's local-override mechanism (a gitignored `.local/`, a `*.local.*` file, local git config) rather than a new environment variable, and the committed file names where to find it.
+- Work a program can decide that you have done by hand twice this session becomes a script (py, js, ps1 or sh) in the repository; the reply names it.
 
-## Reports
+## Evidence
 
-- A question for the user defines each term they have not seen, with the real screen or output beside it when there is one, and says where every number comes from. A relayed subagent report carries what the user must decide.
-- A change that shows on screen (a UI, a bot run, a live test) comes back with evidence: a clip or annotated stills (the `screen-record` and `evidence-annotate` skills), as finished as the run allows.
-
-## T3 Code
-
-When the `t3-code` MCP tools are present, the session runs in a T3 thread:
-
-- Long or live delegated work runs through the `t3-code` `delegate_task`, so it shows in the user's sidebar; a native subagent is for a short read whose result comes straight back.
-- `link_pull_request` is best effort: on an error, say so in one line and carry on with the task in the same turn.
+- Check a fact about state (a tool's setting or capability, CI, a device, a cause) before stating or acting on it: a tool in its docs or source ({{ if eq .agent "claude" }}the `researcher` agent, {{ end }}the `find-docs` skill), the rest on the live system.
+- A brief marks each such fact `verified` (checked this session) or `unverified`. A reply marks the `unverified` ones.
+- A question for the user shows the real screen or output beside it, defines each term they have not seen, and says where every number comes from. A change that shows on screen (a UI, a bot run, a live test) comes back with a clip or annotated stills.
+- A relayed subagent report carries what the user must decide.
 
 ## Tools
 
-- Package manager: pnpm, unless the project's own lockfile names another. A global CLI from the npm registry installs with `pnpm add -g`.
-- Wire an external tool in as its CLI plus a skill, not an MCP server: the CLI goes in `.chezmoidata/tools.toml`, the skill in `.chezmoidata/skills.toml`. An MCP server is for a tool that must stay resident (a browser session); it goes in `[claude.mcp]` of `.chezmoidata/claude.toml`.
-- Declare native agent plugins and marketplaces in `.chezmoidata/plugins.toml`; `~/.agents/sync-plugins.py` reconciles them through each host's CLI. Existing local disabled choices stay local; update explicitly with `--update`.
+- JavaScript packages go through pnpm unless the project's lockfile names another: `pnpm add -g` for a global CLI, `pnpm dlx` for a one-off run.
+- An external tool comes in as a CLI plus a skill. An MCP server is for a tool with no CLI, or one that must stay resident (a browser session).
 {{ if eq .agent "claude" -}}
-- Wait on a long job by starting it with `run_in_background`, then end the turn: its completion notice resumes you. Poll only state that sends no notice (a CI pipeline, a remote deploy).
-- A notice that a background task is still waiting on its own work ends the turn with no text; a finish, a failure, or a question for the user gets one reply.
-- Edit one place with the Edit tool, which refuses an ambiguous match.{{ else -}}
-- Wait on long jobs using the session or task identifier returned by the execution tool, and report completion after checking its exit status.
-- Make focused edits with the available patch tool.{{ end }} A scripted batch of edits asserts that each search string occurs exactly once and passes each replacement literally: a function in JavaScript (`s.replace(a, () => b)`), so a `$` in the new text stays literal; Python's `str.replace` is literal already, `re.sub` takes a lambda.
+- Delegate with a model and effort matched to the task: `haiku` and `low` for mechanical inventories, `sonnet` and `medium` by default, `opus` and `high` for bug hunts and hard reasoning. A named agent and a pstack role keep their own; raise a named agent to `opus` and `high` only to retry a diagnosis its run got wrong.
+- A background-task notice that the task is still running ends the turn with no text; a finish, a failure, or a question for the user gets one reply.
+{{ end -}}
+- A scripted batch of edits asserts each search string occurs exactly once and inserts each replacement literally, so a `$` stays a `$`: a function in JavaScript (`s.replace(a, () => b)`), `str.replace` in Python, or `re.sub` with a lambda.
 {{- if ne .chezmoi.os "windows" }}
-- The shell is zsh with `noclobber`: overwrite an existing file with `>|`, since a plain `>` onto it fails with "file exists".
-- Stop processes by PID: `pgrep -f <pattern>`, check the list, then `kill <pid>`. `pkill -f` also matches the shell running it whenever the pattern sits in that shell's own command line, and kills it; a `pgrep -f` wait loop matches itself the same way and never ends.
+- The shell is zsh with `noclobber`: overwrite an existing file with `>|`.
+- Stop a process by PID: `pgrep -f <pattern>`, check the list, then `kill <pid>`. `pkill -f` matches the shell running it when the pattern sits in its own command line, and kills that shell; a `pgrep -f` wait loop matches itself and never ends.
 {{- end }}
 {{- if eq .chezmoi.os "windows" }}
 
 ## Windows shell
 
-- Before a Bash command that names a `/tmp` path another program reads (node, python, pwsh), passes a path or another program's output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe or heredoc), holds a `\\`, or runs `python -I` / `-E` on text with CJK, read `~/.claude/docs/windows-shell.md`: path rewriting, two `/tmp` folders, `\r` line ends, console encoding, pwsh arguments, doubled backslashes, inline scripts.
+- Read `~/.claude/docs/windows-shell.md` before a Bash command that hands a `/tmp` path to node, python or pwsh, passes a path or output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe, a heredoc), or runs `python -I` / `-E` on CJK text.
 {{- end }}
