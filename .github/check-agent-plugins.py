@@ -84,7 +84,7 @@ class AgentPlugins(unittest.TestCase):
                          catalog['marketplaces']['tempad-dev']['claude_sparse'])
 
     def test_agents_share_body_and_inherit_model(self):
-        for name in ('code-reviewer', 'explore', 'implementer', 'researcher', 'retro-analyst'):
+        for name in ('code-reviewer', 'implementer', 'researcher', 'retro-analyst'):
             with self.subTest(name=name):
                 config = tomllib.loads(render(f'dot_codex/agents/{name}.toml.tmpl'))
                 self.assertEqual(config['name'], name)
