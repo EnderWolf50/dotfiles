@@ -57,14 +57,14 @@ out of Codex instructions. The existing skills sync installs into `~/.agents/ski
 them for Claude Code. In Codex, use `$skill-name` or `/skills`; Claude's `/skill-name` syntax is not copied.
 The Codex skill-patches plugin injects matching patches for explicit skill mentions, observed skill
 file reads and matching MCP calls. The global instructions retain a fallback for implicit skill
-activation with no observable read, and for project-only Claude skills or commands.
+activation with no observable read and for project patches.
 
 Every apply runs `uv run --no-project --script ~/.codex/sync-settings.py`. The script pins TOML Kit
 in its inline dependency metadata and merges only:
 
 - `CLAUDE.md` into `project_doc_fallback_filenames`, keeping existing fallbacks. Codex discovers it
-  only where `AGENTS.md` is absent; the global instructions explain how to consult additional Claude
-  guidance and `@path` imports when needed.
+  only where `AGENTS.md` is absent, and leaves its `@path` imports as text; the global instructions
+  tell Codex to read those files itself.
 - MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently isolated
   Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
 - `LEFTHOOK_OUTPUT` from Claude into Codex's shell environment.

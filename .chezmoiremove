@@ -6,3 +6,5 @@
 .claude/search-tools
 .claude/agents/docs-researcher.md
 .claude/rules/karpathy-guidelines.md
+.claude/agents/explore.md
+.codex/agents/explore.toml

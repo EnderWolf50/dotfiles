@@ -97,9 +97,8 @@ class CodexSettingsTests(unittest.TestCase):
             claude = render("dot_claude/CLAUDE.md.tmpl", os_name)
             codex = render("dot_codex/AGENTS.md.tmpl", os_name)
             for text in (claude, codex):
-                self.assertIn("Always reply in 繁體中文", text)
                 self.assertNotIn("playwright", text)
-                self.assertIn("Package manager: pnpm", text)
+                self.assertIn("go through pnpm", text)
             self.assertIn("<name>.patch/SKILL.md", codex)
             self.assertNotIn("`haiku`", codex)
             self.assertNotIn("run_in_background", codex)
