@@ -101,4 +101,4 @@ paths = ["skills/find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per ma
 
 [[skills]]
 source = "tinyfish-io/tinyfish-cookbook"
-paths = ["skills/npm-package-comparator", "skills/oss-alternatives", "skills/use-tinyfish"]  # all run the tinyfish CLI (tools.toml)
+paths = ["skills/use-tinyfish"]  # runs the tinyfish CLI (tools.toml)
