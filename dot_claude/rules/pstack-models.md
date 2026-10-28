@@ -1,20 +1,20 @@
 # pstack model configuration. One line per role. Delete a line to fall back to the skill default.
 # `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
-# budget: medium (high)
+# budget: large (xhigh)
 feature, refactoring: inherit-parent
 bug-fix: inherit-parent
 perf-issue: inherit-parent
 hillclimb: inherit-parent
-judgment and prose: opus high
-hardest tasks: opus high
+judgment and prose: opus xhigh
+hardest tasks: opus xhigh
 how explorer: inherit-parent
-how explainer: opus high
+how explainer: opus xhigh
 why investigators: inherit-parent
-why synthesizer: opus high
+why synthesizer: opus xhigh
 reflect tooling: inherit-parent
-reflect judgment, divergent, synthesizer: opus high
-arena runners: opus high, fable high
-arena cross-judge pool: opus high, fable high
+reflect judgment, divergent, synthesizer: opus xhigh
+arena runners: opus xhigh, fable xhigh
+arena cross-judge pool: opus xhigh, fable xhigh
 swarm workers: inherit-parent
-architect runners: opus high, fable high
-interrogate reviewers: opus high, fable high
+architect runners: opus xhigh, fable xhigh
+interrogate reviewers: opus xhigh, fable xhigh
