@@ -91,7 +91,7 @@ class AgentPlugins(unittest.TestCase):
                 config = tomllib.loads(render(f'dot_codex/agents/{file}.toml.tmpl'))
                 self.assertEqual(config['name'], name)
                 self.assertIn('Done:', config['developer_instructions'])
-                self.assertNotRegex(config['developer_instructions'], r'WebFetch|WebSearch|Bash is|Write is')
+                self.assertNotRegex(config['developer_instructions'], r'\b(WebFetch|WebSearch|Bash|Grep|Glob|Skill|Edit tool|Write tool)\b')
                 self.assertNotIn('model', config)
                 self.assertNotIn('sandbox_mode', config)
                 self.assertIn(config['model_reasoning_effort'], ('low', 'medium', 'high'))

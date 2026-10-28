@@ -8,7 +8,7 @@ A `CLAUDE.md` read in place of `AGENTS.md` may hold `@path` import lines, which 
 {{ end -}}
 ## Dotfiles
 
-chezmoi owns the targets `chezmoi managed` lists: most of `~/.claude`, the shared files under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries. Change one through its source in `~/.local/share/chezmoi` (the `dotfiles` skill), not the target: a hand-edited target drifts, and the next `chezmoi apply` hangs the shell on an interactive prompt. A file outside that list, such as one under `~/.claude/rules/` or `~/.claude/projects/`, is local: edit it in place.
+chezmoi owns the targets `chezmoi managed` lists: parts of `~/.claude`, the shared files under `~/.codex`, `~/.gitconfig` and the shared `~/.config` entries. Change one through its source in `~/.local/share/chezmoi` (the `dotfiles` skill), not the target: a hand-edited target drifts, and the next `chezmoi apply` hangs the shell on an interactive prompt. A skill changes in its source repository (`.chezmoidata/skills.toml` names it), and a plugin in its marketplace repository. Any other file, such as one under `~/.claude/rules/` or `~/.claude/projects/`, is local: edit it in place.
 
 ## Commands for the user
 
@@ -28,7 +28,7 @@ A command for the user names its shell as the fence language and uses that shell
 ## Changes
 
 - Before editing a config file chezmoi does not own, copy it to `<file>.bak-<yyyymmdd>`. The reply lists every touched file, so a revert is one copy back.
-- A close or a choice between options waits for the user's answer on that item. "繼續" or "continue" moves the other work forward, and the reply lists what still waits.
+- Closing a pull request or an issue, or a choice between options, waits for the user's answer on that item. "繼續" or "continue" moves the other work forward, and the reply lists what still waits.
 - A pull request merges after the user's go-ahead, and on a green pipeline where the repository has one. A pipeline that does not start (billing, quota) leaves the merge waiting and the reply says why. A local check does not stand in for it.
 - A committed file names only home-relative or repository-relative paths. A machine-local value goes in the repository's local-override mechanism (a gitignored `.local/`, a `*.local.*` file, local git config) rather than a new environment variable, and the committed file names where to find it.
 - Work a program can decide that you have done by hand twice this session becomes a script (py, js, ps1 or sh) in the repository. The reply names it.
@@ -45,8 +45,8 @@ A command for the user names its shell as the fence language and uses that shell
 - JavaScript packages go through pnpm unless the project's lockfile names another: `pnpm add -g` for a global CLI, `pnpm dlx` for a one-off run.
 - An external tool comes in as a CLI plus a skill. An MCP server is for a tool with no CLI, or one that must stay resident (a browser session).
 {{ if eq .agent "claude" -}}
-- Delegate with a model and effort matched to the task: `haiku` and `low` for mechanical inventories, `sonnet` and `medium` by default, `opus` and `high` for bug hunts and hard reasoning. A named agent keeps the model and effort in its definition, and a pstack role the ones its line in `~/.claude/rules/pstack-models.md` or its skill default gives. Raise a named agent to `opus` and `high` only to retry a diagnosis its run got wrong.
-- A background-task notice that the task is still running ends the turn with no text; a finish, a failure, or a question for the user gets one reply.
+- Delegate with a model and effort matched to the task: `haiku` and `low` for mechanical inventories, `sonnet` and `medium` by default, `opus` and `high` for bug hunts and hard reasoning. A named agent keeps the model and effort in its definition, and a pstack role keeps what pstack sets for it (`~/.claude/rules/pstack-models.md`). Raise a named agent to `opus` and `high` only to retry a diagnosis its run got wrong.
+- A background-task notice that the task is still running ends the turn with no text. A finish, a failure, or a question for the user gets one reply.
 {{ end -}}
 - A scripted batch of edits asserts each search string occurs exactly once and inserts each replacement literally, so a `$` stays a `$`: a function in JavaScript (`s.replace(a, () => b)`), `str.replace` in Python, or `re.sub` with a lambda.
 {{- if ne .chezmoi.os "windows" }}
