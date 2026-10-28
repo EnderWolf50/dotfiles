@@ -3,6 +3,8 @@
 
 Shared skills live in `~/.agents/skills`. The skill-patches plugin injects a skill's patch on an explicit mention, an observed skill read or a matching MCP call. When it has not, read `<name>.patch/SKILL.md` yourself from `~/.claude/skills`, `~/.agents/skills`, then the repository's `.claude/skills` and `.agents/skills`, and apply them in that order, a later patch overriding an earlier one. A patch extends its base skill: run the base workflow.
 
+A `CLAUDE.md` read in place of `AGENTS.md` may hold `@path` import lines, which Codex leaves as text: read each referenced file yourself (relative to that `CLAUDE.md`, `~/` against the home directory), once per file.
+
 {{ end -}}
 ## Dotfiles
 
