@@ -68,7 +68,6 @@ paths = [
   "patches/implement.patch",
   "patches/implement-spec.patch",
   "workflow/move-claude-project",
-  "patches/oss-alternatives.patch",
   "patches/pr.patch",
   "workflow/release-cli",
   "patches/research.patch",
