@@ -92,7 +92,7 @@ See the plugin READMEs for coverage and failure behavior.
 ## Native agent plugins
 
 Declare a plugin once in `.chezmoidata/plugins.toml`, with its hosts and marketplace source. The shared
-catalog currently installs guards, skill-patches, TemPad Dev, Ponytail and Impeccable
+catalog currently installs guards, skill-patches, TemPad Dev, Impeccable and pstack (CC only)
 through native CC/Codex CLIs. TemPad uses each host's generated package; sparse paths avoid cloning unrelated files.
 CC marketplace declarations and seeded enablement come from this same catalog, replacing the entries
 previously kept in `claude.toml`. Other CC plugins and marketplaces remain in that file.
