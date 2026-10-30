@@ -46,6 +46,7 @@ A command for the user names its shell as the fence language and uses that shell
 - An external tool comes in as a CLI plus a skill. An MCP server is for a tool with no CLI, or one that must stay resident (a browser session).
 {{ if eq .agent "claude" -}}
 - Delegate with a model and effort matched to the task: `haiku` and `low` for mechanical inventories, `sonnet` and `medium` by default, `opus` and `high` for bug hunts and hard reasoning. A named agent keeps the model and effort in its definition, and a pstack role keeps what pstack sets for it (`~/.claude/rules/pstack-models.md`). Raise a named agent to `opus` and `high` only to retry a diagnosis its run got wrong.
+- Keep at most five delegated tasks running at once; the next one starts when one finishes.
 - A background-task notice that the task is still running ends the turn with no text. A finish, a failure, or a question for the user gets one reply.
 {{ end -}}
 - A scripted batch of edits asserts each search string occurs exactly once and inserts each replacement literally, so a `$` stays a `$`: a function in JavaScript (`s.replace(a, () => b)`), `str.replace` in Python, or `re.sub` with a lambda.
@@ -57,5 +58,5 @@ A command for the user names its shell as the fence language and uses that shell
 
 ## Windows shell
 
-- Read `~/.claude/docs/windows-shell.md` before a Bash command that hands a `/tmp` path to node, python or pwsh, passes a path or output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe, a heredoc), runs `python -I` / `-E` on CJK text, sizes a large folder, or deletes a folder.
+- Read `~/.claude/docs/windows-shell.md` before a Bash command that hands a `/tmp` path to node, python or pwsh, passes a path or output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe, a heredoc), runs `python -I` / `-E` on CJK text, sizes a large folder, deletes a folder, writes a Bash command over about 7.5 KB, or runs `gh … --jq` or `gh pr checks`.
 {{- end }}
