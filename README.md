@@ -66,7 +66,8 @@ in its inline dependency metadata and merges only:
   only where `AGENTS.md` is absent, and leaves its `@path` imports as text; the global instructions
   tell Codex to read those files itself.
 - MCP connection fields from `[claude.mcp]` in `.chezmoidata/claude.toml` (currently isolated
-  Playwright). Other servers, and policy fields such as `enabled` on shared servers, stay local.
+  Playwright, and `playwright-ext`, which drives the user's own browser through the Playwright
+  Extension). Other servers, and policy fields such as `enabled` on shared servers, stay local.
 - `LEFTHOOK_OUTPUT` from Claude into Codex's shell environment.
 - The shared theme into `tui.theme` and desktop dark chrome accent, background and foreground.
   `dot_codex/themes/vesper.tmTheme.tmpl` generates CLI highlighting from the same palette; desktop

@@ -61,6 +61,15 @@ allow = [
 command = "npx"
 args    = ["-y", "@playwright/mcp@latest", "--isolated"]
 
+# playwright-ext drives the user's own running Edge/Chrome tabs, logged in to webmail and the like,
+# through the Playwright Extension (Chrome Web Store id mmlmfjhmonkocbjadbfplnigmagldckm). It is an MCP
+# server, not a CLI, because it holds that browser connection open across calls. The browser asks to
+# approve each connection; PLAYWRIGHT_MCP_EXTENSION_TOKEN (per browser profile, from the extension's
+# status page) skips that, and stays a machine-local env var, never committed here.
+[claude.mcp.playwright-ext]
+command = "npx"
+args    = ["-y", "@playwright/mcp@latest", "--extension"]
+
 # local: plugins and marketplaces some machines keep on purpose. run_after_claude-settings-drift
 # lists every settings.json plugin or marketplace this file does not know, except these.
 [claude.local]
