@@ -70,6 +70,15 @@ args    = ["-y", "@playwright/mcp@latest", "--isolated"]
 command = "npx"
 args    = ["-y", "@playwright/mcp@latest", "--extension"]
 
+# windows.args are appended on Windows only, a leading ~/ becoming the home directory. The user's browser is
+# Brave, where the extension is installed; without these the server looks for it in Chrome's user data and stops
+# with "Playwright Extension not found" (playwright-core createExtensionBrowser).
+[claude.mcp.playwright-ext.windows]
+args = [
+  "--executable-path", "~/AppData/Local/BraveSoftware/Brave-Browser/Application/brave.exe",
+  "--user-data-dir", "~/AppData/Local/BraveSoftware/Brave-Browser/User Data",
+]
+
 # local: plugins and marketplaces some machines keep on purpose. run_after_claude-settings-drift
 # lists every settings.json plugin or marketplace this file does not know, except these.
 [claude.local]

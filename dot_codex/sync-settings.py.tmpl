@@ -13,7 +13,16 @@ from datetime import datetime
 import tomlkit
 
 {{ $palette := (index .themes .theme).palette -}}
-SHARED = json.loads({{ dict "mcp_servers" .claude.mcp "tui" (dict "theme" .theme) "desktop" (dict "appearanceDarkChromeTheme" (dict "accent" $palette.accent "accentSource" "custom" "surface" $palette.bg "ink" $palette.fg)) "shell_environment_policy" (dict "set" (dict "LEFTHOOK_OUTPUT" .claude.merge.env.LEFTHOOK_OUTPUT)) | toJson | toJson }})
+{{/* MCP servers as registered on this OS: a server's windows.args join its args on Windows only */ -}}
+{{ $mcp := dict -}}
+{{ range $name, $s := .claude.mcp -}}
+{{   $args := $s.args -}}
+{{   if and (eq $.chezmoi.os "windows") (hasKey $s "windows") -}}
+{{     range $s.windows.args }}{{ $args = append $args (. | replace "~/" (printf "%s/" $.chezmoi.homeDir)) }}{{ end -}}
+{{   end -}}
+{{   $_ := set $mcp $name (set (omit $s "windows") "args" $args) -}}
+{{ end -}}
+SHARED = json.loads({{ dict "mcp_servers" $mcp "tui" (dict "theme" .theme) "desktop" (dict "appearanceDarkChromeTheme" (dict "accent" $palette.accent "accentSource" "custom" "surface" $palette.bg "ink" $palette.fg)) "shell_environment_policy" (dict "set" (dict "LEFTHOOK_OUTPUT" .claude.merge.env.LEFTHOOK_OUTPUT)) | toJson | toJson }})
 
 
 def merge_config(original, shared=SHARED):

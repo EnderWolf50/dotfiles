@@ -6,7 +6,7 @@ if (-not (Get-Command claude -ErrorAction SilentlyContinue)) { Write-Warning 'cl
 # Registered either way; the server starts once its command is installed.
 if (-not (Get-Command {{ $s.command }} -ErrorAction SilentlyContinue)) { Write-Warning 'claude-mcp: {{ $name }} needs {{ $s.command }}; install it with `tools -Install` (tools.toml), then restart Claude Code' }
 claude mcp remove -s user {{ $name }} *> $null
-claude mcp add -s user {{ $name }} -- {{ $s.command }}{{ range $s.args }} '{{ . }}'{{ end }}
+claude mcp add -s user {{ $name }} -- {{ $s.command }}{{ range $s.args }} '{{ . }}'{{ end }}{{ if hasKey $s "windows" }}{{ range $s.windows.args }} '{{ . | replace "~/" (printf "%s/" $.chezmoi.homeDir) }}'{{ end }}{{ end }}
 if ($LASTEXITCODE) { Write-Warning 'claude-mcp: adding {{ $name }} failed' }
 {{ end -}}
 {{ end -}}
