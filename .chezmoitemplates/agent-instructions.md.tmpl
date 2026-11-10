@@ -31,7 +31,7 @@ A command for the user names its shell as the fence language and uses that shell
 - Closing a pull request or an issue, or a choice between options, waits for the user's answer on that item. "繼續" or "continue" moves the other work forward, and the reply lists what still waits.
 - A pull request merges after the user's go-ahead, and on a green pipeline where the repository has one. A pipeline that does not start (billing, quota) leaves the merge waiting and the reply says why. A local check does not stand in for it.
 - A committed file names only home-relative or repository-relative paths. A machine-local value goes in the repository's local-override mechanism (a gitignored `.local/`, a `*.local.*` file, local git config) rather than a new environment variable, and the committed file names where to find it.
-- Work a program can decide that you have done by hand twice this session becomes a script (py, js, ps1 or sh) in the repository. The reply names it.
+- Work a program can decide that you have done by hand twice this session becomes a script (py, js, ps1 or sh) in the repository when it recurs beyond this task, takes more than three commands, and no script or CI job there does it yet. The reply names the script, or lists the commands and the condition that failed.
 
 ## Evidence
 
