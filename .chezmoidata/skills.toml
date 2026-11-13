@@ -87,6 +87,11 @@ paths = [
 ]
 
 [[skills]]
+source = "EnderWolf50/fm"
+personal = true
+paths = ["skills/fm"]
+
+[[skills]]
 source = "cli/cli"
 paths = ["skills/gh"]
 
