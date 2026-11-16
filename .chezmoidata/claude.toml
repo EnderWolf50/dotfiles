@@ -28,6 +28,11 @@ CLAUDE_CODE_ENABLE_TODO_TOOLS = "1"
 [claude.merge.worktree]
 baseRef = "fresh"
 
+# Opus 5.5 defaults to medium. high ties xhigh on CursorBench 4.0 (56.0%) for about half the tokens;
+# pstack pins xhigh per role where it pays (~/.claude/rules/pstack-models.md).
+[claude.merge.modelSettings."claude-opus-5-5"]
+effortLevel = "high"
+
 [claude.merge.modelSettings."claude-sonnet-5-5"]
 effortLevel = "high"
 
