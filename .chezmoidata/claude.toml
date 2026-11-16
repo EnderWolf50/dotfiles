@@ -21,9 +21,13 @@ defaultMode = "auto"
 
 [claude.merge.env]
 # Only Claude Code sessions get this env: lefthook prints nothing unless a hook fails, keeping commit output short.
-LEFTHOOK_OUTPUT               = "failure"
+LEFTHOOK_OUTPUT                    = "failure"
 # Task-tracking tools (TaskCreate and the rest) on every model, not only the ones Claude Code turns them on for.
-CLAUDE_CODE_ENABLE_TODO_TOOLS = "1"
+CLAUDE_CODE_ENABLE_TODO_TOOLS      = "1"
+# Code Mode (experimental): Claude writes JavaScript that batches its tool calls. Interactive terminal sessions only;
+# it doesn't start with agent teams on, and Claude in Chrome is unavailable in it. For an agent-teams session, start
+# that one shell with CLAUDE_CODE_EXPERIMENTAL_CODE_MODE=0: a 0 anywhere keeps Code Mode off.
+CLAUDE_CODE_EXPERIMENTAL_CODE_MODE = "1"
 
 [claude.merge.worktree]
 baseRef = "fresh"
