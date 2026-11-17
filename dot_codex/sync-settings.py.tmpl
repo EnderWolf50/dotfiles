@@ -18,7 +18,7 @@ import tomlkit
 {{ range $name, $s := .claude.mcp -}}
 {{   $args := $s.args -}}
 {{   if and (eq $.chezmoi.os "windows") (hasKey $s "windows") -}}
-{{     range $s.windows.args }}{{ $args = append $args (. | replace "~/" (printf "%s/" $.chezmoi.homeDir)) }}{{ end -}}
+{{     range $s.windows.args }}{{ $args = append $args (includeTemplate "mcp-windows-arg" (dict "arg" . "home" $.chezmoi.homeDir)) }}{{ end -}}
 {{   end -}}
 {{   $_ := set $mcp $name (set (omit $s "windows") "args" $args) -}}
 {{ end -}}

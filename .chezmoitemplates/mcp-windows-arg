@@ -1,0 +1,17 @@
+{{- /* One windows.args entry of a [claude.mcp] server, as this machine needs it. Input: dict "arg" "home".
+     In a path, a leading ~/ becomes the home directory and %ProgramFiles% the Program Files folder.
+     A list names candidate paths: the first that exists wins, else the first one, so a startup error
+     still names a path. */ -}}
+{{- $home := printf "%s/" .home -}}
+{{- $pf := env "ProgramFiles" | replace "\\" "/" -}}
+{{- if kindIs "slice" .arg -}}
+{{-   $out := "" -}}
+{{-   range .arg -}}
+{{-     $p := . | replace "~/" $home | replace "%ProgramFiles%" $pf -}}
+{{-     if and (not $out) (stat $p) }}{{ $out = $p }}{{ end -}}
+{{-   end -}}
+{{-   if not $out }}{{ $out = index .arg 0 | replace "~/" $home | replace "%ProgramFiles%" $pf }}{{ end -}}
+{{-   $out -}}
+{{- else -}}
+{{-   .arg | replace "~/" $home | replace "%ProgramFiles%" $pf -}}
+{{- end -}}

@@ -79,12 +79,18 @@ args    = ["-y", "@playwright/mcp@latest", "--isolated"]
 command = "npx"
 args    = ["-y", "@playwright/mcp@latest", "--extension"]
 
-# windows.args are appended on Windows only, a leading ~/ becoming the home directory. The user's browser is
-# Brave, where the extension is installed; without these the server looks for it in Chrome's user data and stops
-# with "Playwright Extension not found" (playwright-core createExtensionBrowser).
+# windows.args are appended on Windows only, resolved by .chezmoitemplates/mcp-windows-arg: a leading ~/ becomes
+# the home directory, %ProgramFiles% the Program Files folder, and a list names candidate paths of which the first
+# that exists wins. The user's browser is Brave, where the extension is installed; without these the server looks
+# for it in Chrome's user data and stops with "Playwright Extension not found" (playwright-core
+# createExtensionBrowser). Brave installs per user or, from an elevated installer, under Program Files; a missing
+# brave.exe kills the server on its first tool call with "spawn ... brave.exe ENOENT".
 [claude.mcp.playwright-ext.windows]
 args = [
-  "--executable-path", "~/AppData/Local/BraveSoftware/Brave-Browser/Application/brave.exe",
+  "--executable-path", [
+    "~/AppData/Local/BraveSoftware/Brave-Browser/Application/brave.exe",
+    "%ProgramFiles%/BraveSoftware/Brave-Browser/Application/brave.exe",
+  ],
   "--user-data-dir", "~/AppData/Local/BraveSoftware/Brave-Browser/User Data",
 ]
 

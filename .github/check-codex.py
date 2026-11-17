@@ -70,6 +70,14 @@ class CodexSettingsTests(unittest.TestCase):
         self.assertNotIn("url", result["mcp_servers"]["playwright"])
         self.assertEqual(result["mcp_servers"]["playwright"]["command"], "npx")
 
+    def test_windows_args_resolve_candidates(self):
+        # SHARED is rendered for Windows; a candidate list in windows.args becomes one expanded path.
+        args = namespace["SHARED"]["mcp_servers"]["playwright-ext"]["args"]
+        self.assertTrue(all(isinstance(arg, str) for arg in args), args)
+        executable = args[args.index("--executable-path") + 1]
+        self.assertTrue(executable.endswith("/brave.exe"), executable)
+        self.assertFalse("~/" in executable or "%ProgramFiles%" in executable, executable)
+
     def test_backup_and_idempotent_write(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "config.toml"
