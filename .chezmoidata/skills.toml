@@ -90,7 +90,7 @@ paths = [
 [[skills]]
 source = "EnderWolf50/skills"
 work = true
-paths = ["git/merge-pr"]
+paths = ["git/merge-pr", "workflow/bug-sweep"]
 
 [[skills]]
 source = "EnderWolf50/fm"
