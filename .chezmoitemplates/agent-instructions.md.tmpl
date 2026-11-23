@@ -28,6 +28,7 @@ A command for the user names its shell as the fence language and uses that shell
 ## Changes
 
 - Before editing a config file chezmoi does not own, copy it to `<file>.bak-<yyyymmdd>`. The reply lists every touched file, so a revert is one copy back.
+- A visual choice (glyphs, colors, layout) goes to the user as options to preview (`html_preview`, or an HTML file to open), and the edit follows their pick.
 - Closing a pull request or an issue, or a choice between options, waits for the user's answer on that item. "繼續" or "continue" moves the other work forward, and the reply lists what still waits.
 - A pull request merges on a green pipeline where the repository has one. A pipeline that does not start (billing, quota) leaves the merge waiting and the reply says why. A local check does not stand in for it.
 - A committed file names only home-relative or repository-relative paths. A machine-local value goes in the repository's local-override mechanism (a gitignored `.local/`, a `*.local.*` file, local git config) rather than a new environment variable, and the committed file names where to find it.
@@ -39,10 +40,12 @@ A command for the user names its shell as the fence language and uses that shell
 - Every such fact carries one of: its source (a link, `file:line`, or the command that shows it), `(※)` with the basis when it rests on indirect evidence, or `(?)` when it was not checked this session. A brief marks every such fact. A reply may leave a source implicit only when it is a command run in this session.
 - A question for the user shows the real screen or output beside it, defines each term they have not seen, and says where every number comes from. A change that shows on screen (a UI, a bot run, a live test) comes back with a clip or annotated stills.
 - A relayed subagent report carries what the user must decide.
+- The first reply after a compaction or a finished background task has three parts: what is done, what is still running, and what waits on the user's decision.
 
 ## Tools
 
 - JavaScript packages go through pnpm unless the project's lockfile names another: `pnpm add -g` for a global CLI, `pnpm dlx` for a one-off run.
+- Wait on a long job by starting it in the background and ending the turn: its completion notice resumes you. In T3 Code, `t3_background_wait` takes `taskIds: [...]` of jobs still running. Poll only state that sends no notice (a CI pipeline, a remote deploy).
 - An external tool comes in as a CLI plus a skill. An MCP server is for a tool with no CLI, or one that must stay resident (a browser session).
 {{ if eq .agent "claude" -}}
 - Delegate with a model and effort matched to the task: `haiku` and `low` for mechanical inventories, `sonnet` and `medium` by default, `opus` and `high` for bug hunts and hard reasoning. A named agent keeps the model and effort in its definition, and a pstack role keeps what pstack sets for it (`~/.claude/rules/pstack-models.md`). Raise a named agent to `opus` and `high` only to retry a diagnosis its run got wrong.
@@ -58,5 +61,5 @@ A command for the user names its shell as the fence language and uses that shell
 
 ## Windows shell
 
-- Read `~/.claude/docs/windows-shell.md` before a Bash command that hands a `/tmp` path to node, python or pwsh, passes a path or output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe, a heredoc), runs `python -I` / `-E` on CJK text, sizes a large folder, deletes a folder, writes a Bash command over about 7.5 KB, or runs `gh … --jq` or `gh pr checks`.
+- Read `~/.claude/docs/windows-shell.md` before a Bash command that hands a Git Bash path (`/tmp/...`, `/d/...`) to node, python or pwsh, passes a path or output between Git Bash, Node and pwsh, feeds a script to an interpreter (`-e`, `-c`, a pipe, a heredoc), runs `python -I` / `-E` on CJK text, sizes a large folder, deletes a folder, writes a Bash command over about 7.5 KB, or runs `gh … --jq` or `gh pr checks`.
 {{- end }}

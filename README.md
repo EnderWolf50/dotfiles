@@ -133,7 +133,7 @@ and plugin build outputs are untouched. Unset `personal` is treated as false.
 
 Work-only skills (`merge-pr`) are marked `work = true` the same way and install only on machines
 with `data.work = true`. On a machine set up before the `work` question existed, run
-`chezmoi init --promptBool work=true` (or `false`) once to record the answer.
+`chezmoi init --no-tty --promptBool "Work machine (installs work-only skills, such as merge-pr)=true"` (or `=false`) once to record the answer: `--promptBool` matches the prompt text, so `work=true` leaves `--no-tty` failing on EOF.
 
 Agent LSP plugins and the `languages` machine selector have been retired. An audit on 2026-10-16
 found zero LSP tool calls across 488 retained CC JSONL files and 231 sessions with tool calls on this
