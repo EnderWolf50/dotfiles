@@ -7,7 +7,8 @@
 # clones the whole repository once (`--depth 1`; cli/cli is 43 MB for one SKILL.md), only when a
 # skill is missing or changed.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
-# `personal = true` entries install only when this machine has data.personal = true.
+# `personal = true` entries install only when this machine has data.personal = true, and
+# `work = true` entries only when it has data.work = true.
 
 [[skills]]
 source = "mattpocock/skills"
@@ -85,6 +86,11 @@ paths = [
   "dalamud/dalamud-regional-client-adaptation",
   "dalamud/dalamud-traditional-chinese-localization",
 ]
+
+[[skills]]
+source = "EnderWolf50/skills"
+work = true
+paths = ["git/merge-pr"]
 
 [[skills]]
 source = "EnderWolf50/fm"

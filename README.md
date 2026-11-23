@@ -131,6 +131,10 @@ Dalamud skills are marked `personal = true` in `.chezmoidata/skills.toml`: only 
 sync removes previously CLI-installed copies/links for both Claude Code and Codex. The source repo
 and plugin build outputs are untouched. Unset `personal` is treated as false.
 
+Work-only skills (`merge-pr`) are marked `work = true` the same way and install only on machines
+with `data.work = true`. On a machine set up before the `work` question existed, run
+`chezmoi init --promptBool work=true` (or `false`) once to record the answer.
+
 Agent LSP plugins and the `languages` machine selector have been retired. An audit on 2026-10-16
 found zero LSP tool calls across 488 retained CC JSONL files and 231 sessions with tool calls on this
 Windows machine; this does not measure editor LSP use or deleted/other-machine sessions. Language-server

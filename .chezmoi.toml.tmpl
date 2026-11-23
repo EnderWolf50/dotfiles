@@ -2,9 +2,11 @@
        Questions are asked once per machine; rerun `chezmoi init` after editing this file. */ -}}
 {{- $preset := promptChoiceOnce . "prompt.preset" "Prompt symbols (ascii if the font lacks ❯ ⇡ ✘)" (list "unicode" "ascii") "unicode" -}}
 {{- $personal := promptBoolOnce . "personal" "Personal development machine (installs personal tools and skills, including Railway CLI and Dalamud skills)" false -}}
+{{- $work := promptBoolOnce . "work" "Work machine (installs work-only skills, such as merge-pr)" false -}}
 
 [data]
     personal = {{ $personal }}
+    work = {{ $work }}
 
 [data.prompt]
     preset = {{ $preset | quote }}
