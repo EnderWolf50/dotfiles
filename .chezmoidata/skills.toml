@@ -110,6 +110,14 @@ source = "herdrdev/herdr"
 paths = ["skills/herdr"]
 
 [[skills]]
+source = "cathrynlavery/diagram-design"
+paths = ["skills/diagram-design"]
+
+[[skills]]
+source = "tt-a1i/archify"
+paths = ["archify"]
+
+[[skills]]
 source = "upstash/context7"
 paths = ["skills/find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per machine raises the rate limit
 
