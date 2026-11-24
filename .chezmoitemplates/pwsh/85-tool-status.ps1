@@ -57,7 +57,7 @@ if ($IsInteractiveConsole) {
       } elseif ($tool.Kind -eq 'module') {
         [bool](Get-Module -ListAvailable -Name $tool.Check)
       } else {
-        [bool](Get-Command $tool.Check -CommandType Application, ExternalScript -ErrorAction Ignore)
+        [bool](Get-Command ([Environment]::ExpandEnvironmentVariables($tool.Check)) -CommandType Application, ExternalScript -ErrorAction Ignore)
       }
       [pscustomobject]@{
         Installed = if ($null -eq $found) { '?' } elseif ($found) { 'yes' } else { 'NO' }
