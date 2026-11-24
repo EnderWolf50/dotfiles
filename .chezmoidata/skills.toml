@@ -113,7 +113,5 @@ source = "tinyfish-io/tinyfish-cookbook"
 paths = ["skills/use-tinyfish"]  # runs the tinyfish CLI (tools.toml)
 
 [[skills]]
-source = "Leonxlnx/taste-skill"
-paths = ["skills/taste-skill"]
-# Override the folder basename with the name declared in SKILL.md.
-names = { "skills/taste-skill" = "design-taste-frontend" }
+source = "nextlevelbuilder/ui-ux-pro-max-skill"
+paths = [".claude/skills/ui-ux-pro-max"]

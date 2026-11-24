@@ -8,13 +8,13 @@
 if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) { Write-Warning 'sync-skills: pnpm not found, skipped'; exit 0 }
 $env:GIT_TERMINAL_PROMPT = '0'
 $wanted = @(
-{{- range .skills }}{{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) }}{{ $skill := . }}{{ range .paths }}
-  '{{ index (index $skill "names" | default dict) . | default (base .) }}'
+{{- range .skills }}{{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) }}{{ range .paths }}
+  '{{ base . }}'
 {{- end }}{{ end }}{{ end }}
 )
 $sources = @(
 {{- range .skills }}{{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) }}
-  @{ repo = '{{ .source }}'; names = '{{ $skill := . }}{{ range $j, $p := .paths }}{{ if $j }} {{ end }}{{ index (index $skill "names" | default dict) $p | default (base $p) }}{{ end }}' }
+  @{ repo = '{{ .source }}'; names = '{{ range $j, $p := .paths }}{{ if $j }} {{ end }}{{ base $p }}{{ end }}' }
 {{- end }}{{ end }}
 )
 $installed = @(pnpm dlx skills@latest ls -g --json 2>$null | ConvertFrom-Json)

@@ -10,7 +10,7 @@
 command -v pnpm >/dev/null || { echo 'sync-skills: pnpm not found, skipped' >&2; exit 0; }
 command -v jq >/dev/null || { echo 'sync-skills: jq not found, skipped' >&2; exit 0; }
 export GIT_TERMINAL_PROMPT=0
-wanted='{{ range .skills }}{{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) }}{{ $skill := . }}{{ range .paths }} {{ index (index $skill "names" | default dict) . | default (base .) }}{{ end }}{{ end }}{{ end }} '
+wanted='{{ range .skills }}{{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) }}{{ range .paths }} {{ base . }}{{ end }}{{ end }}{{ end }} '
 installed=$(pnpm dlx skills@latest ls -g --json 2>/dev/null)
 tracked=" $(echo "$installed" | jq -r '.[] | select(.sourceType == "github") | .name' | tr '\n' ' ') "
 # add_skills <owner/repo> <name>...: install from GitHub unless every name is already tracked
@@ -26,7 +26,7 @@ add_skills() {
 }
 {{ range .skills -}}
 {{ if and (or (not (index . "personal" | default false)) (and (hasKey $ "personal") $.personal)) (or (not (index . "work" | default false)) (and (hasKey $ "work") $.work)) -}}
-add_skills {{ .source }}{{ $skill := . }}{{ range .paths }} {{ index (index $skill "names" | default dict) . | default (base .) }}{{ end }}
+add_skills {{ .source }}{{ range .paths }} {{ base . }}{{ end }}
 {{ end }}{{ end -}}
 pnpm dlx skills@latest update -g -y
 extra=$(echo "$installed" | jq -r '.[] | select(.source) | .name' |
