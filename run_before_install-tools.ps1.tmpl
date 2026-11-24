@@ -17,7 +17,7 @@ $env:PATH = @([Environment]::GetEnvironmentVariable('PATH', 'Machine'), [Environ
 $steps = @()
 $new = $false
 foreach ($t in $tools) {
-  $found = if ($t.Kind -eq 'module') { Get-Module -ListAvailable -Name $t.Check } else { Get-Command $t.Check -CommandType Application, ExternalScript -ErrorAction Ignore }
+  $found = if ($t.Kind -eq 'module') { Get-Module -ListAvailable -Name $t.Check } else { Get-Command ([Environment]::ExpandEnvironmentVariables($t.Check)) -CommandType Application, ExternalScript -ErrorAction Ignore }
   if ($found) { continue }
 
   $global:LASTEXITCODE = 0
