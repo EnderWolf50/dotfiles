@@ -98,6 +98,10 @@ source = "EnderWolf50/fm"
 paths = ["skills/fm"]
 
 [[skills]]
+source = "nextlevelbuilder/ui-ux-pro-max-skill"
+paths = [".claude/skills/ui-ux-pro-max"]
+
+[[skills]]
 source = "cli/cli"
 paths = ["skills/gh"]
 
