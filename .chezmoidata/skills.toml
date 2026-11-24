@@ -3,7 +3,8 @@
 # installs every skill listed here that is missing, runs `skills update` (reinstalls only skills
 # whose folder changed upstream) and removes any CLI-installed global skill that is not listed.
 # Skills installed by hand without a source (plugin ones) are left alone.
-# `paths` are the skill folders inside the repo; the skill's name is the folder's name. Installing
+# `paths` are the skill folders inside the repo. The skill name is the folder name, or the
+# repository name for a root-level skill (`paths = ["."]`). Installing
 # clones the whole repository once (`--depth 1`; cli/cli is 43 MB for one SKILL.md), only when a
 # skill is missing or changed.
 # ~/.agents/.skill-lock.json stays the CLI's own file and is not tracked here.
@@ -111,3 +112,11 @@ paths = ["skills/find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per ma
 [[skills]]
 source = "tinyfish-io/tinyfish-cookbook"
 paths = ["skills/use-tinyfish"]  # runs the tinyfish CLI (tools.toml)
+
+[[skills]]
+source = "blader/humanizer"
+paths = ["."]
+
+[[skills]]
+source = "heygen-com/hyperframes"
+paths = ["skills/hyperframes"]
