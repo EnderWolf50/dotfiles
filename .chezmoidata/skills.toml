@@ -111,3 +111,9 @@ paths = ["skills/find-docs"]  # runs `npx ctx7@latest`; `ctx7 login` once per ma
 [[skills]]
 source = "tinyfish-io/tinyfish-cookbook"
 paths = ["skills/use-tinyfish"]  # runs the tinyfish CLI (tools.toml)
+
+[[skills]]
+source = "Leonxlnx/taste-skill"
+paths = ["skills/taste-skill"]
+# Override the folder basename with the name declared in SKILL.md.
+names = { "skills/taste-skill" = "design-taste-frontend" }
