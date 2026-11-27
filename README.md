@@ -126,10 +126,10 @@ catalog migration and generated agents without installing anything.
 
 ## Per-machine overrides
 
-Dalamud skills are marked `personal = true` in `.chezmoidata/skills.toml`: only machines with
-`data.personal = true` install them. Other machines omit them from the desired list and the skills
-sync removes previously CLI-installed copies/links for both Claude Code and Codex. The source repo
-and plugin build outputs are untouched. Unset `personal` is treated as false.
+Skills marked `personal = true` in `.chezmoidata/skills.toml` install only on machines with
+`data.personal = true`; unset `personal` is treated as false. The Dalamud skills are not listed
+there: the DalamudPlugins home repo installs them per project from its own `skills-lock.json`
+(`pnpm dlx skills@latest experimental_install` in that repo).
 
 Work-only skills (`merge-pr`) are marked `work = true` the same way and install only on machines
 with `data.work = true`. On a machine set up before the `work` question existed, run

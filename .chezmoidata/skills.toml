@@ -80,16 +80,6 @@ paths = [
 
 [[skills]]
 source = "EnderWolf50/skills"
-personal = true
-paths = [
-  "dalamud/dalamud-plugin-build",
-  "dalamud/dalamud-plugin-integration-auditing",
-  "dalamud/dalamud-regional-client-adaptation",
-  "dalamud/dalamud-traditional-chinese-localization",
-]
-
-[[skills]]
-source = "EnderWolf50/skills"
 work = true
 paths = ["git/merge-pr", "workflow/bug-sweep"]
 
