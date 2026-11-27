@@ -7,7 +7,7 @@ bug-fix: opus xhigh
 perf-issue: opus xhigh
 hillclimb: opus xhigh
 judgment and prose: opus xhigh
-arena runners: opus high, fable high
-arena cross-judge pool: opus high, fable high
+arena runners: opus high, gpt-6.2-sol high, gemini-4-neon high
+arena cross-judge pool: gpt-6.2-sol high, gemini-4-neon high
 swarm workers: opus high
-interrogate reviewers: opus high, fable high
+interrogate reviewers: opus high, gpt-6.2-sol high, gemini-4-neon high
